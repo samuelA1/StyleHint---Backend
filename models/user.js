@@ -3,13 +3,13 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
 
 const UserSchema = new Schema({
-    username: {type: String, lowercase: true, unique: true, required: true},
     email: {type: String, lowercase: true, unique: true, required: true},
     password: String,
     country: {type: String, lowercase:true, default: 'united states', required: true},
     gender: {type: String, lowercase: true},
     size: {type: String, lowercase: true},
     interest: {type: String, lowercase: true},
+    isAdmin: {type: Boolean, default: false}
 });
 
 UserSchema.pre('save', function (next) {
