@@ -7,6 +7,7 @@ const cors = require('cors');
 const authRoute = require('./routes/auth');
 const customizeRoute = require('./routes/customize');
 const profileRoute = require('./routes/profile');
+const adminRoute = require('./routes/admin');
 
 mongoose.connect(config.db, {useNewUrlParser: true}, err => {
     err ? console.log('Can not connect to database') : console.log('Connected to database');
@@ -22,6 +23,7 @@ app.use(morgan('dev'));
 app.use('/api/auth', authRoute);
 app.use('/api/customize', customizeRoute);
 app.use('/api/profile', profileRoute);
+app.use('/api/admin', adminRoute);
 
 app.listen(config.port, (err) => {
     if (err) {

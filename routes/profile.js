@@ -11,7 +11,23 @@ router.post('/email', checkJwt, (req, res) => {
         userWithId.save();
         res.json({
             success: true,
+            user: userWithId,
             message: 'Email update successful'
+        });
+    });
+});
+
+//change password
+router.post('/password', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, userWithId) => {
+        if (err) return err;
+
+        if(req.body.password) userWithId.password = req.body.password;
+        userWithId.save();
+        res.json({
+            success: true,
+            user: userWithId,
+            message: 'Password update successful'
         });
     });
 });
@@ -25,6 +41,7 @@ router.post('/country', checkJwt, (req, res) => {
         userWithId.save();
         res.json({
             success: true,
+            user: userWithId,
             message: 'Country update successful'
         });
     });
@@ -39,6 +56,7 @@ router.post('/gender', checkJwt, (req, res) => {
         userWithId.save();
         res.json({
             success: true,
+            user: userWithId,
             message: 'Gender update successful'
         });
     });
@@ -53,6 +71,7 @@ router.post('/interest', checkJwt, (req, res) => {
         userWithId.save();
         res.json({
             success: true,
+            user: userWithId,
             message: 'Interest update successful'
         });
     });
@@ -67,6 +86,7 @@ router.post('/size', checkJwt, (req, res) => {
         userWithId.save();
         res.json({
             success: true,
+            user: userWithId,
             message: 'Size update successful'
         });
     });
