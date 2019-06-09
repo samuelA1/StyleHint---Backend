@@ -33,7 +33,8 @@ app.use('/api/customize', customizeRoute);
 app.use('/api/profile', profileRoute);
 app.use('/api/admin', adminRoute);
 
-app.listen(config.port, (err) => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, (err) => {
     if (err) {
         console.log(err);
     } else {
