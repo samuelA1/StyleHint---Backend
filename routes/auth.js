@@ -7,31 +7,36 @@ const async = require('async');
 
 //login route
 router.post('/login', (req, res) => {
-    User.findOne({email: req.body.email}, (err, userExist) => {
-        if (err) return err;
+    res.json({
+        success: true,
+        message: 'Login successful',
+        user: userExist,
+        token: token
+    // User.findOne({email: req.body.email}, (err, userExist) => {
+    //     if (err) return err;
 
-        if (userExist) {
-            let validatePassword = userExist.comparePassword(req.body.password);
-            if (validatePassword) {
-                const token = jwt.sign({user: userExist}, config.secret, {expiresIn: '365d'});
-                res.json({
-                    success: true,
-                    message: 'Login successful',
-                    user: userExist,
-                    token: token
-                })
-            } else {
-                res.json({
-                    success: false,
-                    message: 'Authentication failed. Wrong user password'
-                })
-            }
-        } else {
-            res.json({
-                success: false,
-                message: 'Authentication failed. Wrong user email'
-            })
-        }
+    //     if (userExist) {
+    //         let validatePassword = userExist.comparePassword(req.body.password);
+    //         if (validatePassword) {
+    //             const token = jwt.sign({user: userExist}, config.secret, {expiresIn: '365d'});
+    //             res.json({
+    //                 success: true,
+    //                 message: 'Login successful',
+    //                 user: userExist,
+    //                 token: token
+    //             })
+    //         } else {
+    //             res.json({
+    //                 success: false,
+    //                 message: 'Authentication failed. Wrong user password'
+    //             })
+    //         }
+    //     } else {
+    //         res.json({
+    //             success: false,
+    //             message: 'Authentication failed. Wrong user email'
+    //         })
+    //     }
     })
 });
 
