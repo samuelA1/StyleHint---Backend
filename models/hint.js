@@ -10,11 +10,12 @@ const HintSchema = new Schema({
    do: {type: String, required: true},
    dont: {type: String, required: true},
    gender : {type: String, lowercase: true},
-   size : {type: String, lowercase: true},
-   interest : {type: String, lowercase: true},
+   size : [{type: String, lowercase: true}],
+   interest : [{type: String, lowercase: true}],
    weather: [{type: String, lowercase: true}],
    season: [{type: String, lowercase: true}],
-   occasion: [{type: String, lowercase: true}]
+   occasion: [{type: String, lowercase: true}],
+   country: {type: String, lowercase: true}
 });
 
 
