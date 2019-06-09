@@ -24,8 +24,7 @@ app.get("/api/some", function (req, res) {
     res.json({
         success: true,
         message: 'Login successful',
-        user: userExist,
-        token: token})
+        })
 })
 
 app.use('/api/auth', authRoute);
