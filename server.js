@@ -9,7 +9,7 @@ const customizeRoute = require('./routes/customize');
 const profileRoute = require('./routes/profile');
 const adminRoute = require('./routes/admin');
 
-mongoose.connect(config.db, {useNewUrlParser: true}, err => {
+mongoose.connect('mongodb+srv://stylehint:sneakers36.@cluster0-lzzhs.mongodb.net/stylehint?retryWrites=true&w=majority', {useNewUrlParser: true}, err => {
     err ? console.log('Can not connect to database') : console.log('Connected to database');
 })
 
