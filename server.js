@@ -25,7 +25,6 @@ app.use('/api/customize', customizeRoute);
 app.use('/api/profile', profileRoute);
 app.use('/api/admin', adminRoute);
 
-const PORT = process.env.PORT || 3000;
 app.listen(config.port, (err) => {
     if (err) {
         console.log(err);
