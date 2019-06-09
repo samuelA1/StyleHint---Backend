@@ -9,7 +9,7 @@ const customizeRoute = require('./routes/customize');
 const profileRoute = require('./routes/profile');
 const adminRoute = require('./routes/admin');
 
-mongoose.connect('mongodb+srv://stylehint:sneakers36.@cluster0-lzzhs.mongodb.net/stylehint?retryWrites=true&w=majority', {useNewUrlParser: true}, err => {
+mongoose.connect(config.db, {useNewUrlParser: true}, err => {
     err ? console.log('Can not connect to database') : console.log('Connected to database');
 })
 
@@ -26,7 +26,7 @@ app.use('/api/profile', profileRoute);
 app.use('/api/admin', adminRoute);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, (err) => {
+app.listen(config.port, (err) => {
     if (err) {
         console.log(err);
     } else {
