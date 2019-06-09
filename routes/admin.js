@@ -24,37 +24,38 @@ router.post('/add-hint', isAdmin, (req, res) => {
         if (fields.do) hint.do = fields.do;
         if (fields.dont) hint.dont = fields.dont;
         if (fields.gender) hint.gender = fields.gender;
-        if (fields.size) {
-            fields.size.forEach(element => {
-                hint.size.push(element);
-            });
-        }
-        if (fields.interest) {
-            fields.interest.forEach(element => {
-                hint.interest.push(element);
-            });
-        }
-        if (fields.weather) {
-            fields.weather.forEach(element => {
-                hint.weather.push(element);
-            });
-        }
-        if (fields.season) {
-            fields.season.forEach(element => {
-                hint.season.push(element);
-            });
-        }
-        if (fields.occasion) {
-            fields.occasion.forEach(element => {
-                hint.occasion.push(element);
-            });
-        }
-        cloudinary.uploader.upload(files.image.path, function(error, result) {
-            if (error.url) {
-                hint.url = error.url;
-                hint.save();
-            }
-        });
+        console.log(fields)
+        // if (fields.size) {
+        //     fields.size.forEach(element => {
+        //         hint.size.push(element);
+        //     });
+        // }
+        // if (fields.interest) {
+        //     fields.interest.forEach(element => {
+        //         hint.interest.push(element);
+        //     });
+        // }
+        // if (fields.weather) {
+        //     fields.weather.forEach(element => {
+        //         hint.weather.push(element);
+        //     });
+        // }
+        // if (fields.season) {
+        //     fields.season.forEach(element => {
+        //         hint.season.push(element);
+        //     });
+        // }
+        // if (fields.occasion) {
+        //     fields.occasion.forEach(element => {
+        //         hint.occasion.push(element);
+        //     });
+        // }
+        // cloudinary.uploader.upload(files.image.path, function(error, result) {
+        //     if (error.url) {
+        //         hint.url = error.url;
+        //         hint.save();
+        //     }
+        // });
         
 
         res.json({
