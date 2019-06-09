@@ -20,13 +20,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(morgan('dev'));
 
-app.get("/api/some", function (req, res) {
-    res.json({
-        success: true,
-        message: 'Login successful',
-        })
-})
-
 app.use('/api/auth', authRoute);
 app.use('/api/customize', customizeRoute);
 app.use('/api/profile', profileRoute);
