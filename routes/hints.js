@@ -10,7 +10,7 @@ router.get('/get-hints',checkJwt, (req, res) => {
     const page = req.query.page;
     async.parallel([
         function(callback) {
-            Hint.count({$and: [{gender: req.body.gender}, {size: req.body.size}, 
+            Hint.countDocuments({$and: [{gender: req.body.gender}, {size: req.body.size}, 
                 {interest: req.body.interest},{weather: req.body.weather},
                  {season: req.body.season}, {occasion: req.body.occasion}]},
                  (err, count) => {
