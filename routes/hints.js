@@ -42,7 +42,7 @@ router.post('/get-hints',checkJwt, (req, res) => {
             message: 'Enjoy',
             totalHints: count,
             hints: hints,
-            totalPages: Math.ceil(totalHints / perPage)
+            totalPages: Math.ceil(count / perPage)
         })
     })
 });
