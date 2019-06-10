@@ -3,7 +3,7 @@ const Hint = require('../models/hint');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
-//get hint based on criteria
+//get hints based on criteria
 router.post('/get-hints',checkJwt, (req, res) => {
     
     const perPage = 20;
@@ -42,8 +42,14 @@ router.post('/get-hints',checkJwt, (req, res) => {
             message: 'Enjoy',
             totalHints: count,
             hints: hints,
+            totalPages: Math.ceil(totalHints / perPage)
         })
     })
 });
+
+//get a single hint
+router.get('/get-single-hint', checkJwt, (req, res) => {
+
+})
 
 module.exports = router;
