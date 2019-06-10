@@ -49,9 +49,10 @@ router.post('/add-hint', isAdmin, (req, res) => {
                 hint.occasion.push(element);
             });
         }
-        cloudinary.uploader.upload(files.image.path, function(error, result) {
+        cloudinary.uploader.upload(files.image, function(error, result) {
             if (error.url) {
-                hint.url = error.url;
+                console.log(files.image)
+                hint.url = error.secure_url;
                 hint.save();
             }
         });
