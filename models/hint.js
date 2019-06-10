@@ -22,20 +22,20 @@ const HintSchema = new Schema({
    toJSON: {virtuals: true}
 });
 
-HintSchema
-    .virtual('averageRating')
-    .get(function() {
-        var rating = 0;
-        if (this.ratings.length == 0) {
-            rating = 0;
-        }else {
-            this.ratings.map((rate) => {
-                rating += rate
-            });
-            rating = rating / this.ratings.length
-        }
-        return rating;
-    })
+// HintSchema
+//     .virtual('averageRating')
+//     .get(function() {
+//         var rating = 0;
+//         if (this.ratings.length == 0) {
+//             rating = 0;
+//         }else {
+//             this.ratings.map((rate) => {
+//                 rating += rate
+//             });
+//             rating = rating / this.ratings.length
+//         }
+//         return rating;
+//     })
 
 
 module.exports = mongoose.model('Hint', HintSchema);
