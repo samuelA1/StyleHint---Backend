@@ -4,7 +4,7 @@ const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
 //get hint based on criteria
-router.get('/get-hints',checkJwt, (req, res) => {
+router.post('/get-hints',checkJwt, (req, res) => {
     
     const perPage = 20;
     const page = req.query.page;
