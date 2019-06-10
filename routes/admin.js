@@ -24,7 +24,7 @@ router.post('/add-hint', isAdmin, (req, res) => {
         if (fields.do) hint.do = fields.do;
         if (fields.dont) hint.dont = fields.dont;
         if (fields.gender) hint.gender = fields.gender;
-        console.log(files.image)
+        console.log(files)
         // if (fields.size) {
         //     fields.size.split(',').forEach(element => {
         //         hint.size.push(element);
