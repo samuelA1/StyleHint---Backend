@@ -55,7 +55,7 @@ router.post('/add-hint', isAdmin, (req, res) => {
                 hint.save();
 
                 res.json({
-                    succes: true,
+                    success: true,
                     message: 'Hint successfully added'
                 });
             }
