@@ -13,7 +13,7 @@ router.post('/add-hint', isAdmin, (req, res) => {
     let hint = new Hint();
 
     // if (err) return err;
-    console.log(req.body)
+    console.log(req.body.season)
 
     // hint.owner = req.decoded.user._id;
     // if (req.body.overview) hint.overview = req.body.overview;
