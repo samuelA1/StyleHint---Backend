@@ -24,44 +24,43 @@ router.post('/add-hint', isAdmin, (req, res) => {
         if (fields.do) hint.do = fields.do;
         if (fields.dont) hint.dont = fields.dont;
         if (fields.gender) hint.gender = fields.gender;
-        if (fields.size) {
-            fields.size.split(',').forEach(element => {
-                hint.size.push(element);
-            });
-        }
-        if (fields.interest) {
-            fields.interest.split(',').forEach(element => {
-                hint.interest.push(element);
-            });
-        }
-        if (fields.weather) {
-            fields.weather.split(',').forEach(element => {
-                hint.weather.push(element);
-            });
-        }
-        if (fields.season) {
-            fields.season.split(',').forEach(element => {
-                hint.season.push(element);
-            });
-        }
-        if (fields.occasion) {
-            fields.occasion.split(',').forEach(element => {
-                hint.occasion.push(element);
-            });
-        }
-        cloudinary.uploader.upload(files.image, function(error, result) {
-            if (error.url) {
-                console.log(files.image)
-                hint.url = error.secure_url;
-                hint.save();
-            }
-        });
-        
+        console.log(files.image)
+        // if (fields.size) {
+        //     fields.size.split(',').forEach(element => {
+        //         hint.size.push(element);
+        //     });
+        // }
+        // if (fields.interest) {
+        //     fields.interest.split(',').forEach(element => {
+        //         hint.interest.push(element);
+        //     });
+        // }
+        // if (fields.weather) {
+        //     fields.weather.split(',').forEach(element => {
+        //         hint.weather.push(element);
+        //     });
+        // }
+        // if (fields.season) {
+        //     fields.season.split(',').forEach(element => {
+        //         hint.season.push(element);
+        //     });
+        // }
+        // if (fields.occasion) {
+        //     fields.occasion.split(',').forEach(element => {
+        //         hint.occasion.push(element);
+        //     });
+        // }
+        // cloudinary.uploader.upload(files.image, function(error, result) {
+        //     if (error.url) {
+        //         hint.url = error.secure_url;
+        //         hint.save();
 
-        res.json({
-            succes: true,
-            message: 'Hint successfully added'
-        });
+        //         res.json({
+        //             succes: true,
+        //             message: 'Hint successfully added'
+        //         });
+        //     }
+        // });
     });
     
 });
