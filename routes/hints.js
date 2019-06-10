@@ -25,7 +25,7 @@ router.post('/get-hints',checkJwt, (req, res) => {
                   {season: req.body.season}, {occasion: req.body.occasion}]})
             .limit(perPage)
             .skip(page * perPage)
-            // .sort({releaseDate: -1})
+            .sort({averageRating: -1})
             .exec((err, hints) => {
                 callback(err, hints)
             });
