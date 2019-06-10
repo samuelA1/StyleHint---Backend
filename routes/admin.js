@@ -12,7 +12,7 @@ cloudinary.config({
 router.post('/add-hint', isAdmin, (req, res) => {
     let hint = new Hint();
 
-    if (err) return err;
+    // if (err) return err;
     console.log(req.body)
 
     // hint.owner = req.decoded.user._id;
