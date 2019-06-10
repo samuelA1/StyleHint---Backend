@@ -25,7 +25,7 @@ router.post('/get-hints',checkJwt, (req, res) => {
                   {season: req.body.season}, {occasion: req.body.occasion}]})
             .limit(perPage)
             .skip(page * perPage)
-            .select(['url'])
+            .select(['_id','url'])
             // .select(['_id','averageRating', 'url', 'overview', 'recommendations', 'alternatives', 'do', 'dont'])
             .sort({averageRating: -1})
             .exec((err, hints) => {
