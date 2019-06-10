@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Hint = require('../models/hint');
 const isAdmin = require('../middleware/is-admin');
 const cloudinary = require('cloudinary');
+const formidable = require('formidable');
 
 cloudinary.config({ 
     cloud_name: 'stylehint', 
@@ -10,50 +11,55 @@ cloudinary.config({
 });
 
 router.post('/add-hint', isAdmin, (req, res) => {
+    let form = new formidable.IncomingForm();
     let hint = new Hint();
 
-    hint.owner = req.decoded.user._id;
-    if (req.body.overview) hint.overview = req.body.overview;
-    if (req.body.recommendations) hint.recommendations = req.body.recommendations;
-    if (req.body.alternatives) hint.alternatives = req.body.alternatives;
-    if (req.body.do) hint.do = req.body.do;
-    if (req.body.dont) hint.dont = req.body.dont;
-    if (req.body.gender) hint.gender = req.body.gender;
-    if (req.body.size) {
-        req.body.size.split(',').forEach(element => {
-            hint.size.push(element);
-        });
-    }
-    if (req.body.interest) {
-        req.body.interest.split(',').forEach(element => {
-            hint.interest.push(element);
-        });
-    }
-    if (req.body.weather) {
-        req.body.weather.split(',').forEach(element => {
-            hint.weather.push(element);
-        });
-    }
-    if (req.body.season) {
-        req.body.season.split(',').forEach(element => {
-            hint.season.push(element);
-        });
-    }
-    if (req.body.occasion) {
-        req.body.occasion.split(',').forEach(element => {
-            hint.occasion.push(element);
-        });
-    }
-    cloudinary.uploader.upload(req.body.image, function(error, result) {
-        if (error.url) {
-            hint.url = error.secure_url;
-            hint.save();
+    form.parse(req, (err, fields, files) => {
+        if (err) return err;
 
-            res.json({
-                success: true,
-                message: 'Hint successfully added'
+        hint.owner = req.decoded.user._id;
+        if (fields.overview) hint.overview = fields.overview;
+        if (fields.recommendations) hint.recommendations = fields.recommendations;
+        if (fields.alternatives) hint.alternatives = fields.alternatives;
+        if (fields.do) hint.do = fields.do;
+        if (fields.dont) hint.dont = fields.dont;
+        if (fields.gender) hint.gender = fields.gender;
+        if (fields.size) {
+            fields.size.split(',').forEach(element => {
+                hint.size.push(element);
             });
         }
+        if (fields.interest) {
+            fields.interest.split(',').forEach(element => {
+                hint.interest.push(element);
+            });
+        }
+        if (fields.weather) {
+            fields.weather.split(',').forEach(element => {
+                hint.weather.push(element);
+            });
+        }
+        if (fields.season) {
+            fields.season.split(',').forEach(element => {
+                hint.season.push(element);
+            });
+        }
+        if (fields.occasion) {
+            fields.occasion.split(',').forEach(element => {
+                hint.occasion.push(element);
+            });
+        }
+        cloudinary.uploader.upload(fields.image, function(error, result) {
+            if (error.url) {
+                hint.url = error.secure_url;
+                hint.save();
+
+                res.json({
+                    success: true,
+                    message: 'Hint successfully added'
+                });
+            }
+        });
     });
     
 });
