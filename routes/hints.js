@@ -53,9 +53,20 @@ router.get('/get-single-hint/:id', checkJwt, (req, res) => {
     .exec((err, hint) => {
         if (err) return err;
 
+        var rating = 0;
+        if (hint.ratings == null) {
+            rating = 0;
+        }else {
+            hint.ratings.map((rate) => {
+                rating += rate
+            });
+            rating = rating / hint.ratings.length
+        }
+        
         res.json({
             success: true,
-            hint: hint
+            hint: hint,
+            averageRating: rating
         });
     });
 });

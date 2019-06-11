@@ -17,25 +17,6 @@ const HintSchema = new Schema({
    occasion: [{type: String, lowercase: true}],
    ratings: [{type: Number, default: 0}],
    country: {type: String, lowercase: true}
-}, {
-   toObject: {virtuals: true},
-   toJSON: {virtuals: true}
 });
-
-HintSchema
-    .virtual('averageRating')
-    .get(function() {
-        var rating = 0;
-      //   if (this.ratings == null) {
-      //       rating = 0;
-      //   }else {
-            this.ratings.map((rate) => {
-                rating += rate
-            });
-            rating = rating / this.ratings.length
-      //   }
-        return rating;
-    })
-
 
 module.exports = mongoose.model('Hint', HintSchema);
