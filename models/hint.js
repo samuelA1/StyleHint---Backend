@@ -26,14 +26,14 @@ HintSchema
     .virtual('averageRating')
     .get(function() {
         var rating = 0;
-        if (this.ratings == null) {
-            rating = 0;
-        }else {
+      //   if (this.ratings == null) {
+      //       rating = 0;
+      //   }else {
             this.ratings.map((rate) => {
                 rating += rate
             });
             rating = rating / this.ratings.length
-        }
+      //   }
         return rating;
     })
 

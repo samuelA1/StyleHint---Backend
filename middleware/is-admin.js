@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
 
     if (!token) {
         res.status(403).json({
-            sucess: false,
+            success: false,
             message: 'No token provided. Login and try again'
         });
     } else {
@@ -17,7 +17,7 @@ module.exports = function (req, res, next) {
                 next();
             } else {
                 res.status(403).json({
-                    sucess: false,
+                    success: false,
                     message: 'Sorry, you must be an administrator to access this data'
                 })
             }

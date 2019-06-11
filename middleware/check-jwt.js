@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
 
     if (!token) {
         res.status(403).json({
-            sucess: false,
+            success: false,
             message: 'No token provided. Login and try again'
         });
     } else {
