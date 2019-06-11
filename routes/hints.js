@@ -26,7 +26,6 @@ router.post('/get-hints',checkJwt, (req, res) => {
             .limit(perPage)
             .skip(page * perPage)
             .select(['_id','url'])
-            // .select(['_id','averageRating', 'url', 'overview', 'recommendations', 'alternatives', 'do', 'dont'])
             .sort({averageRating: -1})
             .exec((err, hints) => {
                 callback(err, hints)
@@ -48,8 +47,17 @@ router.post('/get-hints',checkJwt, (req, res) => {
 });
 
 //get a single hint
-router.get('/get-single-hint', checkJwt, (req, res) => {
+router.get('/get-single-hint/:id', checkJwt, (req, res) => {
+    Hint.findById(req.params.id)
+    .select(['_id','averageRating', 'url', 'overview', 'recommendations', 'alternatives', 'do', 'dont'])
+    .exec((err, hint) => {
+        if (err) return err;
 
-})
+        res.json({
+            success: true,
+            hint: hint
+        });
+    });
+});
 
 module.exports = router;
