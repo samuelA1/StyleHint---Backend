@@ -26,7 +26,7 @@ HintSchema
     .virtual('averageRating')
     .get(function() {
         var rating = 0;
-        if (this.ratings.length == 0 ||this.ratings == null) {
+        if (this.ratings == null) {
             rating = 0;
         }else {
             this.ratings.map((rate) => {
