@@ -60,4 +60,17 @@ router.get('/get-single-hint/:id', checkJwt, (req, res) => {
     });
 });
 
+//add rating
+router.post('/add-rating/:id', checkJwt, (req, res) => {
+    Hint.findById(req.params.id, (err, hint) => {
+        if (err) return err;
+
+        hint.ratings.push(req.body.rating);
+        hint.save();
+        res.json({
+            success: true
+        });
+    });
+});
+
 module.exports = router;

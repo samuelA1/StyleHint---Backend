@@ -18,7 +18,7 @@ module.exports = function (req, res, next) {
             } else {
                 res.status(403).json({
                     sucess: false,
-                    message: 'Sorry, yoou must be an administrator to access this data'
+                    message: 'Sorry, you must be an administrator to access this data'
                 })
             }
 
