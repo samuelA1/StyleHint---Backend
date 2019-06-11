@@ -49,7 +49,7 @@ router.post('/get-hints',checkJwt, (req, res) => {
 //get a single hint
 router.get('/get-single-hint/:id', checkJwt, (req, res) => {
     Hint.findById(req.params.id)
-    .select(['_id','averageRating', 'url', 'overview', 'recommendations', 'alternatives', 'do', 'dont'])
+    .select(['_id','ratings','averageRating', 'url', 'overview', 'recommendations', 'alternatives', 'do', 'dont'])
     .exec((err, hint) => {
         if (err) return err;
 
