@@ -49,24 +49,27 @@ router.post('/get-hints',checkJwt, (req, res) => {
 //get a single hint
 router.get('/get-single-hint/:id', checkJwt, (req, res) => {
     Hint.findById(req.params.id)
-    .select(['_id', 'ratings','averageRating', 'url', 'overview', 'recommendations', 'alternatives', 'do', 'dont'])
+    .select(['_id', 'ratings', 'url', 'overview', 'recommendations', 'alternatives', 'do', 'dont'])
     .exec((err, hint) => {
         if (err) return err;
 
         var rating = 0;
+        var numberOfRatings = 0;
         if (hint.ratings == null) {
             rating = 0;
         }else {
             hint.ratings.map((rate) => {
                 rating += rate
             });
-            rating = rating / hint.ratings.length
+            rating = rating / hint.ratings.length;
+            numberOfRatings = hint.ratings.length;
         }
         
         res.json({
             success: true,
             hint: hint,
-            averageRating: Math.round(rating)
+            averageRating: Math.round(rating),
+            numberOfRatings: numberOfRatings
         });
     });
 });
