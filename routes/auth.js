@@ -7,7 +7,7 @@ const async = require('async');
 
 //login route
 router.post('/login', (req, res) => {
-    User.findOne({email: req.body.email})
+    User.findOne({$or: [{ email: req.body.email }, { username: req.body.username }]})
     .select(['-friends'])
     .exec((err, userExist) => {
         if (err) return err;
