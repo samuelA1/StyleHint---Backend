@@ -4,7 +4,9 @@ const User = require('../models/user');
 
 //route to customize size, gender and interest
 router.post('/customize', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id, (err, userWithId) => {
+    User.findById(req.decoded.user._id)
+    .select(['-friends'])
+    .exec((err, userWithId) => {
         if (err) return err;
 
         if (req.body.size) userWithId.size = req.body.size;

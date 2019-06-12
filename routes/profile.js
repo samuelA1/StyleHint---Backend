@@ -20,7 +20,9 @@ router.post('/email', checkJwt, (req, res) => {
                     message: 'Sorry, a user with that email already exist. Please try another email'
                 });
             } else {
-                User.findById(req.decoded.user._id, (err, userWithId) => {
+                User.findById(req.decoded.user._id)
+                .select(['-friends'])
+                .exec((err, userWithId) => {
                     if (err) return err;
             
                     if(req.body.email) userWithId.email = req.body.email;
@@ -54,7 +56,9 @@ router.post('/username', checkJwt, (req, res) => {
                     message: 'Sorry, a user with that username already exist. Please try another username'
                 });
             } else {
-                User.findById(req.decoded.user._id, (err, userWithId) => {
+                User.findById(req.decoded.user._id)
+                .select(['-friends'])
+                .exec((err, userWithId) => {
                     if (err) return err;
             
                     if(req.body.username) userWithId.username = req.body.username;
@@ -72,7 +76,9 @@ router.post('/username', checkJwt, (req, res) => {
 
 //change password
 router.post('/password', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id, (err, userWithId) => {
+    User.findById(req.decoded.user._id)
+    .select(['-friends'])
+    .exec((err, userWithId) => {
         if (err) return err;
 
         let validatePassword = userWithId.comparePassword(req.body.oldPassword);
@@ -96,7 +102,9 @@ router.post('/password', checkJwt, (req, res) => {
 
 //change country
 router.post('/country', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id, (err, userWithId) => {
+    User.findById(req.decoded.user._id)
+    .select(['-friends'])
+    .exec( (err, userWithId) => {
         if (err) return err;
 
         if(req.body.country) userWithId.country = req.body.country;
@@ -111,7 +119,9 @@ router.post('/country', checkJwt, (req, res) => {
 
 //change gender
 router.post('/gender', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id, (err, userWithId) => {
+    User.findById(req.decoded.user._id)
+    .select(['-friends'])
+    .exec((err, userWithId) => {
         if (err) return err;
 
         if(req.body.gender) userWithId.gender = req.body.gender;
@@ -126,7 +136,9 @@ router.post('/gender', checkJwt, (req, res) => {
 
 //change interest
 router.post('/interest', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id, (err, userWithId) => {
+    User.findById(req.decoded.user._id)
+    .select(['-friends'])
+    .exec( (err, userWithId) => {
         if (err) return err;
 
         if(req.body.interest) userWithId.interest = req.body.interest;
@@ -141,7 +153,9 @@ router.post('/interest', checkJwt, (req, res) => {
 
 //change size
 router.post('/size', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id, (err, userWithId) => {
+    User.findById(req.decoded.user._id)
+    .select(['-friends'])
+    .exec((err, userWithId) => {
         if (err) return err;
 
         if(req.body.size) userWithId.size = req.body.size;
