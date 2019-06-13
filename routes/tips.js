@@ -3,6 +3,7 @@ const Tip = require('../models/tip');
 const User = require('../models/user');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
+const auto = require('./auto-delete');
 
 //add tip
 router.post('/add-tip/:id', checkJwt, (req, res) => {
@@ -54,6 +55,8 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
         
                 if (tip.owner == req.decoded.user._id) {
                     //call auto delete
+                    const wow = auto(req.params.id);
+                    console.log(wow);
                     Tip.findByIdAndDelete(req.params.id, (err) => {
                         if (err) return err;
 
@@ -81,27 +84,27 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
 });
 
 //auto delete tip
-router.post('/auto-delete/:id', (req, res) => {
-    async.waterfall([
-        function (callback) {
-            Tip.findById(req.params.id, (err, tip) => {
-                if (err) return err;
+// router.post('/auto-delete/:id', (req, res) => {
+//     async.waterfall([
+//         function (callback) {
+//             Tip.findById(req.params.id, (err, tip) => {
+//                 if (err) return err;
 
-                callback(err, tip);
-            });
-        },
-        function(tip) {
-            tip.usersToSee.forEach(userId => {
-                User.findById(userId, (err, userGotten) => {
-                    if (err) return err;
+//                 callback(err, tip);
+//             });
+//         },
+//         function(tip) {
+//             tip.usersToSee.forEach(userId => {
+//                 User.findById(userId, (err, userGotten) => {
+//                     if (err) return err;
 
-                    const tipToRemove = userGotten.tips.indexOf(req.params.id)
-                    userGotten.tips.splice(tipToRemove, 1);
-                    userGotten.save();
-                    res.json({success: true})
-                });
-            });
-        }
-    ]);
-});
+//                     const tipToRemove = userGotten.tips.indexOf(req.params.id)
+//                     userGotten.tips.splice(tipToRemove, 1);
+//                     userGotten.save();
+//                     res.json({success: true})
+//                 });
+//             });
+//         }
+//     ]);
+// });
 module.exports = router;
