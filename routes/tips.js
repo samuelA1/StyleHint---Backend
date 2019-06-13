@@ -51,6 +51,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
             });
         },
         function (user) {
+            console.log(user)
             if (user['tips'].length !== 0) {
                         user['tips'].forEach(tip => {
                             Tip.findById(tip, (err, tipsGotten) => {
@@ -76,33 +77,6 @@ router.get('/get-tips', checkJwt, (req, res) => {
             })
         }
     ])
-    // User.findById(req.decoded.user._id, (err, user) => {
-    //     if (err) return err;
-
-    //     if (user['tips'].length !== 0) {
-    //         user['tips'].forEach(tip => {
-    //             Tip.findById(tip, (err, tipsGotten) => {
-    //                 if (err) return err;
-
-    //                 sharedTips.push(tipsGotten);
-    //             });
-    //         });
-    //     }
-    //     if (user['myTips'].length !== 0) {
-    //         user['myTips'].forEach(tip => {
-    //             Tip.findById(tip, (err, tipsGotten) => {
-    //                 if (err) return err;
-
-    //                 myTips.push(tipsGotten);
-    //             });
-    //         });
-    //     }
-    //     res.json({
-    //         success: true,
-    //         sharedTips: sharedTips,
-    //         myTips: myTips
-    //     })
-    // });
 });
 //add comment to tip
 router.post('/add-comment/:id', checkJwt, (req, res) => {
