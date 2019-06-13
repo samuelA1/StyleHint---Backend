@@ -15,7 +15,8 @@ router.post('/add-tip', checkJwt, (req, res) => {
         tip.hintId = req.body.hintId;
         const friends = req.body.friends;
         console.log(friends)
-        friends.forEach(friendId => {
+        for (let i = 0; i < friends.length; i++) {
+            const friendId = friends[i];
             User.findById(friendId, (err, friend) => {
                 if (err) return err;
 
@@ -23,7 +24,17 @@ router.post('/add-tip', checkJwt, (req, res) => {
                 friend.save();
             });
             tip.usersToSee.push(friendId);
-        });
+            
+        }
+        // friends.forEach(friendId => {
+        //     User.findById(friendId, (err, friend) => {
+        //         if (err) return err;
+
+        //         friend.tips.push(tip._id);
+        //         friend.save();
+        //     });
+        //     tip.usersToSee.push(friendId);
+        // });
         userSendingTip.myTips.push(tip._id);
 
         tip.save();
