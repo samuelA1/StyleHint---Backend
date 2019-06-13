@@ -86,15 +86,20 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
 
 //auto delete tip
 router.post('/auto-delete/:id', (req, res) => {
-    async.waterfall([
-        function (callback) {
-            Tip.findById(req.params.id, (err, tip) => {
-                if (err) return err;
+    Tip.findById(req.params.id, (err, tip) => {
+        if (err) return err;
 
-                callback(err, tip);
-            });
-        },
-        function(tip) {
+        res.json({success: true,  tip: tip})
+    });
+    // async.waterfall([
+    //     function (callback) {
+    //         Tip.findById(req.params.id, (err, tip) => {
+    //             if (err) return err;
+
+    //             callback(err, tip);
+    //         });
+    //     },
+        // function(tip) {
             // tip.usersToSee.forEach(userId => {
             //     User.findById(userId, (err, userGotten) => {
             //         if (err) return err;
@@ -105,10 +110,10 @@ router.post('/auto-delete/:id', (req, res) => {
             //         res.json({success: true})
             //     });
             // });
-            res.json({success: true,
-            tip: tip})
+    //         res.json({success: true,
+    //         tip: tip})
 
-        }
-    ]);
+    //     }
+    // ]);
 });
 module.exports = router;
