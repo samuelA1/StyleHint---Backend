@@ -40,8 +40,8 @@ router.post('/add-tip', checkJwt, (req, res) => {
 
 //get tips
 router.get('/get-tips', checkJwt, (req, res) => {
-    const sharedTips = [];
-    const myTips = [];
+    var sharedTips = [];
+    var myTips = [];
     async.waterfall([
         function (callback) {
             User.findById(req.decoded.user._id, (err, user) => {
@@ -54,21 +54,21 @@ router.get('/get-tips', checkJwt, (req, res) => {
             console.log(user)
             if (user['tips'] !== null) {
                         user['tips'].forEach(tip => {
-                            console.log(tip)
                             Tip.findById(tip, (err, tipsGotten) => {
                                 if (err) return err;
             
                                 sharedTips.push(tipsGotten);
+                                console.log(tipGotten)
                             });
                         });
             }
             if (user['myTips'] !== null) {
                 user['myTips'].forEach(tip => {
-                    console.log(tip)
                     Tip.findById(tip, (err, tipsGotten) => {
                         if (err) return err;
     
                         myTips.push(tipsGotten);
+                        console.log(tipGotten)
                     });
                 });
             }
