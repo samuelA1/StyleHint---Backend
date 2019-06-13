@@ -51,7 +51,6 @@ router.get('/get-tips', checkJwt, (req, res) => {
             });
         },
         function (user) {
-            console.log(user)
             if (user['tips'] !== null) {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
@@ -59,7 +58,6 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         sharedTips.push(tipsGotten);
-                        console.log(tipsGotten)
                     });
                 }
             }
@@ -70,8 +68,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                     Tip.findById(tip, (err, tipsGotten) => {
                         if (err) return err;
     
-                        sharedTips.push(tipsGotten);
-                        console.log(tipsGotten)
+                        myTips.push(tipsGotten);
                     });
                 }
             }
