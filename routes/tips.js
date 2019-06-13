@@ -14,6 +14,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
         tip.imageUrl = req.body.imageUrl;
         tip.hintId = req.body.hintId;
         const friends = req.body.friends;
+        console.log(friends)
         for (let i = 0; i < friends.length; i++) {
             const friendId = friends[i];
             console.log(friendId)
