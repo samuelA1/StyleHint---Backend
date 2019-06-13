@@ -54,7 +54,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                 if (err) return err;
         
                 if (tip.owner == req.decoded.user._id) {
-                    fetch(`http://www.thestylehint.com/api/tips/auto-delete/${req.params.id}`, { method: 'post',
+                    fetch(`http://www.thestylehint.com/api/tips/auto-delete/${req.params.id}`, {
                 headers: {"Content-type": "application/json",
                 "Accept": "application/json",
                 "Accept-Charset": "utf-8"} }).then(res => res.json())
@@ -74,6 +74,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                 } else {
                     const tipToRemove = user.tips.indexOf(req.params.id)
                     user.tips.splice(tipToRemove, 1);
+                    user.save();
                     res.json({
                         success: true,
                         message: 'Tip deleted'
@@ -85,35 +86,27 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
 });
 
 //auto delete tip
-router.post('/auto-delete/:id', (req, res) => {
-    Tip.findById(req.params.id, (err, tip) => {
-        if (err) return err;
+router.get('/auto-delete/:id', (req, res) => {
+    async.waterfall([
+        function (callback) {
+            Tip.findById(req.params.id, (err, tip) => {
+                if (err) return err;
 
-        res.json({success: true,  tip: tip})
-    });
-    // async.waterfall([
-    //     function (callback) {
-    //         Tip.findById(req.params.id, (err, tip) => {
-    //             if (err) return err;
+                callback(err, tip);
+            });
+        },
+        function(tip) {
+            tip.usersToSee.forEach(userId => {
+                User.findById(userId, (err, userGotten) => {
+                    if (err) return err;
 
-    //             callback(err, tip);
-    //         });
-    //     },
-        // function(tip) {
-            // tip.usersToSee.forEach(userId => {
-            //     User.findById(userId, (err, userGotten) => {
-            //         if (err) return err;
-
-            //         const tipToRemove = userGotten.tips.indexOf(req.params.id)
-            //         userGotten.tips.splice(tipToRemove, 1);
-            //         userGotten.save();
-            //         res.json({success: true})
-            //     });
-            // });
-    //         res.json({success: true,
-    //         tip: tip})
-
-    //     }
-    // ]);
+                    const tipToRemove = userGotten.tips.indexOf(req.params.id)
+                    userGotten.tips.splice(tipToRemove, 1);
+                    userGotten.save();
+                    res.json({success: true})
+                });
+            });
+        }
+    ]);
 });
 module.exports = router;
