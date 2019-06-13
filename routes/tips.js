@@ -26,6 +26,14 @@ router.post('/add-tip', checkJwt, (req, res) => {
             tip.usersToSee.push(friendId);
             
         }
+        userSendingTip.myTips.push(tip._id);
+
+        tip.save();
+        userSendingTip.save();
+        res.json({
+            success: true,
+            message: 'Tip sent'
+        })
         // friends.forEach(friendId => {
         //     User.findById(friendId, (err, friend) => {
         //         if (err) return err;
@@ -35,14 +43,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
         //     });
         //     tip.usersToSee.push(friendId);
         // });
-        userSendingTip.myTips.push(tip._id);
-
-        tip.save();
-        userSendingTip.save();
-        res.json({
-            success: true,
-            message: 'Tip sent'
-        })
+        
     });
     // async.waterfall([
     //     function (callback) {
