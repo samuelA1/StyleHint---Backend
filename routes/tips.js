@@ -98,6 +98,7 @@ router.post('/auto-delete/:id', (req, res) => {
 
                     const tipToRemove = userGotten.ttips.indexOf(req.params.id)
                     userGotten.tips.splice(tipToRemove, 1);
+                    userGotten.save();
                     res.json({success: true})
                 });
             });
