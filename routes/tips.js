@@ -52,7 +52,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
         },
         function (user) {
             console.log(user)
-            if (user['tips'].length !== 0) {
+            if (user['tips']) {
                         user['tips'].forEach(tip => {
                             Tip.findById(tip, (err, tipsGotten) => {
                                 if (err) return err;
@@ -61,7 +61,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                             });
                         });
             }
-            if (user['myTips'].length !== 0) {
+            if (user['myTips']) {
                 user['myTips'].forEach(tip => {
                     Tip.findById(tip, (err, tipsGotten) => {
                         if (err) return err;
