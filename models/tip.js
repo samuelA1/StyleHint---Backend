@@ -9,7 +9,7 @@ const TipSchema = new Schema({
    comments: [{
        commenter: String,
        comment: String,
-       commenteddAt:{type: Date, default: Date.now}
+       commentedAt:{type: Date, default: Date.now}
    }],
    createdAt: {type: Date, default: Date.now}
 });

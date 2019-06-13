@@ -5,33 +5,87 @@ const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
 //add tip
-router.post('/add-tip/:id', checkJwt, (req, res) => {
+router.post('/add-tip', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, userSendingTip) => {
+        if (err) return err;
+
+        let tip = new Tip();
+        tip.owner = req.decoded.user._id;
+        tip.imageUrl = req.body.imageUrl;
+        tip.hintId = req.body.hintId;
+        req.body.friends.forEach(friendId => {
+            User.findById(friendId, (err, friend) => {
+                if (err) return err;
+
+                friend.tips.push(tip._id);
+                friend.save();
+            });
+            tip.usersToSee.push(friendId);
+        });
+        userSendingTip.myTips.push(tip._id);
+
+        tip.save();
+        userSendingTip.save();
+        res.json({
+            success: true,
+            message: 'Tip sent'
+        })
+    });
+    // async.waterfall([
+    //     function (callback) {
+    //         User.findById(req.params.id, (err, userToGetTip) => {
+    //             if (err) return err;
+
+    //             callback(err, userToGetTip);
+    //         });
+    //     },
+    //     function (userToGetTip) {
+    //         User.findById(req.decoded.user._id, (err, userSendingTip) => {
+    //             if (err) return err;
+
+    //             let tip = new Tip();
+    //             tip.owner = req.decoded.user._id;
+    //             tip.imageUrl = req.body.imageUrl;
+    //             tip.hintId = req.body.hintId;
+    //             tip.usersToSee.push(req.params.id)
+    //             userToGetTip.tips.push(tip._id);
+    //             userSendingTip.myTips.push(tip._id);
+
+    //             tip.save();
+    //             userToGetTip.save();
+    //             userSendingTip.save();
+    //             res.json({
+    //                 success: true,
+    //                 message: 'Tip sent'
+    //             })
+    //         });
+    //     }
+    // ]);
+});
+
+//add comment to tip
+router.post('/add-comment/:id', checkJwt, (req, res) => {
     async.waterfall([
         function (callback) {
-            User.findById(req.params.id, (err, userToGetTip) => {
+            User.findById(req.decoded.user._id, (err, user) => {
                 if (err) return err;
 
-                callback(err, userToGetTip);
+                callback(err, user);
             });
         },
-        function (userToGetTip) {
-            User.findById(req.decoded.user._id, (err, userSendingTip) => {
+        function (user) {
+            Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
-
-                let tip = new Tip();
-                tip.owner = req.decoded.user._id;
-                tip.imageUrl = req.body.imageUrl;
-                tip.hintId = req.body.hintId;
-                tip.usersToSee.push(req.params.id)
-                userToGetTip.tips.push(tip._id);
-                userSendingTip.myTips.push(tip._id);
-
+        
+                let comment = {
+                    commenter: user['username'],
+                    comment: req.body.comment
+                }
+                tip.comments.push(comment);
                 tip.save();
-                userToGetTip.save();
-                userSendingTip.save();
                 res.json({
                     success: true,
-                    message: 'Tip sent'
+                    message: 'Comment added'
                 })
             });
         }
