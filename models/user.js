@@ -11,6 +11,8 @@ const UserSchema = new Schema({
     size: {type: String, lowercase: true},
     interest: {type: String, lowercase: true},
     isAdmin: {type: Boolean, default: false},
+    tips: [{type: Schema.Types.ObjectId, ref: 'Tip'}],
+    myTips: [{type: Schema.Types.ObjectId, ref: 'Tip'}],
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
     createdAt: {type: Date, default: Date.now}
 });
