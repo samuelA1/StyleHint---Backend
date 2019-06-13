@@ -1,6 +1,4 @@
-const express = require('express');
-const app = express();
-const router = express.Router();
+const router = require('express').Router();
 const Tip = require('../models/tip');
 const User = require('../models/user');
 const checkJwt = require('../middleware/check-jwt');
@@ -56,8 +54,6 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
         
                 if (tip.owner == req.decoded.user._id) {
                     //call auto delete
-                    ;
-
                     Tip.findByIdAndDelete(req.params.id, (err) => {
                         if (err) return err;
 
@@ -69,9 +65,6 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                             success: true,
                             message: 'Tip deleted'
                         });
-                        req.url = `/api/tips/auto-delete/${req.params.id}`
-                        req.method = 'POST'
-                        return app._router.handle(req, res, next)
                     });
                 } else {
                     const tipToRemove = user.tips.indexOf(req.params.id)
