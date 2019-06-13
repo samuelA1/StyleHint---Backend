@@ -1,9 +1,10 @@
-const router = require('express').Router();
+const express = require('express');
+const app = express();
+const router = express.Router();
 const Tip = require('../models/tip');
 const User = require('../models/user');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
-const fetch = require('node-fetch');
 
 //add tip
 router.post('/add-tip/:id', checkJwt, (req, res) => {
@@ -54,11 +55,9 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                 if (err) return err;
         
                 if (tip.owner == req.decoded.user._id) {
-                    fetch(`http://www.thestylehint.com/api/tips/auto-delete/${req.params.id}`, {
-                headers: {"Content-type": "application/json",
-                "Accept": "application/json",
-                "Accept-Charset": "utf-8"} }).then(res => res.json())
-                        .then(json => console.log(json));
+                    //call auto delete
+                    ;
+
                     Tip.findByIdAndDelete(req.params.id, (err) => {
                         if (err) return err;
 
@@ -70,6 +69,9 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                             success: true,
                             message: 'Tip deleted'
                         });
+                        req.url = `/api/tips/auto-delete/${req.params.id}`
+                        req.method = 'POST'
+                        return app._router.handle(req, res, next)
                     });
                 } else {
                     const tipToRemove = user.tips.indexOf(req.params.id)
@@ -86,7 +88,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
 });
 
 //auto delete tip
-router.get('/auto-delete/:id', (req, res) => {
+router.post('/auto-delete/:id', (req, res) => {
     async.waterfall([
         function (callback) {
             Tip.findById(req.params.id, (err, tip) => {
