@@ -14,7 +14,6 @@ router.post('/add-tip', checkJwt, (req, res) => {
         tip.imageUrl = req.body.imageUrl;
         tip.hintId = req.body.hintId;
         const friends = req.body.friends;
-        // console.log(friends)
         for (let i = 0; i < friends.length; i++) {
             const friendId = friends[i];
             console.log(friendId)
@@ -28,54 +27,14 @@ router.post('/add-tip', checkJwt, (req, res) => {
             
         }
         userSendingTip.myTips.push(tip._id);
-
         tip.save();
         userSendingTip.save();
         res.json({
             success: true,
             message: 'Tip sent'
         })
-        // friends.forEach(friendId => {
-        //     User.findById(friendId, (err, friend) => {
-        //         if (err) return err;
-
-        //         friend.tips.push(tip._id);
-        //         friend.save();
-        //     });
-        //     tip.usersToSee.push(friendId);
-        // });
         
     });
-    // async.waterfall([
-    //     function (callback) {
-    //         User.findById(req.params.id, (err, userToGetTip) => {
-    //             if (err) return err;
-
-    //             callback(err, userToGetTip);
-    //         });
-    //     },
-    //     function (userToGetTip) {
-    //         User.findById(req.decoded.user._id, (err, userSendingTip) => {
-    //             if (err) return err;
-
-    //             let tip = new Tip();
-    //             tip.owner = req.decoded.user._id;
-    //             tip.imageUrl = req.body.imageUrl;
-    //             tip.hintId = req.body.hintId;
-    //             tip.usersToSee.push(req.params.id)
-    //             userToGetTip.tips.push(tip._id);
-    //             userSendingTip.myTips.push(tip._id);
-
-    //             tip.save();
-    //             userToGetTip.save();
-    //             userSendingTip.save();
-    //             res.json({
-    //                 success: true,
-    //                 message: 'Tip sent'
-    //             })
-    //         });
-    //     }
-    // ]);
 });
 
 //add comment to tip
