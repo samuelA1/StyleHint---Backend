@@ -59,7 +59,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         sharedTips.push(tipsGotten);
-                        console.log(tipGotten)
+                        console.log(tipsGotten)
                     });
                 }
             }
@@ -71,7 +71,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         sharedTips.push(tipsGotten);
-                        // console.log(tipGotten)
+                        console.log(tipsGotten)
                     });
                 }
             }
