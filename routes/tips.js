@@ -17,13 +17,13 @@ router.post('/add-tip', checkJwt, (req, res) => {
         console.log(friends)
         for (let i = 0; i < friends.length; i++) {
             const friendId = friends[i];
+            tip.usersToSee.push(friendId);
             User.findById(friendId, (err, friend) => {
                 if (err) return err;
 
                 friend.tips.push(tip._id);
                 friend.save();
             });
-            tip.usersToSee.push(friendId);
             
         }
         userSendingTip.myTips.push(tip._id);
