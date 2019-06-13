@@ -5,9 +5,10 @@ const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
 //auto delete tip
-module.exports = function (id) {
-    router.post('/auto-delete', (req, res) => {
-        res.json({success: true})
+module.exports = function (req, res, next,  id) {
+    res.json({success: true})
+    // router.post('/auto-delete', (req, res) => {
+        
         // async.waterfall([
         //     function (callback) {
         //         Tip.findById(id, (err, tip) => {
@@ -29,5 +30,5 @@ module.exports = function (id) {
         //         });
         //     }
         // ]);
-    });   
+    // });   
 }
