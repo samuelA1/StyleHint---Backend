@@ -83,32 +83,26 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
 
 //auto delete tip
 router.post('/auto-delete/:id', (req, res) => {
-    Tip.findById(req.params.id, (err, tip) => {
-        if (err) return err;
+    async.waterfall([
+        function (callback) {
+            Tip.findById(req.params.id, (err, tip) => {
+                if (err) return err;
 
-        console.log(tip)
-    });
-    // async.waterfall([
-    //     function (callback) {
-    //         Tip.findById(req.params.id, (err, tip) => {
-    //             if (err) return err;
+                callback(err, tip);
+            });
+        },
+        function(tip) {
+            tip.usersToSee.forEach(userId => {
+                User.findById(userId, (err, userGotten) => {
+                    if (err) return err;
 
-    //             callback(err, tip);
-    //         });
-    //     },
-    //     function(tip) {
-    //         console.log(tip)
-    //         tip.usersToSee.forEach(userId => {
-    //             User.findById(userId, (err, userGotten) => {
-    //                 if (err) return err;
-
-    //                 const tipToRemove = userGotten.ttips.indexOf(req.params.id)
-    //                 userGotten.tips.splice(tipToRemove, 1);
-    //                 userGotten.save();
-    //                 res.json({success: true})
-    //             });
-    //         });
-    //     }
-    // ]);
+                    const tipToRemove = userGotten.ttips.indexOf(req.params.id)
+                    userGotten.tips.splice(tipToRemove, 1);
+                    userGotten.save();
+                    res.json({success: true})
+                });
+            });
+        }
+    ]);
 });
 module.exports = router;
