@@ -13,7 +13,9 @@ router.post('/add-tip', checkJwt, (req, res) => {
         tip.owner = req.decoded.user._id;
         tip.imageUrl = req.body.imageUrl;
         tip.hintId = req.body.hintId;
-        req.body.friends.forEach(friendId => {
+        const friends = req.body.friends;
+        console.log(friends)
+        friends.forEach(friendId => {
             User.findById(friendId, (err, friend) => {
                 if (err) return err;
 
