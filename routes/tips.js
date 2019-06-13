@@ -95,16 +95,19 @@ router.post('/auto-delete/:id', (req, res) => {
             });
         },
         function(tip) {
-            tip.usersToSee.forEach(userId => {
-                User.findById(userId, (err, userGotten) => {
-                    if (err) return err;
+            // tip.usersToSee.forEach(userId => {
+            //     User.findById(userId, (err, userGotten) => {
+            //         if (err) return err;
 
-                    const tipToRemove = userGotten.tips.indexOf(req.params.id)
-                    userGotten.tips.splice(tipToRemove, 1);
-                    userGotten.save();
-                    res.json({success: true})
-                });
-            });
+            //         const tipToRemove = userGotten.tips.indexOf(req.params.id)
+            //         userGotten.tips.splice(tipToRemove, 1);
+            //         userGotten.save();
+            //         res.json({success: true})
+            //     });
+            // });
+            res.json({success: true,
+            tip: tip})
+
         }
     ]);
 });
