@@ -53,24 +53,27 @@ router.get('/get-tips', checkJwt, (req, res) => {
         function (user) {
             console.log(user)
             if (user['tips'] !== null) {
-                        user['tips'].forEach(tip => {
-                            Tip.findById(tip, (err, tipsGotten) => {
-                                if (err) return err;
-            
-                                sharedTips.push(tipsGotten);
-                                console.log(tipGotten)
-                            });
-                        });
-            }
-            if (user['myTips'] !== null) {
-                user['myTips'].forEach(tip => {
+                for (let i = 0; i < user['tips'].length; i++) {
+                    const tip = user['tips'][i];
                     Tip.findById(tip, (err, tipsGotten) => {
                         if (err) return err;
     
-                        myTips.push(tipsGotten);
+                        sharedTips.push(tipsGotten);
                         console.log(tipGotten)
                     });
-                });
+                }
+            }
+            
+            if (user['myTips'] !== null) {
+                for (let i = 0; i < user['myTips'].length; i++) {
+                    const tip = user['myTips'][i];
+                    Tip.findById(tip, (err, tipsGotten) => {
+                        if (err) return err;
+    
+                        sharedTips.push(tipsGotten);
+                        console.log(tipGotten)
+                    });
+                }
             }
             res.json({
                 success: true,
