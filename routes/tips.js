@@ -96,7 +96,7 @@ router.post('/auto-delete/:id', (req, res) => {
                 User.findById(userId, (err, userGotten) => {
                     if (err) return err;
 
-                    const tipToRemove = userGotten.ttips.indexOf(req.params.id)
+                    const tipToRemove = userGotten.tips.indexOf(req.params.id)
                     userGotten.tips.splice(tipToRemove, 1);
                     userGotten.save();
                     res.json({success: true})
