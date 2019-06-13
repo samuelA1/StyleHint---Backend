@@ -54,11 +54,12 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                 if (err) return err;
         
                 if (tip.owner == req.decoded.user._id) {
+                    fetch(`http://www.thestylehint.com/api/tips/auto-delete/${req.params.id}`, { method: 'POST' }).then(res => res.json())
+                        .then(json => console.log(json));
                     Tip.findByIdAndDelete(req.params.id, (err) => {
                         if (err) return err;
 
-                        fetch(`http://www.thestylehint.com/api/tips/auto-delete/${req.params.id}`, { method: 'POST' }).then(res => res.json())
-                        .then(json => console.log(json));
+                        
                         const tipToRemove = user.myTips.indexOf(req.params.id)
                         user.myTips.splice(tipToRemove, 1);
                         user.save();
