@@ -58,6 +58,10 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         sharedTips.push(tipsGotten);
+                        res.json({
+                            success: true,
+                            sharedTips: sharedTips
+                        })
                     });
                 }
             }
@@ -71,17 +75,11 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         myTips.push(tipsGotten);
                         res.json({
                             success: true,
-                            // sharedTips: sharedTips,
                             myTips: myTips
                         })
                     });
                 }
             }
-            // res.json({
-            //     success: true,
-            //     sharedTips: sharedTips,
-            //     myTips: myTips
-            // })
         }
     ])
 });
