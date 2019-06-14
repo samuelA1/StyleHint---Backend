@@ -75,8 +75,8 @@ router.get('/get-tips', checkJwt, (req, res) => {
             }
             res.json({
                 success: true,
-                // sharedTips: sharedTips,
-                // myTips: myTips
+                tipsToShare: sharedTips,
+                my: myTips
             })
         }
     ])
