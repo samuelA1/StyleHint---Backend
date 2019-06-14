@@ -57,11 +57,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                     Tip.findById(tip, (err, tipsGotten) => {
                         if (err) return err;
     
-                        sharedTips.push(tipsGotten);
-                        // res.json({
-                        //     success: true,
-                        //     sharedTips: sharedTips
-                        // })
+                        sharedTips = sharedTips.push(tipsGotten);
                     });
                 }
             }
@@ -80,6 +76,10 @@ router.get('/get-tips', checkJwt, (req, res) => {
                     });
                 }
             }
+            res.json({
+                success: true,
+                sharedTips: sharedTips
+            })
         }
     ])
 });
