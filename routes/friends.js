@@ -16,12 +16,14 @@ router.post('/add-friend/:id', checkJwt, (req, res) => {
     });
 });
 
+//remove friend
 router.post('/delete-friend/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, userWithId) => {
         if (err) return err;
 
         const userToRemove = userWithId.friends.indexOf(req.params.id)
         userWithId.friends.splice(userToRemove, 1);
+        userWithId.save();
         res.json({
             success: true,
             message: 'Friend removed'
