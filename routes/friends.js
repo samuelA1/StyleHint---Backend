@@ -16,6 +16,21 @@ router.post('/add-friend/:id', checkJwt, (req, res) => {
     });
 });
 
+//get friends
+router.get('/get-friends', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id)
+    .select(['friends'])
+    .populate('friends')
+    .exec((err, user) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            friends: user['friends']
+        })
+    });;
+});
+
 //remove friend
 router.post('/delete-friend/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, userWithId) => {
