@@ -58,3 +58,5 @@ Model.SyncToAlgolia();
 Model.SetAlgoliaSettings({
   searchableAttributes: ['username']
 });
+
+module.exports = Model;
