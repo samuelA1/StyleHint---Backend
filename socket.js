@@ -4,7 +4,7 @@ module.exports = function (io) {
             console.log(data)
             data.friends.forEach(friend => {
                 friend.join('share');
-                socket.to('share').emit('share-hint', "let's play a game");
+                socket.to('share').emit('share', "let's play a game");
             });
             // io.emit('share', "let's play a game");
         })
