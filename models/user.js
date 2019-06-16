@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
+const algolia = require('mongoose-algolia');
 
 const UserSchema = new Schema({
     username: {type: String, lowercase: true, unique: true, required: true},
@@ -16,6 +17,22 @@ const UserSchema = new Schema({
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
     createdAt: {type: Date, default: Date.now}
 });
+
+UserSchema.plugin(algolia, {
+    appId: 'X1ROWG5RKS',
+    apiKey: '39c62197312b40a371657727f4df78cf',
+    indexName: 'stylehint',
+    selector: '_id username',
+    defaults: {
+      author: 'uknown'
+    },
+    mappings: {
+      username: function(value) {
+        return `${value}`
+      }
+    },
+    debug: true
+  });
 
 UserSchema.pre('save', function (next) {
     const user = this;
@@ -35,4 +52,9 @@ UserSchema.methods.comparePassword = function (password) {
 
 
 
-module.exports = mongoose.model('User', UserSchema);
+UserSchema.plugin(algolia);
+let Model = mongoose.model('User', UserSchema);
+Model.SyncToAlgolia();
+Model.SetAlgoliaSettings({
+  searchableAttributes: ['username']
+});

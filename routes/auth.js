@@ -31,7 +31,7 @@ router.post('/login', (req, res) => {
         } else {
             res.json({
                 success: false,
-                message: 'Authentication failed. Wrong user email'
+                message: 'Authentication failed. Wrong user email or username'
             })
         }
     })
