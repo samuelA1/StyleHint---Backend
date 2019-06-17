@@ -83,7 +83,6 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         sharedTips.push(tipsGotten);
-                        callback(sharedTips)
                     })
                 }
             }
@@ -98,7 +97,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         myTips.push(tipsGotten);
-                        callback(myTips)
+                        callback(shared, myTips)
                     })
                 }
                 
