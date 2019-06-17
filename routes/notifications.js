@@ -4,7 +4,8 @@ const Notification = require('../models/notification');
 const User = require('../models/user');
 const async = require('async');
 
-router.get('/notifiyNumber', checkJwt, (req, res) => {
+//get amount of new notifications
+router.get('/notifyNumber', checkJwt, (req, res) => {
     async.waterfall([
         function (callback) {
             User.findById(req.decoded.user._id)
