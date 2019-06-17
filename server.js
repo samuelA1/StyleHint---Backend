@@ -11,7 +11,7 @@ const adminRoute = require('./routes/admin');
 const hintsRoute = require('./routes/hints');
 const friendsRoute = require('./routes/friends');
 const tipsRoute = require('./routes/tips');
-const notificationsRoute = require('./routes/notification');
+const notificationsRoute = require('./routes/notifications');
 
 mongoose.connect(config.db, {useNewUrlParser: true}, err => {
     err ? console.log('Can not connect to database') : console.log('Connected to database');
