@@ -17,12 +17,10 @@ router.get('/notifyNumber', checkJwt, (req, res) => {
             });
         },
         function (userWithNotify) {
-            console.log(userWithNotify)
             Notification.find({for: req.decoded.user._id}, (err, notification) => {
                 if (err) return err;
 
                 const newNotify = notification.length;
-                console.log(newNotify)
                 res.json({
                     success: true,
                     notifyNumber: newNotify - userWithNotify
