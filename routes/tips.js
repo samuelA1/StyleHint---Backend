@@ -97,16 +97,14 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         myTips.push(tipsGotten);
-                        console.log(myTips);
-                        console.log(sharedTips);
                     })
                 }
                 
             }
             res.json({
                 success: true,
-                myTips: myTips,
-                sharedTips: sharedTips
+                myTips: this.myTips,
+                sharedTips: this.sharedTips
             })
         }
     ])
