@@ -62,8 +62,7 @@ router.get('/get-single-tip/:id', checkJwt, (req, res) => {
 
 //get all tips
 router.get('/get-tips', checkJwt, (req, res) => {
-    let sharedTips = [];
-    let myTips = [];
+    
     async.waterfall([
         function (callback) {
             User.findById(req.decoded.user._id, (err, user) => {
@@ -73,6 +72,8 @@ router.get('/get-tips', checkJwt, (req, res) => {
             });
         },
         function (user) {
+            let sharedTips = [];
+            let myTips = [];
             if (user['tips'] !== null) {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
