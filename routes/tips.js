@@ -105,6 +105,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
             }
         },
         function (sharedTips, myTips) {
+            console.log(sharedTips, myTips)
             res.json({
                 success: true,
                 myTips: myTips,
