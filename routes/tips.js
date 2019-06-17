@@ -5,6 +5,9 @@ const User = require('../models/user');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
+var sharedTips = [];
+var myTips = [];
+
 //add tip
 router.post('/add-tip', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, userSendingTip) => {
@@ -62,7 +65,6 @@ router.get('/get-single-tip/:id', checkJwt, (req, res) => {
 
 //get all tips
 router.get('/get-tips', checkJwt, (req, res) => {
-    
     async.waterfall([
         function (callback) {
             User.findById(req.decoded.user._id, (err, user) => {
@@ -72,8 +74,6 @@ router.get('/get-tips', checkJwt, (req, res) => {
             });
         },
         function (user) {
-            let sharedTips = [];
-            let myTips = [];
             if (user['tips'] !== null) {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
