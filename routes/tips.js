@@ -77,7 +77,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
                     Tip.findById(tip)
-                    .select(['owner', 'imageUrl', 'hintId', '_id'])
+                    // .select(['owner', 'imageUrl', 'hintId', '_id'])
                     .populate('owner')
                     .exec((err, tipsGotten) => {
                         if (err) return err;
@@ -91,17 +91,17 @@ router.get('/get-tips', checkJwt, (req, res) => {
                 for (let i = 0; i < user['myTips'].length; i++) {
                     const tip = user['myTips'][i];
                     Tip.findById(tip)
-                    .select(['owner', 'imageUrl', 'hintId', '_id'])
+                    // .select(['owner', 'imageUrl', 'hintId', '_id'])
                     .populate('owner')
                     .exec((err, tipsGotten) => {
                         if (err) return err;
     
                         myTips.push(tipsGotten);
-                        // res.json({
-                        //     success: true,
-                        //     myTips: myTips,
-                        //     sharedTips: sharedTips
-                        // })
+                        res.json({
+                            success: true,
+                            myTips: myTips,
+                            sharedTips: sharedTips
+                        })
                     })
                 }
             }
