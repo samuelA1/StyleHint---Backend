@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Tip = require('../models/tip');
+const Notification = require('../models/notification');
 const User = require('../models/user');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
@@ -10,6 +11,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
         if (err) return err;
 
         let tip = new Tip();
+        let notification = new Notification();
         tip.owner = req.decoded.user._id;
         tip.imageUrl = req.body.imageUrl;
         tip.message = req.body.message;
@@ -18,6 +20,11 @@ router.post('/add-tip', checkJwt, (req, res) => {
         for (let i = 0; i < friends.length; i++) {
             const friendId = friends[i];
             tip.usersToSee.push(friendId);
+            notification.for = friendId;
+            notification.from = req.decoded.user._id;
+            notification.typeOf = 'tip';
+            notification.message = `${userSendingTip['username']} shared a hint with you`;
+            notification.route = `tip/${tip._id}`
             User.findById(friendId, (err, friend) => {
                 if (err) return err;
 
@@ -29,6 +36,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
         userSendingTip.myTips.push(tip._id);
         tip.save();
         userSendingTip.save();
+        notification.save();
         res.json({
             success: true,
             message: 'Tip sent'
@@ -53,18 +61,24 @@ router.get('/get-tips', checkJwt, (req, res) => {
             if (user['tips'] !== null) {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
-                    Tip.findById(tip, (err, tipsGotten) => {
+                    Tip.findById(tip)
+                    .select(['owner', 'imageUrl', 'hintId', '_id'])
+                    .populate('owner')
+                    .exec((err, tipsGotten) => {
                         if (err) return err;
     
                         sharedTips.push(tipsGotten);
-                    });
+                    })
                 }
             }
 
             if (user['myTips'] !== null) {
                 for (let i = 0; i < user['myTips'].length; i++) {
                     const tip = user['myTips'][i];
-                    Tip.findById(tip, (err, tipsGotten) => {
+                    Tip.findById(tip)
+                    .select(['owner', 'imageUrl', 'hintId', '_id'])
+                    .populate('owner')
+                    .exec((err, tipsGotten) => {
                         if (err) return err;
     
                         myTips.push(tipsGotten);
@@ -73,12 +87,28 @@ router.get('/get-tips', checkJwt, (req, res) => {
                             myTips: myTips,
                             sharedTips: sharedTips
                         })
-                    });
+                    })
                 }
             }
         }
     ])
 });
+
+//get single tip
+router.get('/get-single-tip/:id', checkJwt, (req, res) => {
+    Tip.findById(req.params.id)
+    .select(['-usersToSee'])
+    .populate('owner')
+    .exec( (err, tipsGotten) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            tip: tipsGotten
+        })
+    })
+});
+
 //add comment to tip
 router.post('/add-comment/:id', checkJwt, (req, res) => {
     async.waterfall([

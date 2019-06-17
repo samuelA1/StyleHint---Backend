@@ -16,7 +16,8 @@ const HintSchema = new Schema({
    season: [{type: String, lowercase: true}],
    occasion: [{type: String, lowercase: true}],
    ratings: [{type: Number, default: 0}],
-   country: {type: String, lowercase: true}
+   country: {type: String, lowercase: true},
+   createdAt: {type: Date, default: Date.now}
 });
 
 module.exports = mongoose.model('Hint', HintSchema);
