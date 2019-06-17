@@ -15,7 +15,8 @@ const UserSchema = new Schema({
     tips: [{type: Schema.Types.ObjectId, ref: 'Tip'}],
     myTips: [{type: Schema.Types.ObjectId, ref: 'Tip'}],
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    createdAt: {type: Date, default: Date.now}
+    createdAt: {type: Date, default: Date.now},
+    notifications: {type: Number, default: 0}
 });
 
 UserSchema.plugin(algolia, {

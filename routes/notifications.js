@@ -1,7 +1,35 @@
 const router = require('express').Router();
 const checkJwt = require('../middleware/check-jwt');
 const Notification = require('../models/notification');
+const User = require('../models/user');
+const async = require('async');
 
+router.get('/notifiyNumber', checkJwt, (req, res) => {
+    async.waterfall([
+        function (callback) {
+            User.findById(req.decoded.user._id)
+            .select(['notifications'])
+            .exec((err, userWithNotify) => {
+                if (err) return err;
+
+                callback(err, userWithNotify);
+            });
+        },
+        function (userWithNotify) {
+            Notification.find({for: req.decoded.user._id}, (err, notification) => {
+                if (err) return err;
+
+                const newNotify = notification.length;
+                res.json({
+                    success: true,
+                    notifyNumber: newNotify - userWithNotify
+                })
+            })
+        }
+    ]);
+});
+
+//get all notifications
 router.get('/notifications', checkJwt, (req, res) => {
     const perPage = 20;
     const page = req.query.page;
@@ -18,6 +46,18 @@ router.get('/notifications', checkJwt, (req, res) => {
             notifications: notification
         })
     });
+});
+
+router.post('/change-notify', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+        user.notifications = 0;
+        user.save();
+        res.json({
+            success: true
+        })
+    })
 });
 
 module.exports = router;
