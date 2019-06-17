@@ -97,9 +97,10 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         myTips.push(tipsGotten);
-                        callback(sharedTips, myTips)
+                        
                     })
                 }
+                callback(sharedTips, myTips)
                 
             }
         },
