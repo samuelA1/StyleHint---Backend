@@ -25,6 +25,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
             notification.typeOf = 'tip';
             notification.message = `${userSendingTip['username']} shared a hint with you`;
             notification.route = `tip/${tip._id}`
+            notification.save();
             User.findById(friendId, (err, friend) => {
                 if (err) return err;
 
@@ -36,7 +37,6 @@ router.post('/add-tip', checkJwt, (req, res) => {
         userSendingTip.myTips.push(tip._id);
         tip.save();
         userSendingTip.save();
-        notification.save();
         res.json({
             success: true,
             message: 'Tip sent'
