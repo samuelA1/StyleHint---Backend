@@ -63,55 +63,17 @@ router.get('/get-single-tip/:id', checkJwt, (req, res) => {
 
 //get all tips
 router.get('/get-tips', checkJwt, (req, res) => {
-    global.sharedTips = [];
-    global.myTips = [];
-    async.waterfall([
-        function (callback) {
-            User.findById(req.decoded.user._id, (err, user) => {
-                if (err) return err;
+    User.findById(req.decoded.user._id)
+    .populate(['tips', 'myTips'])
+    .select(['tips', 'myTips'])
+    .exec((err, user) => {
+        if (err) return err;
 
-                callback(err, user)
-            });
-        },
-        function (user) {
-            if (user['tips'] !== null) {
-                for (let i = 0; i < user['tips'].length; i++) {
-                    const tip = user['tips'][i];
-                    Tip.findById(tip)
-                    .select(['owner', 'imageUrl', 'hintId', '_id'])
-                    .populate('owner')
-                    .exec((err, tipsGotten) => {
-                        if (err) return err;
-    
-                        sharedTips.push(tipsGotten);
-                        console.log('shared', sharedTips)
-                    })
-                }
-            }
-
-            if (user['myTips'] !== null) {
-                for (let i = 0; i < user['myTips'].length; i++) {
-                    const tip = user['myTips'][i];
-                    Tip.findById(tip)
-                    .select(['owner', 'imageUrl', 'hintId', '_id'])
-                    .populate('owner')
-                    .exec((err, tipsGotten) => {
-                        if (err) return err;
-    
-                        myTips.push(tipsGotten);
-                        console.log('my', myTips)
-
-                    })
-                }
-                
-            }
-            res.json({
-                success: true,
-                myTips: myTips,
-                sharedTips: sharedTips
-            })
-        }
-    ])
+        res.json({
+            success: true,
+            allTips: user
+        })
+    });
 });
 
 //add comment to tip
