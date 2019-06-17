@@ -94,7 +94,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
     ])
 });
 
-//get single tip
+//get a single tip
 router.get('/get-single-tip/:id', checkJwt, (req, res) => {
     Tip.findById(req.params.id)
     .select(['-usersToSee'])
