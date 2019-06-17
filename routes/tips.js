@@ -71,8 +71,8 @@ router.get('/get-tips', checkJwt, (req, res) => {
             });
         },
         function (user) {
-            sharedTips = [];
-            myTips = [];
+            var sharedTips = [];
+            var myTips = [];
             if (user['tips'] !== null) {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
