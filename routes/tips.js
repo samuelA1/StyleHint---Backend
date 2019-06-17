@@ -46,47 +46,47 @@ router.post('/add-tip', checkJwt, (req, res) => {
 });
 
 // //get tips
-// router.get('/get-tips', checkJwt, (req, res) => {
-//     var sharedTips = [];
-//     var myTips = [];
-//     async.waterfall([
-//         function (callback) {
-//             User.findById(req.decoded.user._id, (err, user) => {
-//                 if (err) return err;
+router.get('/get-tips', checkJwt, (req, res) => {
+    var sharedTips = [];
+    var myTips = [];
+    async.waterfall([
+        function (callback) {
+            User.findById(req.decoded.user._id, (err, user) => {
+                if (err) return err;
 
-//                 callback(err, user)
-//             });
-//         },
-//         function (user) {
-//             if (user['tips'] !== null) {
-//                 for (let i = 0; i < user['tips'].length; i++) {
-//                     const tip = user['tips'][i];
-//                     Tip.findById(tip, (err, tipsGotten) => {
-//                         if (err) return err;
+                callback(err, user)
+            });
+        },
+        function (user) {
+            if (user['tips'] !== null) {
+                for (let i = 0; i < user['tips'].length; i++) {
+                    const tip = user['tips'][i];
+                    Tip.findById(tip, (err, tipsGotten) => {
+                        if (err) return err;
     
-//                         sharedTips.push(tipsGotten);
-//                     });
-//                 }
-//             }
+                        sharedTips.push(tipsGotten);
+                    });
+                }
+            }
 
-//             if (user['myTips'] !== null) {
-//                 for (let i = 0; i < user['myTips'].length; i++) {
-//                     const tip = user['myTips'][i];
-//                     Tip.findById(tip, (err, tipsGotten) => {
-//                         if (err) return err;
+            if (user['myTips'] !== null) {
+                for (let i = 0; i < user['myTips'].length; i++) {
+                    const tip = user['myTips'][i];
+                    Tip.findById(tip, (err, tipsGotten) => {
+                        if (err) return err;
     
-//                         myTips.push(tipsGotten);
-//                         res.json({
-//                             success: true,
-//                             myTips: myTips,
-//                             sharedTips: sharedTips
-//                         })
-//                     });
-//                 }
-//             }
-//         }
-//     ])
-// });
+                        myTips.push(tipsGotten);
+                        res.json({
+                            success: true,
+                            myTips: myTips,
+                            sharedTips: sharedTips
+                        })
+                    });
+                }
+            }
+        }
+    ])
+});
 
 //get single tip
 router.get('/get-single-tip/:id', checkJwt, (req, res) => {
@@ -104,53 +104,53 @@ router.get('/get-single-tip/:id', checkJwt, (req, res) => {
 });
 
 //get all tips
-router.get('/get-tips', checkJwt, (req, res) => {
-    var sharedTips = [];
-    var myTips = [];
-    async.waterfall([
-        function (callback) {
-            User.findById(req.decoded.user._id, (err, user) => {
-                if (err) return err;
+// router.get('/get-tips', checkJwt, (req, res) => {
+//     var sharedTips = [];
+//     var myTips = [];
+//     async.waterfall([
+//         function (callback) {
+//             User.findById(req.decoded.user._id, (err, user) => {
+//                 if (err) return err;
 
-                callback(err, user)
-            });
-        },
-        function (user) {
-            if (user['tips'] !== null) {
-                for (let i = 0; i < user['tips'].length; i++) {
-                    const tip = user['tips'][i];
-                    Tip.findById(tip)
-                    .select(['owner', 'imageUrl', 'hintId', '_id'])
-                    .populate('owner')
-                    .exec((err, tipsGotten) => {
-                        if (err) return err;
+//                 callback(err, user)
+//             });
+//         },
+//         function (user) {
+//             if (user['tips'] !== null) {
+//                 for (let i = 0; i < user['tips'].length; i++) {
+//                     const tip = user['tips'][i];
+//                     Tip.findById(tip)
+//                     .select(['owner', 'imageUrl', 'hintId', '_id'])
+//                     .populate('owner')
+//                     .exec((err, tipsGotten) => {
+//                         if (err) return err;
     
-                        sharedTips.push(tipsGotten);
-                    })
-                }
-            }
+//                         sharedTips.push(tipsGotten);
+//                     })
+//                 }
+//             }
 
-            if (user['myTips'] !== null) {
-                for (let i = 0; i < user['myTips'].length; i++) {
-                    const tip = user['myTips'][i];
-                    Tip.findById(tip)
-                    .select(['owner', 'imageUrl', 'hintId', '_id'])
-                    .populate('owner')
-                    .exec((err, tipsGotten) => {
-                        if (err) return err;
+//             if (user['myTips'] !== null) {
+//                 for (let i = 0; i < user['myTips'].length; i++) {
+//                     const tip = user['myTips'][i];
+//                     Tip.findById(tip)
+//                     .select(['owner', 'imageUrl', 'hintId', '_id'])
+//                     .populate('owner')
+//                     .exec((err, tipsGotten) => {
+//                         if (err) return err;
     
-                        myTips.push(tipsGotten);
-                        res.json({
-                            success: true,
-                            myTips: myTips,
-                            sharedTips: sharedTips
-                        })
-                    })
-                }
-            }
-        }
-    ])
-});
+//                         myTips.push(tipsGotten);
+//                         res.json({
+//                             success: true,
+//                             myTips: myTips,
+//                             sharedTips: sharedTips
+//                         })
+//                     })
+//                 }
+//             }
+//         }
+//     ])
+// });
 
 //add comment to tip
 router.post('/add-comment/:id', checkJwt, (req, res) => {
