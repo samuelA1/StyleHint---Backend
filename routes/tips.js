@@ -62,6 +62,8 @@ router.get('/get-single-tip/:id', checkJwt, (req, res) => {
 
 //get all tips
 router.get('/get-tips', checkJwt, (req, res) => {
+    var sharedTips = [];
+    var myTips = [];
     async.waterfall([
         function (callback) {
             User.findById(req.decoded.user._id, (err, user) => {
@@ -70,9 +72,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                 callback(err, user)
             });
         },
-        function (user) {
-            var sharedTips = [];
-            var myTips = [];
+        function (user, callback) {
             if (user['tips'] !== null) {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
@@ -83,6 +83,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         sharedTips.push(tipsGotten);
+                        callback(sharedTips)
                     })
                 }
             }
@@ -97,10 +98,13 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         myTips.push(tipsGotten);
+                        callback(myTips)
                     })
                 }
                 
             }
+        },
+        function (sharedTips, myTips) {
             res.json({
                 success: true,
                 myTips: myTips,
