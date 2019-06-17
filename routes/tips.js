@@ -100,7 +100,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         
                     })
                 }
-                callback(sharedTips, myTips)
+                callback(null, sharedTips, myTips)
                 
             }
         },
