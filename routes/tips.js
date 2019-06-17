@@ -5,9 +5,6 @@ const User = require('../models/user');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
-sharedTips = [];
-myTips = [];
-
 //add tip
 router.post('/add-tip', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, userSendingTip) => {
@@ -74,6 +71,8 @@ router.get('/get-tips', checkJwt, (req, res) => {
             });
         },
         function (user) {
+            sharedTips = [];
+            myTips = [];
             if (user['tips'] !== null) {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
@@ -100,12 +99,13 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         myTips.push(tipsGotten);
                     })
                 }
-                res.json({
-                    success: true,
-                    myTips: myTips,
-                    sharedTips: sharedTips
-                })
+                
             }
+            res.json({
+                success: true,
+                myTips: myTips,
+                sharedTips: sharedTips
+            })
         }
     ])
 });
