@@ -17,10 +17,12 @@ router.get('/notifyNumber', checkJwt, (req, res) => {
             });
         },
         function (userWithNotify) {
+            console.log(userWithNotify)
             Notification.find({for: req.decoded.user._id}, (err, notification) => {
                 if (err) return err;
 
                 const newNotify = notification.length;
+                console.log(newNotify)
                 res.json({
                     success: true,
                     notifyNumber: newNotify - userWithNotify
@@ -53,7 +55,7 @@ router.post('/change-notify', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-        user.notifications = 0;
+        user.notifications = req.body.notify;
         user.save();
         res.json({
             success: true
