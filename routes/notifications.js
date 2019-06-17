@@ -53,7 +53,7 @@ router.post('/change-notify', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-        user.notifications = req.body.notify;
+        user.notifications = user.notifications +  req.body.notify;
         user.save();
         res.json({
             success: true
