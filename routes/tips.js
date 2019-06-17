@@ -72,7 +72,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
                 callback(err, user)
             });
         },
-        function (user, callback) {
+        function (user) {
             if (user['tips'] !== null) {
                 for (let i = 0; i < user['tips'].length; i++) {
                     const tip = user['tips'][i];
@@ -97,15 +97,12 @@ router.get('/get-tips', checkJwt, (req, res) => {
                         if (err) return err;
     
                         myTips.push(tipsGotten);
-                        
+                        console.log(myTips);
+                        console.log(sharedTips);
                     })
                 }
-                callback(null, sharedTips, myTips)
                 
             }
-        },
-        function (sharedTips, myTips) {
-            console.log(sharedTips, myTips)
             res.json({
                 success: true,
                 myTips: myTips,
