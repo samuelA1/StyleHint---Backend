@@ -34,19 +34,31 @@ router.get('/notifyNumber', checkJwt, (req, res) => {
 router.get('/notifications', checkJwt, (req, res) => {
     const perPage = 20;
     const page = req.query.page;
-    Notification.find({for: req.decoded.user._id})
-    .limit(perPage)
-    .skip(page * perPage)
-    .sort({createdAt: -1})
-    .select(['-for'])
-    .exec( (err, notification) => {
-        if (err) return err;
+    async.waterfall([
+        function (callback) {
+            Notification.countDocuments({for: req.decoded.user._id}, (err, count) => {
+                if (err) return err;
 
-        res.json({
-            success: true,
-            notifications: notification
-        })
-    });
+                callback(err, count)
+            });
+        },
+        function (count) {
+            Notification.find({for: req.decoded.user._id})
+                .limit(perPage)
+                .skip(page * perPage)
+                .sort({createdAt: -1})
+                .select(['-for'])
+                .exec( (err, notification) => {
+                    if (err) return err;
+
+                    res.json({
+                        success: true,
+                        notifications: notification,
+                        totalNotifications: count
+                    })
+                });
+        }
+    ])
 });
 
 //change number of notifications gotten
