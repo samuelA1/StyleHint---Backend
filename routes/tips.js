@@ -64,17 +64,35 @@ router.get('/get-single-tip/:id', checkJwt, (req, res) => {
 
 //get all tips
 router.get('/get-tips', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id)
-    .populate(['tips', 'myTips'])
-    .select(['tips', 'myTips', 'tips.owner'])
-    .exec((err, user) => {
-        if (err) return err;
+    async.waterfall([
+        function (callback) {
+            User.findById(req.decoded.user._id)
+                .populate(['tips', 'myTips'])
+                .select(['tips', 'myTips'])
+                .exec((err, user) => {
+                    if (err) return err;
 
-        res.json({
-            success: true,
-            allTips: user
-        })
-    });
+                    callback(err, user)
+
+                    // res.json({
+                    //     success: true,
+                    //     allTips: user
+                    // })
+                });
+        },
+        function (user) {
+            user.select(['tips.owner'])
+            .exec((err, userGot) => {
+                if (err) return err;
+
+                
+                res.json({
+                    success: true,
+                    allTips: userGot
+                })
+            })
+        }
+    ])
 });
 
 //add comment to tip
