@@ -42,16 +42,10 @@ router.get('/notifications', checkJwt, (req, res) => {
     .exec( (err, notification) => {
         if (err) return err;
 
-        if (notification != null) {
-            res.json({
-                success: true,
-                notifications: notification
-            })
-        } else {
-            res.json({
-                success: false,
-            })
-        }
+        res.json({
+            success: true,
+            notifications: notification
+        })
     });
 });
 
