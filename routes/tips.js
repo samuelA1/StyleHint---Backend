@@ -71,7 +71,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
 
         res.json({
             success: true,
-            allTips: user.tips.sort({createdAt: -1})
+            allTips: user
         })
     });
 });
