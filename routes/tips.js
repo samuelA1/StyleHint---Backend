@@ -13,6 +13,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
         let tip = new Tip();
         let notification = new Notification();
         tip.owner = req.decoded.user._id;
+        tip.ownerUsername = userSendingTip.username;
         tip.imageUrl = req.body.imageUrl;
         tip.message = req.body.message;
         tip.hintId = req.body.hintId;
@@ -65,6 +66,7 @@ router.get('/get-single-tip/:id', checkJwt, (req, res) => {
 router.get('/get-tips', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
     .populate(['tips', 'myTips'])
+    .populate(['tips.owner'])
     .select(['tips', 'myTips'])
     .exec((err, user) => {
         if (err) return err;
