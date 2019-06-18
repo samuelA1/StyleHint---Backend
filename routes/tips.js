@@ -51,7 +51,6 @@ router.post('/add-tip', checkJwt, (req, res) => {
 router.get('/get-single-tip/:id', checkJwt, (req, res) => {
     Tip.findById(req.params.id)
     .select(['-usersToSee'])
-    .populate('owner')
     .exec( (err, tipsGotten) => {
         if (err) return err;
 
