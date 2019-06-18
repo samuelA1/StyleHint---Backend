@@ -20,13 +20,11 @@ router.get('/notifyNumber', checkJwt, (req, res) => {
             Notification.find({for: req.decoded.user._id}, (err, notification) => {
                 if (err) return err;
 
-                if (notifications) {
-                    const newNotify = notification.length;
-                    res.json({
-                        success: true,
-                        notifyNumber: newNotify - userWithNotify
-                    })
-                }
+                const newNotify = notification.length;
+                res.json({
+                    success: true,
+                    notifyNumber: newNotify - userWithNotify
+                })
             })
         }
     ]);
@@ -44,10 +42,12 @@ router.get('/notifications', checkJwt, (req, res) => {
     .exec( (err, notification) => {
         if (err) return err;
 
-        res.json({
-            success: true,
-            notifications: notification
-        })
+        if (condition) {
+            res.json({
+                success: true,
+                notifications: notification
+            })
+        }
     });
 });
 
