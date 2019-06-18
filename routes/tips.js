@@ -66,8 +66,7 @@ router.get('/get-single-tip/:id', checkJwt, (req, res) => {
 router.get('/get-tips', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
     .populate(['tips', 'myTips'])
-    .populate(['tips.owner'])
-    .select(['tips', 'myTips'])
+    .select(['tips', 'myTips', 'tips.owner'])
     .exec((err, user) => {
         if (err) return err;
 
