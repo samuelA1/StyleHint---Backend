@@ -14,7 +14,6 @@ router.get('/notifyNumber', checkJwt, (req, res) => {
                 if (err) return err;
 
                 callback(err, userWithNotify.notifications);
-                console.log(userWithNotify)
             });
         },
         function (userWithNotify) {
