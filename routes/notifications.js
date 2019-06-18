@@ -32,7 +32,7 @@ router.get('/notifyNumber', checkJwt, (req, res) => {
 
 //get all notifications
 router.get('/notifications', checkJwt, (req, res) => {
-    const perPage = 20;
+    const perPage = 3;
     const page = req.query.page;
     async.waterfall([
         function (callback) {
