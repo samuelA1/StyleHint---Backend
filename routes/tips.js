@@ -115,6 +115,21 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
     ]);
 });
 
+//delete comment
+router.post('/delete-comment/:id', checkJwt, (req, res) => {
+    Tip.findById(req.params.id, (err, tip) => {
+        if (err) return err;
+
+        const commentToRemove = tip.comments.indexOf(req.query.id);
+        tip.comments.splice(commentToRemove, 1);
+        tip.save();
+        res.json({
+            success: true,
+            message: 'Comment deleted'
+        })
+    });
+});
+
 //delete tip
 router.delete('/delete-tip/:id', checkJwt, (req, res) => {
     async.waterfall([

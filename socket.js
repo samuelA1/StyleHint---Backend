@@ -11,5 +11,10 @@ module.exports = function (io) {
         socket.on('comment', (ownerId) => {
             io.emit('commented', ownerId)
         });
+
+        //for deleting comments
+        socket.on('deleteComment', (ownerId) => {
+            io.emit('commentDeleted', ownerId)
+        });
     });
 }
