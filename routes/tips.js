@@ -87,15 +87,23 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
             });
         },
         function (user) {
+            let notification = new Notification();
             Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
-        
+
+                notification.for.push(tip.owner);
+                notification.from = req.decoded.user._id;
+                notification.fromUsername = req.decoded.user.username;
+                notification.typeOf = 'comment';
+                notification.message = 'commented on one of your tips';
+                notification.route = tip._id;
                 let comment = {
                     commenter: user['username'],
                     comment: req.body.comment
                 }
                 tip.comments.push(comment);
                 tip.save();
+                notification.save();
                 res.json({
                     success: true,
                     message: 'Comment added'
