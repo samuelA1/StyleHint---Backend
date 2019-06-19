@@ -8,7 +8,7 @@ module.exports = function (io) {
         })
 
         //for adding comments
-        socket.on('comment', (data) => {
+        socket.on('comment', (ownerId) => {
             io.emit('commented', ownerId)
         });
     });
