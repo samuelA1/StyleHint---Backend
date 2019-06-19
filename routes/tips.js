@@ -26,7 +26,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
             notification.fromUsername = req.decoded.user.username;
             notification.typeOf = 'tip';
             notification.message = 'shared a hint with you';
-            notification.route = `tip/${tip._id}`
+            notification.route = tip._id;
             User.findById(friendId, (err, friend) => {
                 if (err) return err;
 
