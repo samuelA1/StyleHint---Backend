@@ -9,6 +9,7 @@ const TipSchema = new Schema({
    usersToSee: [{type: Schema.Types.ObjectId, ref: 'User'}],
    message: String,
    comments: [{
+       commenterId: {type: Schema.Types.ObjectId, ref: 'User'},
        commenter: String,
        comment: String,
        commentedAt:{type: Date, default: Date.now}

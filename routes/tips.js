@@ -99,7 +99,8 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
                 notification.route = tip._id;
                 let comment = {
                     commenter: user['username'],
-                    comment: req.body.comment
+                    comment: req.body.comment,
+                    commenterId: user['_id']
                 }
                 tip.comments.push(comment);
                 tip.save();
