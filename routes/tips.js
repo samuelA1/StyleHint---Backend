@@ -106,7 +106,8 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
                 notification.save();
                 res.json({
                     success: true,
-                    message: 'Comment added'
+                    message: 'Comment added',
+                    commenter: user['username']
                 })
             });
         }
