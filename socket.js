@@ -11,6 +11,11 @@ module.exports = function (io) {
         socket.on('friendRequest', (friendId) => {
             io.emit('friendRequested', friendId)
         });
+
+        //accept request
+        socket.on('acceptRequest', (friendId) => {
+            io.emit('requestAccepted', friendId)
+        });
         
         //for adding comments
         socket.on('comment', (ownerId) => {
