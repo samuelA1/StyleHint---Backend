@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const User = require('../models/user');
+const Notification = require('../models/notification');
 const checkJwt = require('../middleware/check-jwt');
 
 //add firends
@@ -13,6 +14,23 @@ router.post('/add-friend/:id', checkJwt, (req, res) => {
             success: true,
             message: 'Friend added'
         });
+    });
+});
+
+router.post('/request-friend/:id', checkJwt, (req, res) => {
+    let notification = new Notification();
+
+    notification.for.push(req.params.id);
+    notification.from = req.decoded.user._id;
+    notification.fromUsername = req.decoded.user.username;
+    notification.typeOf = 'friend';
+    notification.message = 'wants to add you as a friend';
+    notification.route = 'friend request';
+
+    notification.save();
+    res.json({
+        success: true,
+        message: 'friend request sent'
     });
 });
 

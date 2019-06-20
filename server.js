@@ -4,6 +4,7 @@ const config = require('./config');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
+const searchRoutes = require('./routes/search');
 const authRoute = require('./routes/auth');
 const customizeRoute = require('./routes/customize');
 const profileRoute = require('./routes/profile');
@@ -36,6 +37,8 @@ app.use('/api/hints', hintsRoute);
 app.use('/api/friends', friendsRoute);
 app.use('/api/tips', tipsRoute);
 app.use('/api/notifications', notificationsRoute);
+app.use('/api/search', searchRoutes);
+
 
 
 server.listen(config.port, (err) => {

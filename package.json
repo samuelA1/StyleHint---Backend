@@ -9,6 +9,7 @@
   "author": "Samuel Essim",
   "license": "MIT",
   "dependencies": {
+    "algoliasearch": "^3.33.0",
     "async": "^3.0.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.0",
