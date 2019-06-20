@@ -7,6 +7,11 @@ module.exports = function (io) {
             });
         })
 
+        //friend request
+        socket.on('friendRequest', (friendId) => {
+            io.emit('friendRequested', friendId)
+        });
+        
         //for adding comments
         socket.on('comment', (ownerId) => {
             io.emit('commented', ownerId)
