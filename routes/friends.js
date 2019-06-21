@@ -5,16 +5,37 @@ const checkJwt = require('../middleware/check-jwt');
 
 //add firends
 router.post('/add-friend/:id', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id, (err, userWithId) => {
+    User.findById(req.params.id, (err, userWithId) => {
         if (err) return err;
 
-        userWithId.friends.push(req.params.id);
+        let notification = new Notification();
+
+        notification.for.push(req.params.id);
+        notification.from = req.decoded.user._id;
+        notification.fromUsername = req.decoded.user.username;
+        notification.typeOf = 'friend';
+        notification.message = 'accepted your friend request';
+        notification.route = req.params.id;
+
+        notification.save();
+        userWithId.friends.push(req.decoded.user._id);
         userWithId.save();
         res.json({
             success: true,
-            message: 'Friend added'
+            message: 'Request accepted'
         });
     });
+});
+
+//delete friend notification
+router.delete('/delete-notification/:id', checkJwt, (req, res) => {
+    Notification.findByIdAndDelete(req.params.id, (err) => {
+        if (err) return err;
+
+        res.json({
+            success: true
+        })
+    })
 });
 
 router.post('/request-friend/:id', checkJwt, (req, res) => {
