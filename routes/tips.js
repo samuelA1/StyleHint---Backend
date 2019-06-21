@@ -181,4 +181,27 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
     ]);
 });
 
+//auto delete tip
+router.delete('/auto-delete/:id', (req, res) => {
+    Tip.findById(req.params.id, (err, tip) => {
+        if (err) return err;
+
+        tip.usersToSee.forEach(userId => {
+            User.findById(userId, (err, userGotten) => {
+                if (err) return err;
+
+                const tipToRemove = userGotten.tips.indexOf(req.params.id)
+                userGotten.tips.splice(tipToRemove, 1);
+                const tipToRemove = user.myTips.indexOf(req.params.id)
+                user.myTips.splice(tipToRemove, 1);
+                userGotten.save();
+                user.save();
+                res.json({
+                    success: true,
+                    message: 'Tip deleted'
+                });
+            });
+        });
+    });
+});
 module.exports = router;
