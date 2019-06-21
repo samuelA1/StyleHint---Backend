@@ -156,21 +156,21 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         });
                     });
 
-                    Notification.findByIdAndDelete(req.query.notifyId, (err) => {
-                        if (err) return err;
-                    })
 
                     Tip.findByIdAndDelete(req.params.id, (err) => {
                         if (err) return err;
 
-                        
-                        const tipToRemove = user.myTips.indexOf(req.params.id)
-                        user.myTips.splice(tipToRemove, 1);
-                        user.save();
-                        res.json({
-                            success: true,
-                            message: 'Tip deleted'
-                        });
+                        Notification.findByIdAndDelete(req.query.notifyId, (err) => {
+                            if (err) return err;
+
+                            const tipToRemove = user.myTips.indexOf(req.params.id)
+                            user.myTips.splice(tipToRemove, 1);
+                            user.save();
+                            res.json({
+                                success: true,
+                                message: 'Tip deleted'
+                            });
+                        })
                     });
                 } else {
                     Notification.findById(req.query.notifyId, (err, notification) => {
