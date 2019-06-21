@@ -176,9 +176,8 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                     Notification.findById(req.query.notifyId, (err, notification) => {
                         if (err) return err;
 
-                        console.log(user._id);
-                        console.log(notification);
                         const notifyToRemove = notification.for.indexOf(user._id);
+                        console.log(notifyToRemove)
                         notification.for.splice(notifyToRemove, 1);
                         const tipToRemove = user.tips.indexOf(req.params.id)
                         user.tips.splice(tipToRemove, 1);
