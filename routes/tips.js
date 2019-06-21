@@ -155,7 +155,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         });
                     });
 
-                    Notification.findByIdAndDelete(req.query.id, (err) => {
+                    Notification.findByIdAndDelete(req.query.notifyId, (err) => {
                         if (err) return err;
                     })
 
@@ -172,7 +172,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         });
                     });
                 } else {
-                    Notification.findById(req.query.id, (err, notification) => {
+                    Notification.findById(req.query.notifyId, (err, notification) => {
                         if (err) return err;
                 
                         const notifyToRemove = notification.for.indexOf(req.decoded.user._id);
