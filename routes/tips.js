@@ -145,7 +145,6 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                 if (err) return err;
         
                 if (tip.owner == req.decoded.user._id) {
-                    //call auto delete
                     tip.usersToSee.forEach(userId => {
                         User.findById(userId, (err, userGotten) => {
                             if (err) return err;
@@ -183,27 +182,32 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
 });
 
 //auto delete tip
-router.post('/auto-delete/:id', (req, res) => {
-    async.waterfall([
-        function (callback) {
-            Tip.findById(req.params.id, (err, tip) => {
+router.delete('/auto-delete/:id', (req, res) => {
+    Tip.findById(req.params.id, (err, tip) => {
+        if (err) return err;
+
+        tip.usersToSee.forEach(userId => {
+            User.findById(userId, (err, userGotten) => {
                 if (err) return err;
 
-                callback(err, tip);
+                const tipToRemove = userGotten.tips.indexOf(req.params.id)
+                userGotten.tips.splice(tipToRemove, 1);
+                userGotten.save();
             });
-        },
-        function(tip) {
-            tip.usersToSee.forEach(userId => {
-                User.findById(userId, (err, userGotten) => {
-                    if (err) return err;
+        });
 
-                    const tipToRemove = userGotten.tips.indexOf(req.params.id)
-                    userGotten.tips.splice(tipToRemove, 1);
-                    userGotten.save();
-                    res.json({success: true})
-                });
+        Tip.findByIdAndDelete(req.params.id, (err) => {
+            if (err) return err;
+
+            
+            const tipToRemove = user.myTips.indexOf(req.params.id)
+            user.myTips.splice(tipToRemove, 1);
+            user.save();
+            res.json({
+                success: true,
+                message: 'Tip deleted'
             });
-        }
-    ]);
+        });
+    });
 });
 module.exports = router;
