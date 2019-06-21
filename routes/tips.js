@@ -35,6 +35,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
             });
             
         }
+        tip.notifyId = notification._id;
         userSendingTip.myTips.push(tip._id);
         tip.save();
         userSendingTip.save();
