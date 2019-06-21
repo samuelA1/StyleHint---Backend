@@ -14,7 +14,7 @@ const TipSchema = new Schema({
        comment: String,
        commentedAt:{type: Date, default: Date.now}
    }],
-   createdAt: {type: Date, default: Date.now}
+   createdAt: {type: Date, default: Date.now, index: { expires: '2m' },}
 });
 
 module.exports = mongoose.model('Tip', TipSchema);
