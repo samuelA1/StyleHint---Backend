@@ -182,6 +182,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         const tipToRemove = user.tips.indexOf(req.params.id)
                         user.tips.splice(tipToRemove, 1);
                         user.save();
+                        notification.save();
                         res.json({
                             success: true,
                             message: 'Tip deleted'
