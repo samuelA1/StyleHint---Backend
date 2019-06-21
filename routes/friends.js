@@ -25,7 +25,7 @@ router.post('/request-friend/:id', checkJwt, (req, res) => {
     notification.fromUsername = req.decoded.user.username;
     notification.typeOf = 'friend';
     notification.message = 'wants to add you as a friend';
-    notification.route = 'friend request';
+    notification.route = req.params.id;
 
     notification.save();
     res.json({
