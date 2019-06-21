@@ -74,17 +74,4 @@ router.post('/change-notify', checkJwt, (req, res) => {
     })
 });
 
-//delete personal hint notification
-router.post('/delete-personal-notification/:id', checkJwt, (req, res) => {
-    Notification.findById(req.params.id, (err, notification) => {
-        if (err) return err;
-
-        const notifyToRemove = notification.for.indexOf(req.decoded.user._id);
-        notification.for.splice(notifyToRemove, 1);
-        res.json({
-            success: true
-        })
-    })
-});
-
 module.exports = router;

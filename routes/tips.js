@@ -155,6 +155,10 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         });
                     });
 
+                    Notification.findByIdAndDelete(req.params.id, (err) => {
+                        if (err) return err;
+                    })
+
                     Tip.findByIdAndDelete(req.params.id, (err) => {
                         if (err) return err;
 
@@ -168,13 +172,19 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         });
                     });
                 } else {
-                    const tipToRemove = user.tips.indexOf(req.params.id)
-                    user.tips.splice(tipToRemove, 1);
-                    user.save();
-                    res.json({
-                        success: true,
-                        message: 'Tip deleted'
-                    });
+                    Notification.findById(req.params.id, (err, notification) => {
+                        if (err) return err;
+                
+                        const notifyToRemove = notification.for.indexOf(req.decoded.user._id);
+                        notification.for.splice(notifyToRemove, 1);
+                        const tipToRemove = user.tips.indexOf(req.params.id)
+                        user.tips.splice(tipToRemove, 1);
+                        user.save();
+                        res.json({
+                            success: true,
+                            message: 'Tip deleted'
+                        });
+                    })
                 }
             });
         }
