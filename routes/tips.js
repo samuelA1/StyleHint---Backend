@@ -35,6 +35,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
             });
             
         }
+        tip.notifyId = notification._id;
         userSendingTip.myTips.push(tip._id);
         tip.save();
         userSendingTip.save();
@@ -176,7 +177,6 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         if (err) return err;
 
                         const notifyToRemove = notification.for.indexOf(user._id);
-                        console.log(notifyToRemove)
                         notification.for.splice(notifyToRemove, 1);
                         const tipToRemove = user.tips.indexOf(req.params.id)
                         user.tips.splice(tipToRemove, 1);

@@ -8,6 +8,7 @@ const TipSchema = new Schema({
    hintId: {type: Schema.Types.ObjectId, ref: 'Hint'},
    usersToSee: [{type: Schema.Types.ObjectId, ref: 'User'}],
    message: String,
+   notifyId: {type: Schema.Types.ObjectId, ref: 'Notification'},
    comments: [{
        commenterId: {type: Schema.Types.ObjectId, ref: 'User'},
        commenter: String,
