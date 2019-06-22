@@ -144,7 +144,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
             Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
         
-                if (tip.owner === req.decoded.user._id) {
+                if (tip.owner == req.decoded.user._id) {
                     tip.usersToSee.forEach(userId => {
                         User.findById(userId, (err, userGotten) => {
                             if (err) return err;
