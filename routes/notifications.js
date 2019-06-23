@@ -6,7 +6,6 @@ const async = require('async');
 
 //get amount of new notifications
 router.get('/notifyNumber', checkJwt, (req, res) => {
-    var notifyNumber;
     async.waterfall([
         function (callback) {
             User.findById(req.decoded.user._id)
@@ -14,13 +13,14 @@ router.get('/notifyNumber', checkJwt, (req, res) => {
             .exec((err, userWithNotify) => {
                 if (err) return err;
 
+                var notifyNumber;
                 if (userWithNotify.notifications == -1) {
                     notifyNumber = 0;
                 } else {
                     notifyNumber = userWithNotify.notifications
                 }
 
-                callback(err, userWithNotify.notifications);
+                callback(err, notifyNumber);
             });
         },
         function (userWithNotify) {
