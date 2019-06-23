@@ -7,6 +7,7 @@ const TipSchema = new Schema({
    imageUrl: {type: String, required: true},
    hintId: {type: Schema.Types.ObjectId, ref: 'Hint'},
    usersToSee: [{type: Schema.Types.ObjectId, ref: 'User'}],
+   seenBy: [{type: Schema.Types.ObjectId, ref: 'User'}],
    message: String,
    notifyId: {type: Schema.Types.ObjectId, ref: 'Notification'},
    comments: [{

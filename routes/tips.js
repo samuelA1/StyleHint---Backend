@@ -116,6 +116,20 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
     ]);
 });
 
+//add seen to tip
+router.post('/seenBy/:id', checkJwt, (req, res) => {
+    Tip.findById(req.params.id, (err, tip) => {
+        if (err) return err;
+
+        tip.seenBy.push(req.decoded.user._id);
+        tip.save();
+        res.json({
+            success: true,
+            message: 'tip seen'
+        });
+    });
+});
+
 //delete comment
 router.post('/delete-comment/:id', checkJwt, (req, res) => {
     Tip.findById(req.params.id, (err, tip) => {
