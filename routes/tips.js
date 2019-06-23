@@ -152,6 +152,11 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
         
                             const tipToRemove = userGotten.tips.indexOf(req.params.id)
                             userGotten.tips.splice(tipToRemove, 1);
+                            if (userGotten.notifications == -1) {
+                                userGotten.notifications = 0;
+                            } else {
+                                userGotten.notifications = userGotten.notifications - 1;
+                            }
                             userGotten.notifications = userGotten.notifications - 1;
                             userGotten.save();
                         });
