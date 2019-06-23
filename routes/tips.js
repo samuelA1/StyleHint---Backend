@@ -76,7 +76,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
             tips.push(Object.assign({toBeSeen: true}, tip._doc));
           } else {
             tip.seenBy.forEach(seen => {
-              if (req.decoded.user._id === seen) {
+              if (req.decoded.user._id == seen) {
                tips.push(Object.assign({toBeSeen: false}, tip._doc));
              } else {
                tips.push(Object.assign({toBeSeen: true}, tip._doc));
