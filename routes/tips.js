@@ -128,10 +128,7 @@ router.post('/seenBy/:id', checkJwt, (req, res) => {
                 } else {
                     tip.seenBy.push(req.decoded.user._id);
                     tip.save();
-                    res.json({
-                        success: true,
-                        message: 'tip seen'
-                    });
+                    console.log('im not already there')
                 }
             });
         } else {
