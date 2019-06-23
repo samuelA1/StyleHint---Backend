@@ -70,22 +70,24 @@ router.get('/get-tips', checkJwt, (req, res) => {
     .exec((err, user) => {
         if (err) return err;
         
+        let tips = []
          user.tips.forEach(tip => {
           if (tip.seenBy.length === 0) {
-            user.tips.push(Object.assign({toBeSeen: true}, tip));
+            tips.push(Object.assign({toBeSeen: true}, tip));
           } else {
             tip.seenBy.forEach(seen => {
               if (req.decoded.user._id === seen) {
-               user.tips.push(Object.assign({toBeSeen: false}, tip));
+               tips.push(Object.assign({toBeSeen: false}, tip));
              } else {
-               user.tips.push(Object.assign({toBeSeen: true}, tip));
+               tips.push(Object.assign({toBeSeen: true}, tip));
              }
            });
           }
         });
         res.json({
             success: true,
-            allTips: user
+            allTips: user,
+            tipsToSee: tips
         })
     });
 });
