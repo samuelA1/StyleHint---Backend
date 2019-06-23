@@ -120,13 +120,31 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
 router.post('/seenBy/:id', checkJwt, (req, res) => {
     Tip.findById(req.params.id, (err, tip) => {
         if (err) return err;
-
-        tip.seenBy.push(req.decoded.user._id);
-        tip.save();
-        res.json({
-            success: true,
-            message: 'tip seen'
-        });
+        
+        if (tip.seenBy.length !== 0) {
+            tip.seenBy.forEach(tipGot => {
+                if (tipGot == req.decoded.user._id) {
+                    res.json({
+                        success: true,
+                        message: 'tip seen'
+                    });
+                } else {
+                    tip.seenBy.push(req.decoded.user._id);
+                    tip.save();
+                    res.json({
+                        success: true,
+                        message: 'tip seen'
+                    });
+                }
+            });
+        } else {
+            tip.seenBy.push(req.decoded.user._id);
+            tip.save();
+            res.json({
+                success: true,
+                message: 'tip seen'
+            });
+        }
     });
 });
 
