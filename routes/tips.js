@@ -70,15 +70,15 @@ router.get('/get-tips', checkJwt, (req, res) => {
     .exec((err, user) => {
         if (err) return err;
         
-         user.myTips.forEach(tip => {
+         user.tips.forEach(tip => {
           if (tip.seenBy.length === 0) {
-            user.myTips.push(Object.assign({toBeSeen: true}, tip));
+            user.tips.push(Object.assign({toBeSeen: true}, tip));
           } else {
             tip.seenBy.forEach(seen => {
-              if (this.authService.userId == seen) {
-               user.myTips.push(Object.assign({toBeSeen: false}, tip));
+              if (req.decoded.user._id == seen) {
+               user.tips.push(Object.assign({toBeSeen: false}, tip));
              } else {
-               user.myTips.push(Object.assign({toBeSeen: true}, tip));
+               user.tips.push(Object.assign({toBeSeen: true}, tip));
              }
            });
           }
