@@ -122,15 +122,15 @@ router.post('/seenBy/:id', checkJwt, (req, res) => {
         if (err) return err;
         
         if (tip.seenBy.length !== 0) {
-            tip.seenBy.forEach(tipGot => {
+            for (let i = 0; i < tip.seenBy.length; i++) {
                 if (tipGot == req.decoded.user._id) {
-                   console.log('im already there')
-                } else {
-                    tip.seenBy.push(req.decoded.user._id);
-                    tip.save();
-                    console.log('im not already there')
-                }
-            });
+                    console.log('im already there')
+                 } else {
+                     tip.seenBy.push(req.decoded.user._id);
+                     tip.save();
+                     console.log('im not already there')
+                 }
+            }
         } else {
             tip.seenBy.push(req.decoded.user._id);
             tip.save();
