@@ -166,6 +166,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         
                         const tipToRemove = user.myTips.indexOf(req.params.id)
                         user.myTips.splice(tipToRemove, 1);
+                        user.notifications = user.notifications - tip.comments.length;
                         user.save();
                         res.json({
                             success: true,
@@ -180,6 +181,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         notification.for.splice(notifyToRemove, 1);
                         const tipToRemove = user.tips.indexOf(req.params.id)
                         user.tips.splice(tipToRemove, 1);
+                        user.notifications = user.notifications - 1;
                         user.save();
                         notification.save();
                         res.json({
