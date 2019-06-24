@@ -269,9 +269,12 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
             });
         },
         function (user, totalComments) {
+            console.log(user)
+            console.log(totalComments)
             Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
-        
+
+                console.log(tip)
                 if (tip == null) {
                     User.find({tips: req.params.id}, (err, userWithMyTips) => {
                         if (err) return err;
@@ -279,6 +282,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         console.log(userWithMyTips);
                         userWithMyTips.forEach(userWith => {
                             const tipToRemove = userWith.tips.indexOf(req.params.id)
+                            console.log('remove', tipToRemove)
                             userWith.tips.splice(tipToRemove, 1);
                             if (userWith.notifications == -1) {
                                 userWith.notifications = 0;
@@ -294,6 +298,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                     })
         
                     const toRemove = user.myTips.indexOf(req.params.id)
+                    console.log(toRemove)
                     user.myTips.splice(toRemove, 1);
                     if (user.notifications == -1) {
                         user.notifications = 0;
