@@ -73,15 +73,12 @@ router.get('/get-tips', checkJwt, (req, res) => {
         let tips = []
          user.tips.forEach(tip => {
           if (tip.seenBy.length === 0) {
-            return tips.push(Object.assign({toBeSeen: true}, tip._doc));
+            tips.push(Object.assign({toBeSeen: true}, tip._doc));
           } else {
-            for (let i = 0; i < tip.seenBy.length; i++) {
-                if (req.decoded.user._id == tip.seenBy[i]) {
-                    console.log(tip.seenBy[i])
-                    return tips.push(Object.assign({toBeSeen: false}, tip._doc));
-                  } else {
-                    return tips.push(Object.assign({toBeSeen: true}, tip._doc));
-                  }
+            if (tip.seenBy.some(seen => seen == req.decoded.user._id)) {
+                return tips.push(Object.assign({toBeSeen: false}, tip._doc));
+            } else {
+            return tips.push(Object.assign({toBeSeen: true}, tip._doc));
             }
           }
         });
@@ -138,20 +135,19 @@ router.post('/seenBy/:id', checkJwt, (req, res) => {
         if (err) return err;
         
         if (tip.seenBy.length !== 0) {
-            tip.seenBy.forEach(tipGot => {
-                if ( req.decoded.user._id == tipGot) {
-                    console.log(tipGot)
-                    
-                 } else {
-                     tip.seenBy.push(req.decoded.user._id);
-                     tip.save();
-                 }       
-            });
-
-            return res.json({
-                success: true,
-                message: 'tip seen'
-            });
+            if ( tip.seenBy.some(seen => seen == req.decoded.user._id)) {
+                 res.json({
+                     success: true,
+                     message: 'tip seen'
+                 });
+             } else {
+                 tip.seenBy.push(req.decoded.user._id);
+                 tip.save();
+                 res.json({
+                     success: true,
+                     message: 'tip seen'
+                 });
+             }      
         } else {
             tip.seenBy.push(req.decoded.user._id);
             tip.save();
