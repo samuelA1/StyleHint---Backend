@@ -261,7 +261,14 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                 callback(err, user);
             });
         },
-        function (user) {
+        function (user, callback) {
+            Notification.find({route: req.params.id}, (err, notification) => {
+                if (err) return err;
+
+                callback(err, user, notification.length)
+            });
+        },
+        function (user, totalComments) {
             Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
         
@@ -290,7 +297,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                     if (user.notifications == -1) {
                         user.notifications = 0;
                     } else {
-                        user.notifications = user.notifications - tip.comments.length;
+                        user.notifications = user.notifications - totalComments;
                     }
                     user.save();
                     res.json({
