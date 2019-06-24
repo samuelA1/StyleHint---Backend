@@ -274,12 +274,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
 
             Notification.remove({route: req.params.id}, (err) => {
                 if (err) return err;
-            })
 
-            Tip.findByIdAndDelete(req.params.id, (err) => {
-                if (err) return err;
-
-                
                 const tipToRemove = user.myTips.indexOf(req.params.id)
                 user.myTips.splice(tipToRemove, 1);
                 if (user.notifications == -1) {
@@ -291,7 +286,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                 res.json({
                     success: true
                 });
-            });
+            })
         }
     })
 });
