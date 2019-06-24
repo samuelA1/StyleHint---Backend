@@ -82,7 +82,7 @@ router.get('/get-tips', checkJwt, (req, res) => {
             }
           }
         });
-        console.log(user.tips);
+        console.log(user.myTips);
         res.json({
             success: true,
             allTips: user,
