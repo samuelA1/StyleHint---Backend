@@ -266,7 +266,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                 if (err) return err;
         
                 if (tip == null) {
-                    User.find({myTips: req.params.id}, (err, userWithMyTips) => {
+                    User.find({tips: req.params.id}, (err, userWithMyTips) => {
                         if (err) return err;
 
                         res.json({
