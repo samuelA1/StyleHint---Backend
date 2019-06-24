@@ -269,40 +269,33 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                     User.find({tips: req.params.id}, (err, userWithMyTips) => {
                         if (err) return err;
 
-                        res.json({
-                            users: userWithMyTips
-                        })
+                        userWithMyTips.forEach(userWith => {
+                            const tipToRemove = userWith.tips.indexOf(req.params.id)
+                            userWith.tips.splice(tipToRemove, 1);
+                            if (userWith.notifications == -1) {
+                                userWith.notifications = 0;
+                            } else {
+                                userWith.notifications = userWith.notifications - 1;
+                            }
+                            userWith.save();
+                        });
+                    });
+
+                    Notification.remove({route: req.params.id}, (err) => {
+                        if (err) return err;
                     })
-                    // tip.usersToSee.forEach(userId => {
-                    //     User.findById(userId, (err, userGotten) => {
-                    //         if (err) return err;
         
-                    //         const tipToRemove = userGotten.tips.indexOf(req.params.id)
-                    //         userGotten.tips.splice(tipToRemove, 1);
-                    //         if (userGotten.notifications == -1) {
-                    //             userGotten.notifications = 0;
-                    //         } else {
-                    //             userGotten.notifications = userGotten.notifications - 1;
-                    //         }
-                    //         userGotten.save();
-                    //     });
-                    // });
-        
-                    // Notification.remove({route: req.params.id}, (err) => {
-                    //     if (err) return err;
-                    // })
-        
-                    // const tipToRemove = user.myTips.indexOf(req.params.id)
-                    // user.myTips.splice(tipToRemove, 1);
-                    // if (user.notifications == -1) {
-                    //     user.notifications = 0;
-                    // } else {
-                    //     user.notifications = user.notifications - tip.comments.length;
-                    // }
-                    // user.save();
-                    // res.json({
-                    //     success: true
-                    // });
+                    const tipToRemove = user.myTips.indexOf(req.params.id)
+                    user.myTips.splice(tipToRemove, 1);
+                    if (user.notifications == -1) {
+                        user.notifications = 0;
+                    } else {
+                        user.notifications = user.notifications - tip.comments.length;
+                    }
+                    user.save();
+                    res.json({
+                        success: true
+                    });
                 }
             })
         }
