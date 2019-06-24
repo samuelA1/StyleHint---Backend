@@ -280,13 +280,13 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         for (let i = 0; i < userWithMyTips.length; i++) {
                             const tipToRemove = userWithMyTips[i].tips.indexOf(req.params.id)
                             console.log('remove', tipToRemove)
-                            userWith.tips.splice(tipToRemove, 1);
-                            if (userWith.notifications == -1) {
-                                userWith.notifications = 0;
+                            userWithMyTips[i].tips.splice(tipToRemove, 1);
+                            if (userWithMyTips[i].notifications == -1) {
+                                userWithMyTips[i].notifications = 0;
                             } else {
-                                userWith.notifications = userWith.notifications - 1;
+                                userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
                             }
-                            userWith.save();
+                            userWithMyTips[i].save();
                         }
                     });
 
