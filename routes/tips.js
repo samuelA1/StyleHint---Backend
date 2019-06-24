@@ -138,9 +138,9 @@ router.post('/seenBy/:id', checkJwt, (req, res) => {
         if (err) return err;
         
         if (tip.seenBy.length !== 0) {
-            for (let i = 0; i < tip.seenBy.length; i++) {
-                if ( req.decoded.user._id == tip.seenBy[i]) {
-                    console.log(tip.seenBy[i])
+            tip.seenBy.forEach(tipGot => {
+                if ( req.decoded.user._id == tipGot) {
+                    console.log(tipGot)
                     return res.json({
                          success: true,
                          message: 'tip seen'
@@ -152,8 +152,8 @@ router.post('/seenBy/:id', checkJwt, (req, res) => {
                          success: true,
                          message: 'tip seen'
                      });
-                 }                
-            }
+                 }       
+            });
         } else {
             tip.seenBy.push(req.decoded.user._id);
             tip.save();
