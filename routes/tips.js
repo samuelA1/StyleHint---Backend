@@ -82,7 +82,6 @@ router.get('/get-tips', checkJwt, (req, res) => {
             }
           }
         });
-        console.log(user.myTips);
         res.json({
             success: true,
             allTips: user,
@@ -253,7 +252,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
 });
 
 //auto delete tip
-router.post('/auto-delete/:id', checkJwt, (req, res) => {
+router.post('/auto-delete', checkJwt, (req, res) => {
     async.waterfall([
         function (callback) {
             User.findById(req.decoded.user._id, (err, user) => {
@@ -270,42 +269,46 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
             });
         },
         function (user, totalComments) {
-            Tip.findById(req.params.id, (err, tip) => {
-                if (err) return err;
-
-                if (tip == null) {
-                    User.find({tips: req.params.id}, (err, userWithMyTips) => {
+            if (user.myTips.length !== 0) {
+                user.myTips.forEach(myTip => {
+                    Tip.findById(myTip, (err, tip) => {
                         if (err) return err;
-
-                        for (let i = 0; i < userWithMyTips.length; i++) {
-                            const tipToRemove = userWithMyTips[i].tips.indexOf(req.params.id)
-                            userWithMyTips[i].tips.splice(tipToRemove, 1);
-                            if (userWithMyTips[i].notifications == -1) {
-                                userWithMyTips[i].notifications = 0;
-                            } else {
-                                userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
-                            }
-                            userWithMyTips[i].save();
-                        }
-                    });
-
-                    Notification.deleteMany({route: req.params.id}, (err) => {
-                        if (err) return err;
-                    })
         
-                    const toRemove = user.myTips.indexOf(req.params.id)
-                    user.myTips.splice(toRemove, 1);
-                    if (user.notifications == -1) {
-                        user.notifications = 0;
-                    } else {
-                        user.notifications = user.notifications - totalComments;
-                    }
-                    user.save();
-                    res.json({
-                        success: true
-                    });
-                }
-            })
+                        if (tip == null) {
+                            User.find({tips: myTip}, (err, userWithMyTips) => {
+                                if (err) return err;
+        
+                                for (let i = 0; i < userWithMyTips.length; i++) {
+                                    const tipToRemove = userWithMyTips[i].tips.indexOf(myTip)
+                                    userWithMyTips[i].tips.splice(tipToRemove, 1);
+                                    if (userWithMyTips[i].notifications == -1) {
+                                        userWithMyTips[i].notifications = 0;
+                                    } else {
+                                        userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
+                                    }
+                                    userWithMyTips[i].save();
+                                }
+                            });
+        
+                            Notification.deleteMany({route: myTip}, (err) => {
+                                if (err) return err;
+                            })
+                
+                            const toRemove = user.myTips.indexOf(myTip)
+                            user.myTips.splice(toRemove, 1);
+                            if (user.notifications == -1) {
+                                user.notifications = 0;
+                            } else {
+                                user.notifications = user.notifications - totalComments;
+                            }
+                            user.save();
+                            res.json({
+                                success: true
+                            });
+                        }
+                    })
+                });
+            } 
         }
     ])
 });
