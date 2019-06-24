@@ -274,19 +274,19 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
 
             Notification.remove({route: req.params.id}, (err) => {
                 if (err) return err;
-
-                const tipToRemove = user.myTips.indexOf(req.params.id)
-                user.myTips.splice(tipToRemove, 1);
-                if (user.notifications == -1) {
-                    user.notifications = 0;
-                } else {
-                    user.notifications = user.notifications - tip.comments.length;
-                }
-                user.save();
-                res.json({
-                    success: true
-                });
             })
+
+            const tipToRemove = user.myTips.indexOf(req.params.id)
+            user.myTips.splice(tipToRemove, 1);
+            if (user.notifications == -1) {
+                user.notifications = 0;
+            } else {
+                user.notifications = user.notifications - tip.comments.length;
+            }
+            user.save();
+            res.json({
+                success: true
+            });
         }
     })
 });
