@@ -76,8 +76,8 @@ router.get('/get-tips', checkJwt, (req, res) => {
             return tips.push(Object.assign({toBeSeen: true}, tip._doc));
           } else {
             for (let i = 0; i < tip.seenBy.length; i++) {
-                console.log(tip)
                 if (req.decoded.user._id == tip.seenBy[i]) {
+                    console.log(tip.seenBy[i])
                     return tips.push(Object.assign({toBeSeen: false}, tip._doc));
                   } else {
                     return tips.push(Object.assign({toBeSeen: true}, tip._doc));
@@ -139,7 +139,8 @@ router.post('/seenBy/:id', checkJwt, (req, res) => {
         
         if (tip.seenBy.length !== 0) {
             for (let i = 0; i < tip.seenBy.length; i++) {
-                if (tip.seenBy[i] == req.decoded.user._id) {
+                if ( req.decoded.user._id == tip.seenBy[i]) {
+                    console.log(tip.seenBy[i])
                     return res.json({
                          success: true,
                          message: 'tip seen'
