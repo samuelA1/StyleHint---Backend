@@ -88,6 +88,7 @@ router.post('/remove-closet', checkJwt, (req, res) => {
 router.get('/my-closet', checkJwt, (req, res) => {
     Closet.findOne({owner: req.decoded.user._id})
     .populate('collections.hints')
+    .select(['collections.hints._id', 'collections.hints._url'])
     .exec( (err, closetGot) => {
         if (err) return err;
 
