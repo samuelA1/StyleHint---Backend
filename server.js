@@ -12,6 +12,7 @@ const adminRoute = require('./routes/admin');
 const hintsRoute = require('./routes/hints');
 const friendsRoute = require('./routes/friends');
 const tipsRoute = require('./routes/tips');
+const closetRoute = require('./routes/closets');
 const notificationsRoute = require('./routes/notifications');
 
 mongoose.connect(config.db, {useNewUrlParser: true}, err => {
@@ -37,6 +38,7 @@ app.use('/api/hints', hintsRoute);
 app.use('/api/friends', friendsRoute);
 app.use('/api/tips', tipsRoute);
 app.use('/api/notifications', notificationsRoute);
+app.use('/api/closet', closetRoute);
 app.use('/api/search', searchRoutes);
 
 

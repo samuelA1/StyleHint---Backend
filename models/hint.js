@@ -10,6 +10,7 @@ const HintSchema = new Schema({
    do: {type: String, required: true},
    dont: {type: String, required: true},
    gender : {type: String, lowercase: true},
+   likedBy: [{type: Schema.Types.ObjectId, ref: 'User'}],
    size : [{type: String, lowercase: true}],
    interest : [{type: String, lowercase: true}],
    weather: [{type: String, lowercase: true}],
