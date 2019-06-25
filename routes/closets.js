@@ -28,6 +28,10 @@ router.post('/add-closet', checkJwt, (req, res) => {
 
                     hint.save();
                     closet.save();
+                    res.json({
+                        success: true,
+                        message: 'Hint added to closet'
+                    })
                 } else {
                     let closetAdd = closetGot.collections.find(collection => 
                         collection['name'] == req.body.collectionName);
@@ -36,6 +40,10 @@ router.post('/add-closet', checkJwt, (req, res) => {
 
                     hint.save();
                     closetGot.save();
+                    res.json({
+                        success: true,
+                        message: 'Hint added to closet'
+                    })
                 }
             })
         }
