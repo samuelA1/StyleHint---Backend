@@ -7,6 +7,11 @@ module.exports = function (io) {
             });
         })
 
+        //view notification
+        socket.on('viewNotification', (ownerId) => {
+            io.emit('notificationViewed', ownerId)
+        });
+
         //friend request
         socket.on('friendRequest', (friendId) => {
             io.emit('friendRequested', friendId)
