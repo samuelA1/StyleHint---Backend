@@ -123,15 +123,13 @@ router.post('/delete-collection', checkJwt, (req, res) => {
 
         let closetAdd = closetGot.collections.find(collection => 
             collection['name'] == req.body.collectionName);
-        closetAdd.forEach(closet => {
-            closet.hints.forEach(hintId => {
-                Hint.findById(hintId, (err, hint) => {
-                    if (err) return err;
-    
-                    const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
-                    hint.likedBy.splice(hintRemove, 1);
-                    hint.save();
-                });
+        closetAdd.hints.forEach(hintId => {
+            Hint.findById(hintId, (err, hint) => {
+                if (err) return err;
+
+                const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
+                hint.likedBy.splice(hintRemove, 1);
+                hint.save();
             });
         });
         
