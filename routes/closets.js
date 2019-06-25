@@ -98,5 +98,25 @@ router.get('/my-closet', checkJwt, (req, res) => {
     })
 });
 
+//edit closet collection name
+router.post('/edit-collection-name', checkJwt, (req, res) => {
+    Closet.findOne({owner: req.decoded.user._id}, (err, closetGot) => {
+        if (err) return err;
+
+        
+        let closetAdd = closetGot.collections.find(collection => 
+            collection['name'] == req.body.collectionName);
+        closetAdd.name = req.body.newName;
+
+        closetGot.save();
+        res.json({
+            success: true,
+            message: 'Collection name changed'
+        })
+    })
+});
+
+//delete collection
+
 
 module.exports = router;
