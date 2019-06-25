@@ -117,6 +117,34 @@ router.post('/edit-collection-name', checkJwt, (req, res) => {
 });
 
 //delete collection
+router.post('/delete-collection', checkJwt, (req, res) => {
+    Closet.findOne({owner: req.decoded.user._id}, (err, closetGot) => {
+        if (err) return err;
+
+        let closetAdd = closetGot.collections.find(collection => 
+            collection['name'] == req.body.collectionName);
+        closetAdd.forEach(closet => {
+            closet.hints.forEach(hintId => {
+                Hint.findById(hintId, (err, hint) => {
+                    if (err) return err;
+    
+                    const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
+                    hint.likedBy.splice(hintRemove, 1);
+                    hint.save();
+                });
+            });
+        });
+        
+        const toRemove = closetGot.collections.indexOf(closetAdd._id)
+        closetGot.collections.splice(toRemove, 1);
+
+        closetGot.save();
+        res.json({
+            success: true,
+            message: 'collection deleted'
+        })
+    })
+});
 
 
 module.exports = router;
