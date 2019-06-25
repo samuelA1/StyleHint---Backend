@@ -22,7 +22,7 @@ router.post('/add-closet', checkJwt, (req, res) => {
                     closet.owner = req.decoded.user._id;
                     closet.collections.push({
                         name: 'all',
-                        hints: hints.push(req.body.hintId)
+                        hints: [req.body.hintId]
                     });
                     hint.likedBy.push(req.decoded.user._id);
 
