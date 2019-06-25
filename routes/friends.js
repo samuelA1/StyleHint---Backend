@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('../models/user');
 const Notification = require('../models/notification');
 const checkJwt = require('../middleware/check-jwt');
+const async = require('async');
 
 //add firends
 router.post('/add-friend/:id', checkJwt, (req, res) => {
@@ -29,13 +30,30 @@ router.post('/add-friend/:id', checkJwt, (req, res) => {
 
 //delete friend notification
 router.delete('/delete-notification/:id', checkJwt, (req, res) => {
-    Notification.findByIdAndDelete(req.params.id, (err) => {
-        if (err) return err;
+    async.waterfall([
+        function (callback) {
+            User.findById(req.decoded.user._id, (err, user) => {
+                if (err) return err;
 
-        res.json({
-            success: true
-        })
-    })
+                callback(err, user)
+            });
+        },
+        function (user) {
+            Notification.findByIdAndDelete(req.params.id, (err) => {
+                if (err) return err;
+
+                if (user.notifications == -1) {
+                    user.notifications = 0;
+                } else {
+                    user.notifications = user.notifications - 1;
+                }
+                user.save();
+                res.json({
+                    success: true
+                })
+            })
+        }
+    ]);
 });
 
 router.post('/request-friend/:id', checkJwt, (req, res) => {
