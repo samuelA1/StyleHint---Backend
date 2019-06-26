@@ -61,7 +61,7 @@ router.post('/add-closet', checkJwt, (req, res) => {
                         hint.likedBy.push(req.decoded.user._id);
     
                         hint.save();
-                        closet.save();
+                        closetGot.save();
                         res.json({
                             success: true,
                             message: 'Hint added to closet'
