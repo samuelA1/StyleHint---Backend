@@ -98,6 +98,20 @@ router.get('/my-closet', checkJwt, (req, res) => {
     })
 });
 
+//get name of collections
+router.get('/collections-name', checkJwt, (req, res) => {
+    Closet.findOne({owner: req.decoded.user._id})
+    .select(['collections'])
+    .exec( (err, closetGot) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            closet: closetGot
+        })
+    })
+});
+
 //edit closet collection name
 router.post('/edit-collection-name', checkJwt, (req, res) => {
     Closet.findOne({owner: req.decoded.user._id}, (err, closetGot) => {
