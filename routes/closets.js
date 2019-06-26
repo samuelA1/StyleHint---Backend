@@ -134,7 +134,7 @@ router.get('/collections-name/:id', checkJwt, (req, res) => {
         res.json({
             success: true,
             closet: closetGot,
-            found: foundCollection
+            found: 'yes'
         })
     })
 });
