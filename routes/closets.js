@@ -25,14 +25,21 @@ router.post('/add-closet', checkJwt, (req, res) => {
                         name: req.body.collectionName,
                         hints: [req.body.hintId]
                     });
-                    hint.likedBy.push(req.decoded.user._id);
-
-                    hint.save();
-                    closet.save();
-                    res.json({
-                        success: true,
-                        message: 'Hint added to closet'
-                    })
+                    if (hint.likedBy.some(liked => liked == req.decoded.user._id)) {
+                        closet.save();
+                        res.json({
+                            success: true,
+                            message: 'Hint added to closet'
+                        })
+                    } else {
+                        hint.likedBy.push(req.decoded.user._id);
+                        hint.save();
+                        closet.save();
+                        res.json({
+                            success: true,
+                            message: 'Hint added to closet'
+                        })
+                    }
                 } else {
                     let closetAdd = closetGot.collections.find(collection => 
                         collection['name'] == req.body.collectionName);
