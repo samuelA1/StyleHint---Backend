@@ -121,15 +121,20 @@ router.get('/my-closet', checkJwt, (req, res) => {
 });
 
 //get name of collections
-router.get('/collections-name', checkJwt, (req, res) => {
+router.get('/collections-name/:id', checkJwt, (req, res) => {
     Closet.findOne({owner: req.decoded.user._id})
     .select(['collections'])
     .exec( (err, closetGot) => {
         if (err) return err;
 
+        var foundCollection;
+        closetGot.collections.forEach(collection => {
+           foundCollection =  collection.hints.find(hint => hint == req.params.id)
+        });
         res.json({
             success: true,
-            closet: closetGot
+            closet: closetGot,
+            found: foundCollection
         })
     })
 });
