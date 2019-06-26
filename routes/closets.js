@@ -54,7 +54,7 @@ router.post('/add-closet', checkJwt, (req, res) => {
                             })
                         }
                     } else {
-                        closet.collections.push({
+                        closetGot.collections.push({
                             name: req.body.collectionName,
                             hints: [req.body.hintId]
                         });
