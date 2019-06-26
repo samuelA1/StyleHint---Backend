@@ -127,7 +127,7 @@ router.get('/collections-name/:id', checkJwt, (req, res) => {
     .exec( (err, closetGot) => {
         if (err) return err;
 
-        var foundCollection;
+        let foundCollection;
         closetGot.collections.forEach(collection => {
            foundCollection =  collection.hints.find(hint => hint == req.params.id)
         });
