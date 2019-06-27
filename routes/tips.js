@@ -291,31 +291,30 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                     User.find({tips: tipId}, (err, userWithMyTips) => {
                         if (err) return err;
 
-                        for (let i = 0; i < userWithMyTips.length; i++) {
-                            const tipToRemove = userWithMyTips[i].tips.indexOf(tipId)
-                            userWithMyTips[i].tips.splice(tipToRemove, 1);
+                        userWithMyTips.forEach(userWith => {
                             const toRemove = user.myTips.indexOf(tipId)
                             user.myTips.splice(toRemove, 1);
-                            if (userWithMyTips[i].notifications == -1) {
-                                userWithMyTips[i].notifications = 0;
+                            const tipToRemove = userWith.tips.indexOf(tipId)
+                            userWith.tips.splice(tipToRemove, 1);
+                            if (userWith.notifications == -1) {
+                                userWith.notifications = 0;
                             } else {
-                                userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
+                                userWith.notifications = userWith.notifications - 1;
                             }
                             if (user.notifications == -1) {
                                 user.notifications = 0;
                             } else {
                                 user.notifications = user.notifications - totalComments;
                             }
-                            userWithMyTips[i].save();
-                            
-                        }
+                            userWith.save();
+                            user.save();
+                        });
                     });
 
                     Notification.deleteMany({route: tipId}, (err) => {
                         if (err) return err;
                     })
 
-                    user.save();
                     res.json({
                         success: true
                     });
