@@ -37,22 +37,26 @@ router.post('/add-closet', checkJwt, (req, res) => {
                     if (closetGot.collections.some(collection => collection['name'] == req.body.collectionName)) {
                         let closetAdd = closetGot.collections.find(collection => 
                             collection['name'] == req.body.collectionName);
-                        closetAdd.hints.push(req.body.hintId);
-                        if (hint.likedBy.some(liked => liked == req.decoded.user._id)) {
-                            closetGot.save();
-                            res.json({
-                                success: true,
-                                message: 'Hint added to closet'
-                            })
-                        } else {
-                            hint.likedBy.push(req.decoded.user._id);
-                            hint.save();
-                            closetGot.save();
-                            res.json({
-                                success: true,
-                                message: 'Hint added to closet'
-                            })
-                        }
+                            if (closetAdd.hints.some(add => add == req.body.hintId)) {
+                                res.json({success: true, message: 'Hint already in closet'})
+                            } else {
+                                closetAdd.hints.push(req.body.hintId);
+                                if (hint.likedBy.some(liked => liked == req.decoded.user._id)) {
+                                    closetGot.save();
+                                    res.json({
+                                        success: true,
+                                        message: 'Hint added to closet'
+                                    })
+                                } else {
+                                    hint.likedBy.push(req.decoded.user._id);
+                                    hint.save();
+                                    closetGot.save();
+                                    res.json({
+                                        success: true,
+                                        message: 'Hint added to closet'
+                                    })
+                                }
+                            }
                     } else {
                         closetGot.collections.push({
                             name: req.body.collectionName,
