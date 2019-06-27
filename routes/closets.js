@@ -106,11 +106,11 @@ router.post('/remove-closet', checkJwt, (req, res) => {
                         closetGot.save();
 
                     }
-                    hint.save();
-                    res.json({
-                        success: true,
-                        message: 'Hint removed from closet'
-                    })
+                })
+                hint.save();
+                res.json({
+                    success: true,
+                    message: 'Hint removed from closet'
                 })
             })
         }
