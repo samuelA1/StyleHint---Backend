@@ -293,19 +293,19 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         for (let i = 0; i < userWithMyTips.length; i++) {
                             const tipToRemove = userWithMyTips[i].tips.indexOf(req.params.id)
                             userWithMyTips[i].tips.splice(tipToRemove, 1);
+                            const toRemove = user.myTips.indexOf(req.params.id)
+                            user.myTips.splice(toRemove, 1);
                             if (userWithMyTips[i].notifications == -1) {
                                 userWithMyTips[i].notifications = 0;
                             } else {
                                 userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
                             }
-                            userWithMyTips[i].save();
-                            const toRemove = user.myTips.indexOf(req.params.id)
-                            user.myTips.splice(toRemove, 1);
                             if (user.notifications == -1) {
                                 user.notifications = 0;
                             } else {
                                 user.notifications = user.notifications - totalComments;
                             }
+                            userWithMyTips[i].save();
                             user.save();
                         }
                     });
