@@ -267,6 +267,7 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
 
 //auto delete tip
 router.post('/auto-delete/:id', checkJwt, (req, res) => {
+    let tipId = req.params.id;
     async.waterfall([
         function (callback) {
             User.findById(req.decoded.user._id, (err, user) => {
@@ -276,24 +277,24 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
             });
         },
         function (user, callback) {
-            Notification.find({route: req.params.id}, (err, notification) => {
+            Notification.find({route: tipId}, (err, notification) => {
                 if (err) return err;
 
                 callback(err, user, notification.length)
             });
         },
         function (user, totalComments) {
-            Tip.findById(req.params.id, (err, tip) => {
+            Tip.findById(tipId, (err, tip) => {
                 if (err) return err;
 
                 if (tip == null) {
-                    User.find({tips: req.params.id}, (err, userWithMyTips) => {
+                    User.find({tips: tipId}, (err, userWithMyTips) => {
                         if (err) return err;
 
                         for (let i = 0; i < userWithMyTips.length; i++) {
-                            const tipToRemove = userWithMyTips[i].tips.indexOf(req.params.id)
+                            const tipToRemove = userWithMyTips[i].tips.indexOf(tipId)
                             userWithMyTips[i].tips.splice(tipToRemove, 1);
-                            const toRemove = user.myTips.indexOf(req.params.id)
+                            const toRemove = user.myTips.indexOf(tipId)
                             user.myTips.splice(toRemove, 1);
                             if (userWithMyTips[i].notifications == -1) {
                                 userWithMyTips[i].notifications = 0;
@@ -306,14 +307,15 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                                 user.notifications = user.notifications - totalComments;
                             }
                             userWithMyTips[i].save();
-                            user.save();
+                            
                         }
                     });
 
-                    Notification.deleteMany({route: req.params.id}, (err) => {
+                    Notification.deleteMany({route: tipId}, (err) => {
                         if (err) return err;
                     })
 
+                    user.save();
                     res.json({
                         success: true
                     });
