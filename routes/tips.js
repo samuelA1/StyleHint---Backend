@@ -306,8 +306,8 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                             } else {
                                 user.notifications = user.notifications - totalComments;
                             }
-                            userWith.save();
                             user.save();
+                            userWith.save();
                         });
                     });
 
@@ -315,6 +315,10 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         if (err) return err;
                     })
 
+                    res.json({
+                        success: true
+                    });
+                } else {
                     res.json({
                         success: true
                     });
