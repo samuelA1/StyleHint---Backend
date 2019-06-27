@@ -299,6 +299,14 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                                 userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
                             }
                             userWithMyTips[i].save();
+                            const toRemove = user.myTips.indexOf(req.params.id)
+                            user.myTips.splice(toRemove, 1);
+                            if (user.notifications == -1) {
+                                user.notifications = 0;
+                            } else {
+                                user.notifications = user.notifications - totalComments;
+                            }
+                            user.save();
                         }
                     });
 
@@ -306,19 +314,9 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         if (err) return err;
                     })
 
-                    const toRemove = user.myTips.indexOf(req.params.id)
-                    user.myTips.splice(toRemove, 1);
-                    if (user.notifications == -1) {
-                        user.notifications = 0;
-                    } else {
-                        user.notifications = user.notifications - totalComments;
-                    }
-                    user.save();
                     res.json({
                         success: true
                     });
-        
-                    
                 }
             })
         }
