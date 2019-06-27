@@ -98,11 +98,11 @@ router.post('/remove-closet', checkJwt, (req, res) => {
                 closetAdd.hints.splice(toRemove, 1);
                 //loop to see if other collections have the hintId
                 closetGot.collections.forEach(collect => {
-                    console.log(collect.hints.some(hintId => hintId == req.body.hintId))
-                    if (!collect.hints.some(hintId => hintId == req.body.hintId)) {
-                        const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
-                        hint.likedBy.splice(hintRemove, 1);
-                    } 
+                    if (collect.hints.some(hintId => hintId == req.body.hintId)) {
+                        console.log('yes')
+                    } else {
+                        console.log('no')
+                    }
                 });
                 closetGot.save();
                 hint.save();
