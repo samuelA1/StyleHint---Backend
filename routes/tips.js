@@ -304,20 +304,19 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
 
                     Notification.deleteMany({route: req.params.id}, (err) => {
                         if (err) return err;
-
-                        const toRemove = user.myTips.indexOf(req.params.id)
-                        user.myTips.splice(toRemove, 1);
-                        if (user.notifications == -1) {
-                            user.notifications = 0;
-                        } else {
-                            user.notifications = user.notifications - totalComments;
-                        }
-                        user.save();
-                        res.json({
-                            success: true
-                        });
-                        
                     })
+
+                    const toRemove = user.myTips.indexOf(req.params.id)
+                    user.myTips.splice(toRemove, 1);
+                    if (user.notifications == -1) {
+                        user.notifications = 0;
+                    } else {
+                        user.notifications = user.notifications - totalComments;
+                    }
+                    user.save();
+                    res.json({
+                        success: true
+                    });
         
                     
                 }
