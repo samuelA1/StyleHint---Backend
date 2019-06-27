@@ -96,14 +96,24 @@ router.post('/remove-closet', checkJwt, (req, res) => {
                     collection['name'] == req.body.collectionName);
                 const toRemove = closetAdd.hints.indexOf(req.body.hintId)
                 closetAdd.hints.splice(toRemove, 1);
-                const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
-                hint.likedBy.splice(hintRemove, 1);
-
-                hint.save();
-                closetGot.save();
-                res.json({
-                    success: true,
-                    message: 'Hint removed from closet'
+                //loop to see if other collections have the hintId
+                closetGot.collections.forEach(collect => {
+                    if (collect.hints.some(hintId => hintId == req.body.hintId)) {
+                        closetGot.save();
+                        res.json({
+                            success: true,
+                            message: 'Hint removed from closet'
+                        })
+                    } else {
+                        const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
+                        hint.likedBy.splice(hintRemove, 1);
+                        hint.save();
+                        closetGot.save();
+                        res.json({
+                            success: true,
+                            message: 'Hint removed from closet'
+                        })
+                    }
                 })
             })
         }
