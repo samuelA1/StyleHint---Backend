@@ -286,8 +286,8 @@ router.post('/auto-delete', checkJwt, (req, res) => {
                                     } else {
                                         userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
                                     }
-                                    if (userWithMyTips[i]) {
-                                        userWithMyTips[i].save();
+                                    if (userWithMyTips) {
+                                        userWithMyTips.save();
                                     } 
                                 }
                             });
