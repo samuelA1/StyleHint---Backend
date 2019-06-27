@@ -286,9 +286,8 @@ router.post('/auto-delete', checkJwt, (req, res) => {
                                     } else {
                                         userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
                                     }
+                                    userWithMyTips[i].save();
                                 }
-                                userWithMyTips.save();
-
                             });
         
                             Notification.deleteMany({route: myTip}, (err) => {
