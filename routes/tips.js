@@ -277,18 +277,19 @@ router.post('/auto-delete', checkJwt, (req, res) => {
                         if (tip == null) {
                             User.find({tips: myTip}, (err, userWithMyTips) => {
                                 if (err) return err;
-
-                                console.log(userWithMyTips)
-                                // for (let i = 0; i < userWithMyTips.length; i++) {
-                                //     const tipToRemove = userWithMyTips[i].tips.indexOf(myTip)
-                                //     userWithMyTips[i].tips.splice(tipToRemove, 1);
-                                //     if (userWithMyTips[i].notifications == -1) {
-                                //         userWithMyTips[i].notifications = 0;
-                                //     } else {
-                                //         userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
-                                //     }
-                                //     userWithMyTips[i].save();
-                                // }
+        
+                                for (let i = 0; i < userWithMyTips.length; i++) {
+                                    const tipToRemove = userWithMyTips[i].tips.indexOf(myTip)
+                                    userWithMyTips[i].tips.splice(tipToRemove, 1);
+                                    if (userWithMyTips[i].notifications == -1) {
+                                        userWithMyTips[i].notifications = 0;
+                                    } else {
+                                        userWithMyTips[i].notifications = userWithMyTips[i].notifications - 1;
+                                    }
+                                    if (userWithMyTips[i]) {
+                                        userWithMyTips[i].save();
+                                    } 
+                                }
                             });
         
                             Notification.deleteMany({route: myTip}, (err) => {
