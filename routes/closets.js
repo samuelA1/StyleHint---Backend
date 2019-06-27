@@ -101,14 +101,14 @@ router.post('/remove-closet', checkJwt, (req, res) => {
                 closetGot.collections.forEach(collect => {
                     flash.push(collect.hints.some(hintId => hintId == req.body.hintId))
                 });
-                console.log(flash)
                 if (flash.includes(true)) {
-                    console.log('yes')
+                    closetGot.save();
                 } else {
-                    console.log('no')
+                    const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
+                    hint.likedBy.splice(hintRemove, 1);
+                    closetGot.save();
+                    hint.save();
                 }
-                closetGot.save();
-                hint.save();
                 res.json({
                     success: true,
                     message: 'Hint removed from closet'
