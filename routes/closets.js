@@ -100,20 +100,17 @@ router.post('/remove-closet', checkJwt, (req, res) => {
                 closetGot.collections.forEach(collect => {
                     if (collect.hints.some(hintId => hintId == req.body.hintId)) {
                         closetGot.save();
-                        res.json({
-                            success: true,
-                            message: 'Hint removed from closet'
-                        })
                     } else {
                         const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
                         hint.likedBy.splice(hintRemove, 1);
-                        hint.save();
                         closetGot.save();
-                        res.json({
-                            success: true,
-                            message: 'Hint removed from closet'
-                        })
+
                     }
+                    hint.save();
+                    res.json({
+                        success: true,
+                        message: 'Hint removed from closet'
+                    })
                 })
             })
         }
