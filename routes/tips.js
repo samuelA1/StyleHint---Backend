@@ -278,6 +278,7 @@ router.post('/auto-delete', checkJwt, (req, res) => {
                             User.find({tips: myTip}, (err, userWithMyTips) => {
                                 if (err) return err;
         
+                                console.log(userWithMyTips)
                                 for (let i = 0; i < userWithMyTips.length; i++) {
                                     const tipToRemove = userWithMyTips[i].tips.indexOf(myTip)
                                     userWithMyTips[i].tips.splice(tipToRemove, 1);
@@ -300,7 +301,6 @@ router.post('/auto-delete', checkJwt, (req, res) => {
                                 } else {
                                     user.notifications = user.notifications - totalComments;
                                 }
-                                user.save();
                                
                             })
                 
@@ -308,6 +308,7 @@ router.post('/auto-delete', checkJwt, (req, res) => {
                         }
                     })
                 });
+                user.save();
                 res.json({
                     success: true
                 });
