@@ -301,16 +301,16 @@ router.post('/auto-delete', checkJwt, (req, res) => {
                                     user.notifications = user.notifications - totalComments;
                                 }
                                 user.save();
-                                res.json({
-                                    success: true
-                                });
+                               
                             })
                 
                            
                         }
                     })
                 });
-                
+                res.json({
+                    success: true
+                });
             } 
         }
     ])
