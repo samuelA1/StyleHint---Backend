@@ -90,6 +90,20 @@ router.get('/get-tips', checkJwt, (req, res) => {
     });
 });
 
+//get tips for auto delete
+router.get('/get-auto-tips', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id)
+    .select(['myTips'])
+    .exec((err, user) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            allTips: user,
+        })
+    });
+});
+
 //add comment to tip
 router.post('/add-comment/:id', checkJwt, (req, res) => {
     async.waterfall([
@@ -269,15 +283,15 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
             });
         },
         function (user, totalComments) {
-            Tip.findById(myTip, (err, tip) => {
+            Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
 
                 if (tip == null) {
-                    User.find({tips: myTip}, (err, userWithMyTips) => {
+                    User.find({tips: req.params.id}, (err, userWithMyTips) => {
                         if (err) return err;
 
                         for (let i = 0; i < userWithMyTips.length; i++) {
-                            const tipToRemove = userWithMyTips[i].tips.indexOf(myTip)
+                            const tipToRemove = userWithMyTips[i].tips.indexOf(req.params.id)
                             userWithMyTips[i].tips.splice(tipToRemove, 1);
                             if (userWithMyTips[i].notifications == -1) {
                                 userWithMyTips[i].notifications = 0;
@@ -288,10 +302,10 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         }
                     });
 
-                    Notification.deleteMany({route: myTip}, (err) => {
+                    Notification.deleteMany({route: req.params.id}, (err) => {
                         if (err) return err;
 
-                        const toRemove = user.myTips.indexOf(myTip)
+                        const toRemove = user.myTips.indexOf(req.params.id)
                         user.myTips.splice(toRemove, 1);
                         if (user.notifications == -1) {
                             user.notifications = 0;
