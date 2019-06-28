@@ -125,7 +125,8 @@ router.get('/my-closet', checkJwt, (req, res) => {
     .exec( (err, closetGot) => {
         if (err) return err;
 
-        res.json({
+        res.json
+        ({
             success: true,
             closet: closetGot
         })
@@ -139,10 +140,16 @@ router.get('/collections-name', checkJwt, (req, res) => {
     .exec( (err, closetGot) => {
         if (err) return err;
 
-        res.json({
-            success: true,
-            closet: closetGot,
-        })
+        if (closetGot == null) {
+            res.json({
+                success: true
+            })
+        } else {
+            res.json({
+                success: true,
+                closet: closetGot,
+            })
+        }
     })
 });
 
