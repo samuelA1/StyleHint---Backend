@@ -188,7 +188,7 @@ router.post('/delete-collection', checkJwt, (req, res) => {
             });
         });
         
-        const toRemove = closetGot.collections.indexOf(closetAdd._id)
+        const toRemove = closetGot.collections.indexOf(req.body.collectionName)
         console.log(toRemove)
         // closetGot.collections.splice(toRemove, 1);
 
