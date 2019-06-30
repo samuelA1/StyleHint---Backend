@@ -198,7 +198,6 @@ router.post('/delete-collection', checkJwt, (req, res) => {
                 } else {
                     const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
                     hint.likedBy.splice(hintRemove, 1);
-                    closetGot.save();
                     hint.save();
                 }
             });
