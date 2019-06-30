@@ -195,10 +195,8 @@ router.post('/delete-collection', checkJwt, (req, res) => {
                 closetGot.collections.forEach(collect => {
                     flash.push(collect.hints.some(gotId => gotId == hintId))
                 });
-                console.log(hintId)
-                console.log(flash)
+               
                 if (flash.includes(true)) {
-                    closetGot.save();
                 } else {
                     const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
                     hint.likedBy.splice(hintRemove, 1);
