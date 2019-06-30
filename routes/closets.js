@@ -178,7 +178,6 @@ router.post('/delete-collection', checkJwt, (req, res) => {
 
         let closetAdd = closetGot.collections.find(collection => 
             collection['name'] == req.body.collectionName);
-        const toRemove = closetGot.collections.collecction['_id'].indexOf(closetAdd._id)
         console.log(toRemove)
         closetAdd.hints.forEach(hintId => {
             Hint.findById(hintId, (err, hint) => {
@@ -190,10 +189,8 @@ router.post('/delete-collection', checkJwt, (req, res) => {
             });
         });
         
-        
-        // closetGot.collections.splice(toRemove, 1);
-
-        // closetGot.save();
+        closetGot.collections.splice(closetGot.collections.findIndex(got => got._id == closetAdd._id), 1);
+        closetGot.save();
         res.json({
             success: true,
             message: 'collection deleted'
