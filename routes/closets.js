@@ -178,6 +178,8 @@ router.post('/delete-collection', checkJwt, (req, res) => {
 
         let closetAdd = closetGot.collections.find(collection => 
             collection['name'] == req.body.collectionName);
+        const toRemove = closetGot.collections.indexOf(closetAdd._id)
+        console.log(toRemove)
         closetAdd.hints.forEach(hintId => {
             Hint.findById(hintId, (err, hint) => {
                 if (err) return err;
@@ -188,8 +190,7 @@ router.post('/delete-collection', checkJwt, (req, res) => {
             });
         });
         
-        const toRemove = closetGot.collections.indexOf(req.body.collectionName)
-        console.log(toRemove)
+        
         // closetGot.collections.splice(toRemove, 1);
 
         // closetGot.save();
