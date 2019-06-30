@@ -182,9 +182,18 @@ router.post('/delete-collection', checkJwt, (req, res) => {
             Hint.findById(hintId, (err, hint) => {
                 if (err) return err;
 
-                const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
-                hint.likedBy.splice(hintRemove, 1);
-                hint.save();
+                let flash = []
+                closetGot.collections.forEach(collect => {
+                    flash.push(collect.hints.some(id => id == req.body.hintId))
+                });
+                if (flash.includes(true)) {
+                    closetGot.save();
+                } else {
+                    const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
+                    hint.likedBy.splice(hintRemove, 1);
+                    closetGot.save();
+                    hint.save();
+                }
             });
         });
         
