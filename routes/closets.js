@@ -186,20 +186,25 @@ router.post('/delete-collection', checkJwt, (req, res) => {
         let closetAdd = closetGot.collections.find(collection => 
             collection['name'] == req.body.collectionName);
         closetAdd.hints.forEach(hintId => {
-            const toRemove = closetAdd.hints.indexOf(hintId)
+            Hint.findById(hintId, (err, hint) => {
+                if (err) return err;
+
+                const toRemove = closetAdd.hints.indexOf(hintId)
                 closetAdd.hints.splice(toRemove, 1);
-            let flash = []
-            closetGot.collections.forEach(collect => {
-                flash.push(collect.hints.some(gotId => gotId = hintId))
+                let flash = []
+                closetGot.collections.forEach(collect => {
+                    flash.push(collect.hints.some(gotId => gotId == hintId))
+                });
+                console.log(hintId)
+                console.log(flash)
+                if (flash.includes(true)) {
+                    closetGot.save();
+                } else {
+                    const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
+                    hint.likedBy.splice(hintRemove, 1);
+                    hint.save();
+                }
             });
-            console.log(hintId)
-            console.log(flash)
-            if (flash.includes(true)) {
-            } else {
-                const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
-                hint.likedBy.splice(hintRemove, 1);
-                hint.save();
-            }
         });
         
         closetGot.collections.splice(closetGot.collections.findIndex(got => got._id == closetAdd._id), 1);
