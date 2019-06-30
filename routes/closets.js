@@ -178,7 +178,7 @@ router.post('/delete-collection', checkJwt, (req, res) => {
 
         let closetAdd = closetGot.collections.find(collection => 
             collection['name'] == req.body.collectionName);
-        const toRemove = closetGot.collections.indexOf(closetAdd._id)
+        const toRemove = closetGot.collections.collecction['_id'].indexOf(closetAdd._id)
         console.log(toRemove)
         closetAdd.hints.forEach(hintId => {
             Hint.findById(hintId, (err, hint) => {
