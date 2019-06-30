@@ -191,8 +191,9 @@ router.post('/delete-collection', checkJwt, (req, res) => {
 
                 let flash = []
                 closetGot.collections.forEach(collect => {
-                    flash.push(collect.hints.some(id => id == hint._id))
+                    flash.push(collect.hints.some(id => id == hintId))
                 });
+                console.log(hintId)
                 console.log(flash)
                 if (flash.includes(true)) {
                     closetGot.save();
