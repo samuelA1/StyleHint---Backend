@@ -4,6 +4,22 @@ const Hint = require('../models/hint');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
+//new collection
+router.post('/new-collection', checkJwt, (req, res) => {
+    Closet.findOne({owner: req.decoded.user._id}, (err, closetGot) => {
+        if (err) return err;
+
+        closetGot.collections.push({
+            name: req.body.collectionName,
+        });
+        closetGot.save();
+        res.json({
+            success: true,
+            message: 'New collection created'
+        })
+    })
+});
+
 //add hint to closet
 router.post('/add-closet', checkJwt, (req, res) => {
     async.waterfall([
@@ -83,7 +99,6 @@ router.post('/add-closet', checkJwt, (req, res) => {
         }
     ])
 });
-
 //remove hint from closet
 router.post('/remove-closet', checkJwt, (req, res) => {
     async.waterfall([
