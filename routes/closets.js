@@ -9,14 +9,30 @@ router.post('/new-collection', checkJwt, (req, res) => {
     Closet.findOne({owner: req.decoded.user._id}, (err, closetGot) => {
         if (err) return err;
 
-        closetGot.collections.push({
-            name: req.body.collectionName,
-        });
-        closetGot.save();
-        res.json({
-            success: true,
-            message: 'New collection created'
-        })
+        if (closetGot == null) {
+            let closet = new Closet();
+            closet.owner = req.decoded.user._id;
+            closet.collections.push({
+                name: req.body.collectionName,
+                hints: []
+            });
+
+            closet.save();
+            res.json({
+                success: true,
+                message: 'New collection created'
+            })
+        } else {
+            closetGot.collections.push({
+                name: req.body.collectionName,
+                hints: []
+            });
+            closetGot.save();
+            res.json({
+                success: true,
+                message: 'New collection created'
+            })
+        }
     })
 });
 
