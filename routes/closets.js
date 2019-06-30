@@ -184,13 +184,13 @@ router.post('/delete-collection', checkJwt, (req, res) => {
 
                 const hintRemove = hint.likedBy.indexOf(req.decoded.user._id)
                 hint.likedBy.splice(hintRemove, 1);
+                hint.save();
             });
         });
         
         const toRemove = closetGot.collections.indexOf(closetAdd._id)
         closetGot.collections.splice(toRemove, 1);
 
-        hint.save();
         closetGot.save();
         res.json({
             success: true,
