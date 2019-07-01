@@ -21,7 +21,6 @@ router.post('/add-hint', isAdmin, (req, res) => {
         if (fields.overview) hint.overview = fields.overview;
         if (fields.recommendations) hint.recommendations = fields.recommendations;
         if (fields.alternatives) hint.alternatives = fields.alternatives;
-        if (fields.do) hint.do = fields.do;
         if (fields.dont) hint.dont = fields.dont;
         if (fields.gender) hint.gender = fields.gender;
         if (fields.size) {
