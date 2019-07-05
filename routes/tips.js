@@ -151,7 +151,7 @@ router.post('/seenBy/:id', checkJwt, (req, res) => {
         if (tip == null) {
             res.json({
                 success: false,
-                message: 'This tip does no longer exist'
+                message: 'This tip is no longer available'
             });
         } else {
             if (tip.seenBy.length !== 0) {
