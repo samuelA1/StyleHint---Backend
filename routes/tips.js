@@ -292,7 +292,8 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                     User.find({tips: tipId}, (err, userWithMyTips) => {
                         if (err) return err;
 
-                        if (!userWithMyTips) {
+                        console.log(userWithMyTips)
+                        if (userWithMyTips == null) {
                             const toRemove = user.myTips.indexOf(tipId)
                             user.myTips.splice(toRemove, 1);
                             if (user.notifications == -1) {
