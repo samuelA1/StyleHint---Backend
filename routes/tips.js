@@ -292,24 +292,33 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                     User.find({tips: tipId}, (err, userWithMyTips) => {
                         if (err) return err;
 
-                        userWithMyTips.forEach(userWith => {
+                        if (!userWithMyTips) {
                             const toRemove = user.myTips.indexOf(tipId)
                             user.myTips.splice(toRemove, 1);
-                            const tipToRemove = userWith.tips.indexOf(tipId)
-                            userWith.tips.splice(tipToRemove, 1);
-                            if (userWith.notifications == -1) {
-                                userWith.notifications = 0;
-                            } else {
-                                userWith.notifications = userWith.notifications - 1;
-                            }
                             if (user.notifications == -1) {
                                 user.notifications = 0;
                             } else {
                                 user.notifications = user.notifications - totalComments;
                             }
                             user.save();
-                            userWith.save();
-                        });
+                        } else {
+                            userWithMyTips.forEach(userWith => {
+                                const tipToRemove = userWith.tips.indexOf(tipId)
+                                userWith.tips.splice(tipToRemove, 1);
+                                if (userWith.notifications == -1) {
+                                    userWith.notifications = 0;
+                                } else {
+                                    userWith.notifications = userWith.notifications - 1;
+                                }
+                                if (user.notifications == -1) {
+                                    user.notifications = 0;
+                                } else {
+                                    user.notifications = user.notifications - totalComments;
+                                }
+                                user.save();
+                                userWith.save();
+                            });
+                        }
                     });
 
                     Notification.deleteMany({route: tipId}, (err) => {
