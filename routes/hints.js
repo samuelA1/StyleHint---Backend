@@ -90,18 +90,21 @@ router.get('/get-single-hint/:id', checkJwt, (req, res) => {
 router.post('/suggestions', checkJwt, (req, res) => {
     Hint.find({$and: [{gender: req.body.gender}, {size: req.body.size},
         {interest: req.body.interest},{weather: req.body.weather},
-         {season: req.body.season}, {occasion: req.body.occasion}]}, (err, hints) => {
-        if (err) return err;
-
-        let suggestions = [];
-        for (let i = 0; i < 5; i++) {
-            suggestions.push(hints[Math.floor(Math.random()*hints.length)]);
-        }
-        res.json({
-            success: true,
-            suggestions: suggestions
-        })
-    });
+         {season: req.body.season}, {occasion: req.body.occasion}]})
+         .sort({createdAt: -1})
+         .select(['_id','url'])
+         .exec((err, hints) => {
+            if (err) return err;
+        
+            let suggestions = [];
+            for (let i = 0; i < 5; i++) {
+                suggestions.push(hints[Math.floor(Math.random()*hints.length)]);
+            }
+            res.json({
+                success: true,
+                suggestions: suggestions
+            })
+        });
 });
 //add rating
 router.post('/add-rating/:id', checkJwt, (req, res) => {
