@@ -8,7 +8,8 @@ const NotificationSchema = new Schema({
     createdAt: {type: Date, default: Date.now},
     typeOf: String,
     message: String,
-    route: String,
+    route: {type: String, default: ''},
+    comment: {type: String, default: ''}
 });
 
 module.exports = mongoose.model('Notification', NotificationSchema);

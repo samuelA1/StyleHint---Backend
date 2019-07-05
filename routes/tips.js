@@ -124,7 +124,7 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
                 notification.fromUsername = req.decoded.user.username;
                 notification.typeOf = 'comment';
                 notification.message = 'commented on one of your tips';
-                notification.route = tip._id;
+                notification.comment = tip._id;
                 let comment = {
                     commenter: user['username'],
                     comment: req.body.comment,
@@ -277,7 +277,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
             });
         },
         function (user, callback) {
-            Notification.find({route: tipId}, (err, notification) => {
+            Notification.find({comment: tipId}, (err, notification) => {
                 if (err) return err;
 
                 callback(err, user, notification.length)
