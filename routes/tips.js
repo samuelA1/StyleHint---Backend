@@ -288,6 +288,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                 if (err) return err;
 
                 if (tip == null) {
+                    console.log('yes');
                     User.find({tips: tipId}, (err, userWithMyTips) => {
                         if (err) return err;
 
@@ -319,7 +320,6 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         success: true
                     });
                 } else {
-                    console.log('no');
                     res.json({
                         success: true
                     });
