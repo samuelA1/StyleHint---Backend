@@ -293,7 +293,6 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
 
                         userWithMyTips.forEach(userWith => {
                             const toRemove = user.myTips.indexOf(tipId)
-                            console.log(toRemove);
                             user.myTips.splice(toRemove, 1);
                             const tipToRemove = userWith.tips.indexOf(tipId)
                             userWith.tips.splice(tipToRemove, 1);
@@ -320,6 +319,7 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         success: true
                     });
                 } else {
+                    console.log('no');
                     res.json({
                         success: true
                     });
