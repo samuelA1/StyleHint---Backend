@@ -309,16 +309,18 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                                 userWith.tips.splice(tipToRemove, 1);
                                 if (userWith.notifications == -1) {
                                     userWith.notifications = 0;
+                                    userWith.save();
                                 } else {
                                     userWith.notifications = userWith.notifications - 1;
+                                    userWith.save();
                                 }
                                 if (user.notifications == -1) {
                                     user.notifications = 0;
+                                    user.save();
                                 } else {
                                     user.notifications = user.notifications - totalComments;
+                                    user.save();
                                 }
-                                user.save();
-                                userWith.save();
                             });
                         }
                     });
