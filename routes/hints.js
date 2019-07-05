@@ -87,7 +87,7 @@ router.get('/get-single-hint/:id', checkJwt, (req, res) => {
 });
 
 //get suggestions
-router.get('/suggestions', checkJwt, (req, res) => {
+router.post('/suggestions', checkJwt, (req, res) => {
     Hint.find({$and: [{gender: req.body.gender}, {size: req.body.size},
         {interest: req.body.interest},{weather: req.body.weather},
          {season: req.body.season}, {occasion: req.body.occasion}]}, (err, hints) => {
