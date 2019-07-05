@@ -296,10 +296,11 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                             user.myTips.splice(toRemove, 1);
                             if (user.notifications == -1) {
                                 user.notifications = 0;
+                                user.save();
                             } else {
                                 user.notifications = user.notifications - totalComments;
+                                user.save();
                             }
-                            user.save();
                         } else {
                             userWithMyTips.forEach(userWith => {
                                 const tipToRemove = userWith.tips.indexOf(tipId)
