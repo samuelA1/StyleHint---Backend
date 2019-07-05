@@ -99,6 +99,7 @@ router.post('/suggestions', checkJwt, (req, res) => {
             let suggestions = [];
             for (let i = 0; i < 5; i++) {
                 suggestions.push(hints[Math.floor(Math.random()*hints.length)]);
+                console.log(Math.floor(Math.random()*hints.length))
             }
             res.json({
                 success: true,
