@@ -147,28 +147,35 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
 router.post('/seenBy/:id', checkJwt, (req, res) => {
     Tip.findById(req.params.id, (err, tip) => {
         if (err) return err;
-        
-        if (tip.seenBy.length !== 0) {
-            if ( tip.seenBy.some(seen => seen == req.decoded.user._id)) {
-                 res.json({
-                     success: true,
-                     message: 'tip seen'
-                 });
-             } else {
-                 tip.seenBy.push(req.decoded.user._id);
-                 tip.save();
-                 res.json({
-                     success: true,
-                     message: 'tip seen'
-                 });
-             }      
-        } else {
-            tip.seenBy.push(req.decoded.user._id);
-            tip.save();
+
+        if (tip == null) {
             res.json({
                 success: true,
-                message: 'tip seen'
+                message: 'This tip does no longer exist'
             });
+        } else {
+            if (tip.seenBy.length !== 0) {
+                if ( tip.seenBy.some(seen => seen == req.decoded.user._id)) {
+                     res.json({
+                         success: true,
+                         message: 'tip seen'
+                     });
+                 } else {
+                     tip.seenBy.push(req.decoded.user._id);
+                     tip.save();
+                     res.json({
+                         success: true,
+                         message: 'tip seen'
+                     });
+                 }      
+            } else {
+                tip.seenBy.push(req.decoded.user._id);
+                tip.save();
+                res.json({
+                    success: true,
+                    message: 'tip seen'
+                });
+            }   
         }
     });
 });
