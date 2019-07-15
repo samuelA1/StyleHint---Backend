@@ -11,7 +11,7 @@ router.post('/get-hints',checkJwt, (req, res) => {
     async.parallel([
         function(callback) {
             Hint.countDocuments({$and: [{gender: req.body.gender}, {size: req.body.size}, 
-                {interest: req.body.interest},{weather: req.body.weather},
+                {interest: req.body.interest},
                  {season: req.body.season}, {occasion: req.body.occasion}]},
                  (err, count) => {
                      if (err) return err;
@@ -21,7 +21,7 @@ router.post('/get-hints',checkJwt, (req, res) => {
         },
         function (callback) {
             Hint.find({$and: [{gender: req.body.gender}, {size: req.body.size},
-                 {interest: req.body.interest},{weather: req.body.weather},
+                 {interest: req.body.interest},
                   {season: req.body.season}, {occasion: req.body.occasion}]})
             .limit(perPage)
             .skip(page * perPage)
@@ -89,7 +89,7 @@ router.get('/get-single-hint/:id', checkJwt, (req, res) => {
 //get suggestions
 router.post('/suggestions', checkJwt, (req, res) => {
     Hint.find({$and: [{gender: req.body.gender}, {size: req.body.size},
-        {interest: req.body.interest},{weather: req.body.weather},
+        {interest: req.body.interest},
          {season: req.body.season}, {occasion: req.body.occasion}]})
          .sort({createdAt: -1})
          .select(['_id','url'])
