@@ -89,18 +89,14 @@ router.get('/clear-all', checkJwt, (req, res) => {
             notifications.forEach(notify => {
                 Notification.findByIdAndDelete(notify._id, (err) => {
                     if (err) return err;
-    
-                    if (user.notifications == -1) {
-                        user.notifications = 0;
-                    } else {
-                        user.notifications = user.notifications - 1;
-                    }
-                    user.save();
-                    res.json({
-                        success: true
-                    })
+                    
                 })
             });
+            user.notifications = 0;
+            user.save();
+            res.json({
+                success: true
+            })
         }
     ])
 });
