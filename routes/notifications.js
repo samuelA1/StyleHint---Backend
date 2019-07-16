@@ -68,6 +68,43 @@ router.get('/notifications', checkJwt, (req, res) => {
     ])
 });
 
+//delete all notifications
+router.get('/clear-all', checkJwt, (req, res) => {
+    async.waterfall([
+        function (callback) {
+            Notification.find({for: req.decoded.user._id}, (err, notifications) => {
+                if (err) return err;
+
+                callback(err, notifications)
+            })
+        },
+        function (notifications, callback) {
+            User.findById(req.decoded.user._id, (err, user) => {
+                if (err) return err;
+
+                callback(err, user, notifications)
+            });
+        },
+        function (user, notifications) {
+            notifications.forEach(notify => {
+                Notification.findByIdAndDelete(notify._id, (err) => {
+                    if (err) return err;
+    
+                    if (user.notifications == -1) {
+                        user.notifications = 0;
+                    } else {
+                        user.notifications = user.notifications - 1;
+                    }
+                    user.save();
+                    res.json({
+                        success: true
+                    })
+                })
+            });
+        }
+    ])
+});
+
 //change number of notifications gotten
 router.post('/change-notify', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
