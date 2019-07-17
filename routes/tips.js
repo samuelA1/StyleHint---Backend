@@ -185,8 +185,7 @@ router.post('/delete-comment/:id', checkJwt, (req, res) => {
     Tip.findById(req.params.id, (err, tip) => {
         if (err) return err;
 
-        const commentToRemove = tip.comments.indexOf(req.query.id);
-        tip.comments.splice(commentToRemove, 1);
+        tip.comments.splice(tip.comments.findIndex(i => i == req.query.id), 1);
         tip.save();
         res.json({
             success: true,
