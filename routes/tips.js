@@ -120,7 +120,7 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
                 if (err) return err;
 
                 if (user['_id'] = tip.owner) {
-                    notification.for.push('');
+                    notification.for.push(tip._id);
                 } else {
                     notification.for.push(tip.owner);
                 }
