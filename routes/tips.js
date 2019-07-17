@@ -119,6 +119,9 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
             Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
 
+                if (tip.owner == user._id) {
+                    notification.for.push('me');
+                }
                 notification.for.push(tip.owner);
                 notification.from = req.decoded.user._id;
                 notification.fromUsername = req.decoded.user.username;
