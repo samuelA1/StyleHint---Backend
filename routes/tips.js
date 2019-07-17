@@ -121,8 +121,9 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
 
                 if (tip.owner == user._id) {
                     notification.for.push('me');
+                } else {
+                    notification.for.push(tip.owner);
                 }
-                notification.for.push(tip.owner);
                 notification.from = req.decoded.user._id;
                 notification.fromUsername = req.decoded.user.username;
                 notification.typeOf = 'comment';
