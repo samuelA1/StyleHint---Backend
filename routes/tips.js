@@ -119,7 +119,9 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
             Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
 
-                if (user['_id'] !== tip.owner) {
+                console.log(user['_id'])
+                console.log(tip.owner)
+                if (user['_id'] != tip.owner) {
                     notification.for.push(tip.owner);
                 } else {
                     notification.for.push(tip._id);
