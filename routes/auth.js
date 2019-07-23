@@ -113,34 +113,62 @@ router.post('/register', (req, res) => {
                             <p>--The StyleHint Team.</p>
                         </div>
                         `
-                        let transporter = nodemailer.createTransport({
-                            host: "smtp.office365.com",
-                            port: 587,
-                            secure: false, // true for 465, false for other ports
-                            auth: {
-                              user: 'no-reply@thestylehint.com', // generated ethereal user
-                              pass: 'sneakers36.' // generated ethereal password
-                            }
-                          });
+                        // let transporter = nodemailer.createTransport({
+                        //     host: "smtp.office365.com",
+                        //     port: 587,
+                        //     secure: false, // true for 465, false for other ports
+                        //     auth: {
+                        //       user: 'no-reply@thestylehint.com', // generated ethereal user
+                        //       pass: 'sneakers36.' // generated ethereal password
+                        //     }
+                        //   });
                         
-                          // send mail with defined transport object
-                          transporter.sendMail({
-                            from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
-                            to: `${req.body.email}`, // list of receivers
-                            subject: "Welcome to StyleHint", // Subject line
-                            text: "Hello world?", // plain text body
-                            html: output // html body
-                          }, (err, info) => {
-                              if (err) return err;
-                              console.log("Message sent: %s", info);
+                        //   // send mail with defined transport object
+                        //   transporter.sendMail({
+                        //     from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
+                        //     to: `${req.body.email}`, // list of receivers
+                        //     subject: "Welcome to StyleHint", // Subject line
+                        //     text: "Hello world?", // plain text body
+                        //     html: output // html body
+                        //   }, (err, info) => {
+                        //       if (err) return err;
+                        //       console.log("Message sent: %s", info);
 
-                              res.json({
-                                success: true,
-                                message: 'Registration successsful',
-                                token: token
-                              });
+                        //       res.json({
+                        //         success: true,
+                        //         message: 'Registration successsful',
+                        //         token: token
+                        //       });
 
-                          });
+                        //   });
+                        let mailerConfig = {    
+                            host: "smtp.office365.com",  
+                            secureConnection: true,
+                            port: 587,
+                            auth: {
+                                user: "no-reply@thestylehint.com",
+                                pass: "sneakers36."
+                            }
+                        };
+                        let transporter = nodemailer.createTransport(mailerConfig);
+                        
+                        let mailOptions = {
+                            from: '"StyleHint" <no-reply@thestylehint.com>',
+                            to: `${req.body.email}`,
+                            subject: 'Welcome to StyleHint',
+                            html: output
+                        };
+                        
+                        transporter.sendMail(mailOptions, (error) => {
+                            if (err) return err;
+
+                            console.log("Message sent: %s", info);
+                            res.json({
+                            success: true,
+                            message: 'Registration successsful',
+                            token: token
+                            });
+                        });
                     }
                 });
             }
