@@ -115,7 +115,7 @@ router.post('/register', (req, res) => {
                         let transporter = nodemailer.createTransport({
                             host: "smtp.office365.com",
                             port: 587,
-                            secure: true, // true for 465, false for other ports
+                            secure: false, // true for 465, false for other ports
                             auth: {
                             user: 'no-reply@thestylehint.com', // generated ethereal user
                             pass: 'sneakers36.' // generated ethereal password
