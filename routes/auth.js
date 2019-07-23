@@ -130,16 +130,18 @@ router.post('/register', (req, res) => {
                             subject: "Welcome to StyleHint", // Subject line
                             text: "Hello world?", // plain text body
                             html: output // html body
-                          });
-                        
-                          console.log("Message sent: %s", info.messageId);
-                          console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                          }, (err, info) => {
+                              if (err) return err;
+                              console.log("Message sent: %s", info.messageId);
+                              console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
-                        res.json({
-                            success: true,
-                            message: 'Registration successsful',
-                            token: token
-                        });
+                              res.json({
+                                success: true,
+                                message: 'Registration successsful',
+                                token: token
+                              });
+
+                          });
                     }
                 });
             }
