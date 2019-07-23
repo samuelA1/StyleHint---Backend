@@ -125,7 +125,7 @@ router.post('/register', (req, res) => {
                         });
 
                         // send mail with defined transport object
-                        let info = await transporter.sendMail({
+                        let info = transporter.sendMail({
                         from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
                         to: `${req.body.email}`, // list of receivers
                         subject: "Welcome to StyleHint", // Subject line
