@@ -112,24 +112,24 @@ router.post('/register', (req, res) => {
                         </div>
                         `
                          // create reusable transporter object using the default SMTP transport
-                        let transporter = nodemailer.createTransport({
-                            host: "smtp.office365.com",
-                            port: 587,
-                            secure: false, // true for 465, false for other ports
-                            auth: {
-                            user: 'no-reply@thestylehint.com', // generated ethereal user
-                            pass: 'sneakers36.' // generated ethereal password
-                            }
-                        });
+                        // let transporter = nodemailer.createTransport({
+                        //     host: "smtp.office365.com",
+                        //     port: 587,
+                        //     secure: false, // true for 465, false for other ports
+                        //     auth: {
+                        //     user: 'no-reply@thestylehint.com', // generated ethereal user
+                        //     pass: 'sneakers36.' // generated ethereal password
+                        //     }
+                        // });
 
-                        // send mail with defined transport object
-                        let info = transporter.sendMail({
-                            from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
-                            to: `${req.body.email}`, // list of receivers
-                            subject: "Welcome to StyleHint", // Subject line
-                            text: "Hello world?", // plain text body
-                            html: output // html body
-                        });
+                        // // send mail with defined transport object
+                        // let info = transporter.sendMail({
+                        //     from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
+                        //     to: `${req.body.email}`, // list of receivers
+                        //     subject: "Welcome to StyleHint", // Subject line
+                        //     text: "Hello world?", // plain text body
+                        //     html: output // html body
+                        // });
 
                         res.json({
                             success: true,
