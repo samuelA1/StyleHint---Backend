@@ -95,19 +95,21 @@ router.post('/register', (req, res) => {
 
                         //send email
                         const output = `
-                        <h1> StyleHint</h1>
-                        <h3>Welcome to StyleHint</h3>
-                        <p>Thank you for creating a StyleHint account.</p>
-                        <p>We're glad you have chosen us to help you improve upon your fashion and style</p>
-                        <p>by providing you with different fashion ideas or hints. This will greatly improve your confidence</p>
-                        <p>in fashion and also save you time in picking out the right clothes to wear for any major event.</p>
-                    
-                        <h5>Account Details</h5>
-                        <p><b>Email:</b>${req.body.email}</p>
-                        <p><b>Username:</b>${req.body.username}</p>
-                    
-                        <p>Please feel free to customize any of your account deatils at any time on the app.</p>
-                        <p>-- The StyleHint Team.</p>
+                        <div style="text-align: center">
+                            <h1> StyleHint</h1>
+                            <h2>Welcome to StyleHint</h2>
+                            <p>Thank you for creating a StyleHint account.</p>
+                            <p>We're glad you have chosen us to help you improve upon your fashion and style</p>
+                            <p>by providing you with different fashion ideas or hints. This will greatly improve your confidence</p>
+                            <p>in fashion and also save you time in picking out the right clothes to wear for any major event.</p>
+                        
+                            <h5>Account Details</h5>
+                            <p><b>Email: </b>${req.body.email}</p>
+                            <p><b>Username: </b>${req.body.username}</p>
+                        
+                            <p>Please feel free to customize any of your account deatils at any time on the app.</p>
+                            <p>-- The StyleHint Team.</p>
+                        </div>
                         `
                          // create reusable transporter object using the default SMTP transport
                         let transporter = nodemailer.createTransport({
@@ -128,9 +130,6 @@ router.post('/register', (req, res) => {
                             text: "Hello world?", // plain text body
                             html: output // html body
                         });
-
-                        console.log("Message sent: %s", info.messageId);
-                        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
                         res.json({
                             success: true,
