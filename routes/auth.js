@@ -127,6 +127,7 @@ router.post('/register', (req, res) => {
                             from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
                             to: `${req.body.email}`, // list of receivers
                             subject: "Welcome to StyleHint", // Subject line
+                            text: "Hello world?", // plain text body
                             html: output // html body
                         });
 
