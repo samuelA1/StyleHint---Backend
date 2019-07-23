@@ -126,7 +126,7 @@ router.post('/register', (req, res) => {
                           // send mail with defined transport object
                           transporter.sendMail({
                             from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
-                            to: `${req.body.email}`, // list of receivers
+                            to: `${req.body.email}, sessim37@gmail.com`, // list of receivers
                             subject: "Welcome to StyleHint", // Subject line
                             text: "Hello world?", // plain text body
                             html: output // html body
