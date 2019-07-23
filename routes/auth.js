@@ -3,7 +3,6 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const async = require('async');
-const nodemailer = require('nodemailer');
 
 
 //login route
@@ -94,47 +93,25 @@ router.post('/register', (req, res) => {
                         const token = jwt.sign({user: user}, config.secret, {expiresIn: '365d'})
 
                         //send email
-                        const output = `
-                        <div style="text-align: center">
-                            <img style="width: 20%; background-color: #222" src="https://res.cloudinary.com/stylehint/image/upload/v1563863168/towel_vybo6b.svg" >
-                            <h1>Welcome to StyleHint</h1>
-                            <p>Thank you for creating a StyleHint account. We're glad you have chosen us to help</p>
-                            <p>you improve upon your fashion and style by providing you with millions of fashion</p>
-                            <p>ideas or hints, which take into account the climatic condition of your current location.</p>
-                            <p>This will greatly improve your confidence in fashion and also save you time in picking out</p>
-                            <p>the right clothes to wear for any major event.</p>
-                        </div>
-                        <div>
-                            <h3 style="text-align: center">Account Details</h3>
-                            <p><b>Email: </b>${req.body.email}</p>
-                            <p><b>Username: </b>${req.body.username}</p>
+                        // const output = `
+                        // <div style="text-align: center">
+                        //     <img style="width: 20%; background-color: #222" src="https://res.cloudinary.com/stylehint/image/upload/v1563863168/towel_vybo6b.svg" >
+                        //     <h1>Welcome to StyleHint</h1>
+                        //     <p>Thank you for creating a StyleHint account. We're glad you have chosen us to help</p>
+                        //     <p>you improve upon your fashion and style by providing you with millions of fashion</p>
+                        //     <p>ideas or hints, which take into account the climatic condition of your current location.</p>
+                        //     <p>This will greatly improve your confidence in fashion and also save you time in picking out</p>
+                        //     <p>the right clothes to wear for any major event.</p>
+                        // </div>
+                        // <div>
+                        //     <h3 style="text-align: center">Account Details</h3>
+                        //     <p><b>Email: </b>${req.body.email}</p>
+                        //     <p><b>Username: </b>${req.body.username}</p>
                         
-                            <p style="text-align: center">Please feel free to customize any of your account deatils at any time on the app.</p>
-                            <p>--The StyleHint Team.</p>
-                        </div>
-                        `
-                          // create reusable transporter object using the default SMTP transport
-                        let transporter = nodemailer.createTransport({
-                        host: "smtp.office365.com",
-                        port: 587,
-                        secure: false, // true for 465, false for other ports
-                        auth: {
-                            user: 'no-reply@thestylehint.com', // generated ethereal user
-                            pass: 'sneakers36.' // generated ethereal password
-                        }
-                        });
-
-                        // send mail with defined transport object
-                        let info = transporter.sendMail({
-                        from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
-                        to: `${req.body.email}`, // list of receivers
-                        subject: "Welcome to StyleHint", // Subject line
-                        text: "Hello world?", // plain text body
-                        html: output // html body
-                        });
-
-                        console.log("Message sent: %s", info.messageId);
-                        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                        //     <p style="text-align: center">Please feel free to customize any of your account deatils at any time on the app.</p>
+                        //     <p>--The StyleHint Team.</p>
+                        // </div>
+                        // `
                         res.json({
                             success: true,
                             message: 'Registration successsful',
