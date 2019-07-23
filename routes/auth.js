@@ -96,19 +96,21 @@ router.post('/register', (req, res) => {
                         //send email
                         const output = `
                         <div style="text-align: center">
-                            <h1> StyleHint</h1>
-                            <h2>Welcome to StyleHint</h2>
-                            <p>Thank you for creating a StyleHint account.</p>
-                            <p>We're glad you have chosen us to help you improve upon your fashion and style</p>
-                            <p>by providing you with different fashion ideas or hints. This will greatly improve your confidence</p>
-                            <p>in fashion and also save you time in picking out the right clothes to wear for any major event.</p>
-                        
+                            <img src="../../assets/towel.png" >
+                            <h1>Welcome to StyleHint</h1>
+                            <p>Thank you for creating a StyleHint account. We're glad you have chosen us to help</p>
+                            <p>you improve upon your fashion and style by providing you with millions of fashion</p>
+                            <p>ideas or hints, which take into account the climatic condition of your current location.</p>
+                            <p>This will greatly improve your confidence in fashion and also save you time in picking out</p>
+                            <p>the right clothes to wear for any major event.</p>
+                        </div>
+                        <div>
                             <h5>Account Details</h5>
                             <p><b>Email: </b>${req.body.email}</p>
                             <p><b>Username: </b>${req.body.username}</p>
                         
                             <p>Please feel free to customize any of your account deatils at any time on the app.</p>
-                            <p>-- The StyleHint Team.</p>
+                            <p>--The StyleHint Team.</p>
                         </div>
                         `
                         let transporter = nodemailer.createTransport({
