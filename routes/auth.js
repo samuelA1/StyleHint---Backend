@@ -124,7 +124,7 @@ router.post('/register', (req, res) => {
                           });
                         
                           // send mail with defined transport object
-                          let info = transporter.sendMail({
+                          transporter.sendMail({
                             from: '"StyleHint" <no-reply@thestylehint.com>', // sender address
                             to: `${req.body.email}`, // list of receivers
                             subject: "Welcome to StyleHint", // Subject line
@@ -132,8 +132,7 @@ router.post('/register', (req, res) => {
                             html: output // html body
                           }, (err, info) => {
                               if (err) return err;
-                              console.log("Message sent: %s", info.messageId);
-                              console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                              console.log("Message sent: %s", info);
 
                               res.json({
                                 success: true,
