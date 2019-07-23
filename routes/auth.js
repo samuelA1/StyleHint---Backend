@@ -105,7 +105,7 @@ router.post('/register', (req, res) => {
                             <p>the right clothes to wear for any major event.</p>
                         </div>
                         <div>
-                            <h5 style="text-align: center">Account Details</h5>
+                            <h3 style="text-align: center">Account Details</h3>
                             <p><b>Email: </b>${req.body.email}</p>
                             <p><b>Username: </b>${req.body.username}</p>
                         
