@@ -98,7 +98,7 @@ router.post('/register', (req, res) => {
                         //send email
                         const output = `
                         <div style="text-align: center">
-                            <img style="width: 20%; background-color: #222" src="https://res.cloudinary.com/stylehint/image/upload/v1563863168/towel_vybo6b.svg" >
+                            <img style="width: 20%; background-color: #222" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
                             <h1>Welcome to StyleHint</h1>
                             <p>Thank you for creating a StyleHint account. We're glad you have chosen us to help</p>
                             <p>you improve upon your fashion and style by providing you with millions of fashion</p>
@@ -106,12 +106,12 @@ router.post('/register', (req, res) => {
                             <p>This will greatly improve your confidence in fashion and also save you time in picking out</p>
                             <p>the right clothes to wear for any major event.</p>
                         </div>
-                        <div>
-                            <h3 style="text-align: center">Account Details</h3>
+                        <div style="text-align: center">
+                            <h3>Account Details</h3>
                             <p><b>Email: </b>${req.body.email}</p>
                             <p><b>Username: </b>${req.body.username}</p>
                         
-                            <p style="text-align: center">Please feel free to customize any of your account deatils at any time on the app.</p>
+                            <p>Please feel free to customize any of your account deatils at any time on the app.</p>
                             <p>--The StyleHint Team.</p>
                         </div>
                         `
