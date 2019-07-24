@@ -3,9 +3,9 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const async = require('async');
-const API_KEY = 'key-cd89dbc925b95695b194ca3ea9eedf3e';
-const DOMAIN = 'thestylehint.com';
-const mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
+var API_KEY = 'key-cd89dbc925b95695b194ca3ea9eedf3e';
+var DOMAIN = 'mg.thestylehint.com';
+var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
 
 
 //login route
