@@ -109,7 +109,7 @@ router.post('/register', (req, res) => {
                         <div style="text-align: center; font-size: medium">
                             <h3>Account Details</h3>
                             <p><b>Email: </b>${req.body.email}</p>
-                            <p style="margin-right: 109px"><b>Username: </b>${req.body.username}</p>
+                            <p style="margin-right: 130px"><b>Username: </b>${req.body.username}</p>
                         
                             <p>Please feel free to customize any of your account deatils at any time on the app.</p>
                             <p>--The StyleHint Team.</p>
