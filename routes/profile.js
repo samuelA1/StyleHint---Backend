@@ -98,7 +98,7 @@ router.post('/username', checkJwt, (req, res) => {
                         <div style="text-align: center; font-size: medium">
                             <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
                             <h1>Username update confirmation</h1>
-                            <p>Your recent attempt to update your username was successful. This username is to acknowledge that</p>
+                            <p>Your recent attempt to update your username was successful. This email is to acknowledge that</p>
                             <p>your previous username is no longer accepted for authentication purposes, but your new username is.</p>
                         </div>
                         <div style="text-align: center; font-size: medium">
@@ -147,7 +147,7 @@ router.post('/password', checkJwt, (req, res) => {
             <div style="text-align: center; font-size: medium">
                 <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
                 <h1>Password update confirmation</h1>
-                <p>Your recent attempt to update your password was successful. This password is to acknowledge that</p>
+                <p>Your recent attempt to update your password was successful. This email is to acknowledge that</p>
                 <p>your previous password is no longer accepted for authentication purposes, but your new password is.</p>
             </div>
             <div style="text-align: center; font-size: medium">
