@@ -111,7 +111,7 @@ router.post('/register', (req, res) => {
                             <p><b>Email: </b>${req.body.email}</p>
                             <p style="margin-right: 140px"><b>Username: </b>${req.body.username}</p>
                         
-                            <p>Please feel free to customize any of your account deatils at any time on the app.</p>
+                            <p>Please feel free to customize any of your account details at any time on the app.</p>
                             <p>--The StyleHint Team.</p>
                         </div>
                         `

@@ -42,7 +42,7 @@ router.post('/email', checkJwt, (req, res) => {
                             <h3>Account Details</h3>
                             <p><b>New email: </b>${req.body.email}</p>
                         
-                            <p>Please feel free to customize any of your account deatils at any time on the app.</p>
+                            <p>Please feel free to customize any of your account details at any time on the app.</p>
                             <p>--The StyleHint Team.</p>
                         </div>
                         `
@@ -105,7 +105,7 @@ router.post('/username', checkJwt, (req, res) => {
                             <h3>Account Details</h3>
                             <p><b>New username: </b>${req.body.username}</p>
                         
-                            <p>Please feel free to customize any of your account deatils at any time on the app.</p>
+                            <p>Please feel free to customize any of your account details at any time on the app.</p>
                             <p>--The StyleHint Team.</p>
                         </div>
                         `
@@ -151,7 +151,7 @@ router.post('/password', checkJwt, (req, res) => {
                 <p>your previous password is no longer accepted for authentication purposes, but your new password is.</p>
             </div>
             <div style="text-align: center; font-size: medium">
-                <p>Please feel free to customize any of your account deatils at any time on the app.</p>
+                <p>Please feel free to customize any of your account details at any time on the app.</p>
                 <p>--The StyleHint Team.</p>
             </div>
             `
