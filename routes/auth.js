@@ -119,14 +119,12 @@ router.post('/register', (req, res) => {
                             from: 'StyleHint <no-reply@thestylehint.com>',
                             to: `${req.body.email}`,
                             subject: 'Welcome to StyleHint',
-                            text: 'Testing some Mailgun awesomeness!',
+                            text: 'The StyleHint Team',
                             html: output
                         };
                           
                         mailgun.messages().send(data, (error, body) => {
                             if (error) return error;
-
-                            console.log(body);
                         });
 
                         res.json({
