@@ -98,7 +98,7 @@ router.post('/register', (req, res) => {
                         //send email
                         const output = `
                         <div style="text-align: center">
-                            <img style="width: 20%; background-color: #222" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                            <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
                             <h1>Welcome to StyleHint</h1>
                             <p>Thank you for creating a StyleHint account. We're glad you have chosen us to help</p>
                             <p>you improve upon your fashion and style by providing you with millions of fashion</p>
