@@ -2,12 +2,12 @@ module.exports = function (io) {
     io.on('connection', (socket) => {
         //when a user loggs in
         var total = io.engine.clientsCount;
-        io.emit('loggedIn', total)
+        io.emit('loggedIn', total-1)
 
         //when user loggs out
         socket.on('disconnect', () => {
             var total = io.engine.clientsCount;
-            io.emit('loggedIn', total)        
+            io.emit('loggedIn', total-1)        
         });
 
         //for sharing hints
