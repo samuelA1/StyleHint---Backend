@@ -41,4 +41,9 @@ module.exports = function (io) {
             io.emit('friendDeleted', ownerId)
         });
     });
+
+    io.on('disconnection', (socket) => {
+        var total = io.engine.clientsCount;
+        io.emit('loggedIn', total)
+    })
 }
