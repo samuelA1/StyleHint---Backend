@@ -1,7 +1,8 @@
 module.exports = function (io) {
     io.on('connection', (socket) => {
         //when a user loggs in
-        io.emit('loggedIn', '')
+        var total = io.engine.clientsCount;
+        io.emit('loggedIn', total)
 
         //for sharing hints
         socket.on('send', (data) => {
