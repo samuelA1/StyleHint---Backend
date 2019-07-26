@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(morgan('dev'));
 
 const server = require('http').createServer(app);
-const io = require('engine.io').listen(server);
+const io = require('socket.io').listen(server);
 require('./socket')(io);
 
 app.use('/api/auth', authRoute);
