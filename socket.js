@@ -4,6 +4,12 @@ module.exports = function (io) {
         var total = io.engine.clientsCount;
         io.emit('loggedIn', total)
 
+        //when user loggs out
+        socket.on('disconnect', () => {
+            var total = io.engine.clientsCount;
+            io.emit('loggedIn', total)        
+        });
+
         //for sharing hints
         socket.on('send', (data) => {
             data.friends.forEach(friend => {
@@ -41,9 +47,4 @@ module.exports = function (io) {
             io.emit('friendDeleted', ownerId)
         });
     });
-
-    io.on('disconnection', (socket) => {
-        var total = io.engine.clientsCount;
-        io.emit('loggedIn', total)
-    })
 }
