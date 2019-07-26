@@ -2,6 +2,8 @@ module.exports = function (io) {
     io.on('connection', (socket) => {
         //when a user loggs in
         var total = io.engine.clientsCount;
+        console.log(total)
+        console.log(io.engine.clientsCount)
         io.emit('loggedIn', total)
 
         //for sharing hints
