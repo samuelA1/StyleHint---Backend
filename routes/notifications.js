@@ -68,6 +68,22 @@ router.get('/notifications', checkJwt, (req, res) => {
     ])
 });
 
+//get friends request
+router.get('/friendRequests', checkJwt, (req, res) => {
+   
+    Notification.find({$and: [{for: req.decoded.user._id}, {typeOf: 'friend'}]})
+        .sort({createdAt: -1})
+        .select(['-for'])
+        .exec( (err, notification) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                notifications: notification,
+            })
+        });
+});
+
 //delete all notifications
 router.get('/clear-all', checkJwt, (req, res) => {
     async.waterfall([
