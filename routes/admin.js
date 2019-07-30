@@ -67,7 +67,7 @@ router.post('/add-hint', isAdmin, (req, res) => {
 });
 
 //update number of active and daily users
-router.post('/add-statistics', checkJwt, (req, res) => {
+router.post('/update-statistics', checkJwt, (req, res) => {
     Statistics.find({createdAt: new Date()}, (err, stats) => {
         if (err) return err;
         
