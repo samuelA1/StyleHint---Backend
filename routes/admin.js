@@ -68,7 +68,7 @@ router.post('/add-hint', isAdmin, (req, res) => {
 
 //update number of active and daily users
 router.post('/update-statistics', checkJwt, (req, res) => {
-    Statistics.find({createdAt: {$lt: new Date(), 
+    Statistics.findOne({createdAt: {$lt: new Date(), 
         $gte: new Date(new Date().setDate(new Date().getDate()-1))}}, (err, stats) => {
         if (err) return err;
         
@@ -105,7 +105,7 @@ router.post('/update-statistics', checkJwt, (req, res) => {
 
 //get number of active and daily users
 router.get('/get-statistics', isAdmin, (req, res) => {
-    Statistics.find({createdAt: {$lt: new Date(), 
+    Statistics.findOne({createdAt: {$lt: new Date(), 
         $gte: new Date(new Date().setDate(new Date().getDate()-1))}}, (err, stats) => {
         if (err) return err;
 
