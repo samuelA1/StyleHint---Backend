@@ -1,13 +1,10 @@
 module.exports = function (io) {
     io.on('connection', (socket) => {
-        //when a user loggs in
-        var currentTotal = io.engine.clientsCount;
-        var sumTotal = currentTotal-1; // total users for the day
-        // if (sumTotal > 0) {
-        //     var dayTotal = sumTotal++;
-        // }
-        console.log(currentTotal);
-        io.emit('loggedIn', {currentTotal: currentTotal-1, dayTotal: sumTotal})
+        //logged in users
+        socket.on('logIn', (data) => {
+            io.emit('loggedIn', data)
+        })
+
 
         //when user loggs out
         socket.on('disconnect', () => {
