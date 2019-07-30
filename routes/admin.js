@@ -70,33 +70,36 @@ router.post('/add-hint', isAdmin, (req, res) => {
 router.post('/update-statistics', checkJwt, (req, res) => {
     Statistics.find({createdAt: new Date()}, (err, stats) => {
         if (err) return err;
+
+        console.log(stats)
+        res.json({success: true})
         
-        if (stats == null) {
-            let statistic = new Statistics();
-            statistic.currentlyActiveUsers++
-            statistic.dailyUsers++
-            statistic.save();
-            res.json({
-                success: true
-            })
-        } else {
-            if (req.body.action == 'add') {
-                stats.currentlyActiveUsers++
-                stats.dailyUsers++
-                stats.save();
-                res.json({
-                    success: true
-                })
-            } else if(req.body.action == 'subtract') {
-                stats.currentlyActiveUsers--
-                stats.dailyUsers--
-                stats.save();
-                res.json({
-                    success: true
-                })
-            }
+        // if (stats == null) {
+        //     let statistic = new Statistics();
+        //     statistic.currentlyActiveUsers++
+        //     statistic.dailyUsers++
+        //     statistic.save();
+        //     res.json({
+        //         success: true
+        //     })
+        // } else {
+        //     if (req.body.action == 'add') {
+        //         stats.currentlyActiveUsers++
+        //         stats.dailyUsers++
+        //         stats.save();
+        //         res.json({
+        //             success: true
+        //         })
+        //     } else if(req.body.action == 'subtract') {
+        //         stats.currentlyActiveUsers--
+        //         stats.dailyUsers--
+        //         stats.save();
+        //         res.json({
+        //             success: true
+        //         })
+        //     }
            
-        }
+        // }
     });
 });
 
