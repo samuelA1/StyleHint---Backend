@@ -74,7 +74,7 @@ router.post('/update-statistics', checkJwt, (req, res) => {
         
         // console.log(stats);
         // res.json({success: true})
-        if (stats.length == 0) {
+        if (stats.length == null) {
             let statistic = new Statistics();
             statistic.currentlyActiveUsers++
             statistic.dailyUsers++
