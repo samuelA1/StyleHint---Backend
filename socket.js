@@ -6,6 +6,7 @@ module.exports = function (io) {
         // if (sumTotal > 0) {
         //     var dayTotal = sumTotal++;
         // }
+        console.log(currentTotal);
         io.emit('loggedIn', {currentTotal: currentTotal-1, dayTotal: sumTotal})
 
         //when user loggs out
