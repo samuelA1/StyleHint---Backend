@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Hint = require('../models/hint');
+const Statistics = require('../models/statistics');
+const checkJwt = require('../middleware/check-jwt');
 const isAdmin = require('../middleware/is-admin');
 const cloudinary = require('cloudinary');
 const formidable = require('formidable');
@@ -10,6 +12,7 @@ cloudinary.config({
     api_secret: 'CJnItspl_V5HLIl_phgAWYsdbL4' 
 });
 
+//add hint
 router.post('/add-hint', isAdmin, (req, res) => {
     let form = new formidable.IncomingForm();
     let hint = new Hint();
@@ -61,5 +64,52 @@ router.post('/add-hint', isAdmin, (req, res) => {
         });
     });
     
+});
+
+//update number of active and daily users
+router.post('/add-statistics', checkJwt, (req, res) => {
+    Statistics.find({createdAt: new Date()}, (err, stats) => {
+        if (err) return err;
+        
+        if (stats == null) {
+            let statistic = new Statistics();
+            statistic.currentlyActiveUsers++
+            statistic.dailyUsers++
+            statistic.save();
+            res.json({
+                success: true
+            })
+        } else {
+            if (req.body.action == 'add') {
+                stats.currentlyActiveUsers++
+                stats.dailyUsers++
+                stats.save();
+                res.json({
+                    success: true
+                })
+            } else if(req.body.action == 'subtract') {
+                stats.currentlyActiveUsers--
+                stats.dailyUsers--
+                stats.save();
+                res.json({
+                    success: true
+                })
+            }
+           
+        }
+    });
+});
+
+//get number of active and daily users
+router.get('/get-statistics', isAdmin, (req, res) => {
+    Statistics.find({createdAt: new Date()}, (err, stats) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            activeUsers: stats.currentlyActiveUsers,
+            dailyUsers: stats.dailyUsers
+        })
+    });
 });
 module.exports = router;
