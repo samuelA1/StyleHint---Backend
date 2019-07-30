@@ -72,40 +72,41 @@ router.post('/update-statistics', checkJwt, (req, res) => {
         $gte: new Date(new Date().setDate(new Date().getDate()-1))}}, (err, stats) => {
         if (err) return err;
         
-        console.log(stats);
-        res.json({success: true})
-        // if (stats.length == 0) {
-        //     let statistic = new Statistics();
-        //     statistic.currentlyActiveUsers++
-        //     statistic.dailyUsers++
-        //     statistic.save();
-        //     res.json({
-        //         success: true
-        //     })
-        // } else {
-        //     if (req.body.action == 'add') {
-        //         stats.currentlyActiveUsers++
-        //         stats.dailyUsers++
-        //         stats.save();
-        //         res.json({
-        //             success: true
-        //         })
-        //     } else if(req.body.action == 'subtract') {
-        //         stats.currentlyActiveUsers--
-        //         stats.dailyUsers--
-        //         stats.save();
-        //         res.json({
-        //             success: true
-        //         })
-        //     }
+        // console.log(stats);
+        // res.json({success: true})
+        if (stats.length == 0) {
+            let statistic = new Statistics();
+            statistic.currentlyActiveUsers++
+            statistic.dailyUsers++
+            statistic.save();
+            res.json({
+                success: true
+            })
+        } else {
+            if (req.body.action == 'add') {
+                stats.currentlyActiveUsers++
+                stats.dailyUsers++
+                stats.save();
+                res.json({
+                    success: true
+                })
+            } else if(req.body.action == 'subtract') {
+                stats.currentlyActiveUsers--
+                stats.dailyUsers--
+                stats.save();
+                res.json({
+                    success: true
+                })
+            }
            
-        // }
+        }
     });
 });
 
 //get number of active and daily users
 router.get('/get-statistics', isAdmin, (req, res) => {
-    Statistics.find({createdAt: new Date()}, (err, stats) => {
+    Statistics.find({createdAt: {$lt: new Date(), 
+        $gte: new Date(new Date().setDate(new Date().getDate()-1))}}, (err, stats) => {
         if (err) return err;
 
         res.json({
