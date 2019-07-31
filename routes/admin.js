@@ -118,4 +118,17 @@ router.get('/get-statistics', isAdmin, (req, res) => {
         })
     });
 });
+
+//get number of active and daily users
+router.get('/week-statistics', isAdmin, (req, res) => {
+    Statistics.find({createdAt: {$lt: new Date(), 
+        $gte: new Date(new Date().setDate(new Date().getDate()-7))}}, (err, stats) => {
+        if (err) return err;
+
+        console.log(stats);
+        res.json({
+            success: true,
+        })
+    });
+});
 module.exports = router;
