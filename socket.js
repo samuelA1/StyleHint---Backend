@@ -8,7 +8,7 @@ module.exports = function (io) {
 
         //when user loggs out
         socket.on('disconnect', () => {
-            io.emit('loggedOut',  {});        
+            io.once('loggedOut',  {});        
         });
 
         //for sharing hints
