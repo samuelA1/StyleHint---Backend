@@ -10,8 +10,8 @@ module.exports = function (io) {
         //when user loggs out
         socket.on('disconnect', () => {
             if (emitted <= 1) {
+                emitted++
                 io.emit('loggedOut',  {}); 
-                emitted++ 
                 console.log(emitted)
             }      
         });
