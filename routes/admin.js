@@ -128,7 +128,7 @@ router.get('/week-statistics', isAdmin, (req, res) => {
         let weeklyTotal = 0;
         if (stats.length !== 0) {
             stats.forEach(record => {
-                weeklyTotal += record[dailyUsers]
+                weeklyTotal += record['dailyUsers']
             });
         }
         res.json({
