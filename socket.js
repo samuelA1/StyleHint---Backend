@@ -8,8 +8,7 @@ module.exports = function (io) {
 
         //when user loggs out
         socket.on('disconnect', () => {
-            var currentTotal = io.engine.clientsCount;
-            io.emit('loggedOut',  {currentTotal: currentTotal-1})        
+            io.emit('loggedOut',  {});        
         });
 
         //for sharing hints
