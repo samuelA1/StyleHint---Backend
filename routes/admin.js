@@ -90,7 +90,11 @@ router.post('/update-statistics', checkJwt, (req, res) => {
                     success: true
                 })
             } else if(req.body.action == 'subtract') {
-                stats.currentlyActiveUsers--
+                if (stats.currentlyActiveUsers == 0) {
+                    stats.currentlyActiveUsers = 0;
+                } else {
+                    stats.currentlyActiveUsers--
+                }
                 stats.save();
                 res.json({
                     success: true
