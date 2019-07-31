@@ -9,8 +9,8 @@ module.exports = function (io) {
 
         //when user loggs out
         socket.on('disconnect', () => {
+            emitted++
             if (emitted <= 1) {
-                emitted++
                 io.emit('loggedOut',  {}); 
                 console.log(emitted)
             }      
