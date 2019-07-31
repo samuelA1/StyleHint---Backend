@@ -12,6 +12,7 @@ module.exports = function (io) {
             if (emitted < 1) {
                 io.emit('loggedOut',  {}); 
                 emitted++ 
+                console.log(emitted)
             }      
         });
 
