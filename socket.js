@@ -5,15 +5,9 @@ module.exports = function (io) {
             io.emit('loggedIn', data)
         })
 
-        var emitted = 0;
-
         //when user loggs out
         socket.on('disconnect', () => {
-            if (emitted !== 1) {
-                io.emit('loggedOut',  {});
-                emitted++ 
-                console.log(emitted)
-            }      
+            io.emit('loggedOut',  {});        
         });
 
         //for sharing hints
