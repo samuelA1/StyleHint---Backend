@@ -125,9 +125,15 @@ router.get('/week-statistics', isAdmin, (req, res) => {
         $gte: new Date(new Date().setDate(new Date().getDate()-7))}}, (err, stats) => {
         if (err) return err;
 
-        console.log(stats);
+        let weeklyTotal = 0;
+        if (stats.length !== 0) {
+            stats.forEach(record => {
+                weeklyTotal += record[dailyUsers]
+            });
+        }
         res.json({
             success: true,
+            weeklyUsers: weeklyTotal
         })
     });
 });
