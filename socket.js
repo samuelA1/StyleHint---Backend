@@ -7,7 +7,8 @@ module.exports = function (io) {
 
         //when user loggs out
         socket.on('disconnect', () => {
-            io.emit('loggedOut',  {});        
+            io.emit('loggedOut',  {});
+            console.log(io.engine.clientsCount)        
         });
 
         //for sharing hints
