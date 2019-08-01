@@ -75,32 +75,17 @@ router.post('/update-statistics', checkJwt, (req, res) => {
         
         if (stats == null) {
             let statistic = new Statistics();
-            statistic.currentlyActiveUsers++
             statistic.dailyUsers++
             statistic.save();
             res.json({
                 success: true
             })
         } else {
-            if (req.body.action == 'add') {
-                stats.currentlyActiveUsers++
-                stats.dailyUsers++
-                stats.save();
-                res.json({
-                    success: true
-                })
-            } else if(req.body.action == 'subtract') {
-                if (stats.currentlyActiveUsers == 0) {
-                    stats.currentlyActiveUsers = 0;
-                } else {
-                    stats.currentlyActiveUsers--
-                }
-                stats.save();
-                res.json({
-                    success: true
-                })
-            }
-           
+            stats.dailyUsers++
+            stats.save();
+            res.json({
+                success: true
+            })
         }
     });
 });
@@ -113,7 +98,6 @@ router.get('/get-statistics', isAdmin, (req, res) => {
 
         res.json({
             success: true,
-            activeUsers: stats.currentlyActiveUsers,
             dailyUsers: stats.dailyUsers
         })
     });

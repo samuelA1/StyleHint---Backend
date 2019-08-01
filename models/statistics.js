@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 const StatisticSchema = new Schema({
    createdAt: {type: Date, default: Date.now},
-   currentlyActiveUsers: {type: Number, default: 0},
    dailyUsers: {type: Number, default: 0}
 });
 
