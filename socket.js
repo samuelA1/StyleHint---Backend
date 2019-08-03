@@ -3,7 +3,7 @@ module.exports = function (io) {
         //logged in users
         socket.on('logIn', (data) => {
             io.emit('loggedIn', {activeUsers: io.sockets.server.engine.clientsCount});
-            console.log(io.sockets.sockets.length);
+            console.log(io.sockets.sockets);
         })
 
         //when user loggs out
