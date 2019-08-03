@@ -2,13 +2,12 @@ module.exports = function (io) {
     io.on('connection', (socket) => {
         //logged in users
         socket.on('logIn', (data) => {
-            io.emit('loggedIn', {activeUsers: io.sockets.server.engine.clientsCount});
-            console.log(io.sockets.server.clientsCount);
+            io.emit('loggedIn', {activeUsers: io.sockets.server.engine.clientsCount / 2});
         })
 
         //when user loggs out
         socket.on('disconnect', () => {
-            io.emit('loggedOut',  {activeUsers: io.sockets.server.engine.clientsCount});
+            io.emit('loggedOut',  {activeUsers: io.sockets.server.engine.clientsCount / 2});
         });
 
         //for sharing hints
