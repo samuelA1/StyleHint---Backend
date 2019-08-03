@@ -3,6 +3,7 @@ module.exports = function (io) {
         //logged in users
         socket.on('logIn', (data) => {
             io.emit('loggedIn', {activeUsers: io.sockets.server.engine.clientsCount / 2});
+            console.log(io.sockets.Namespace);
         })
 
         //when user loggs out
