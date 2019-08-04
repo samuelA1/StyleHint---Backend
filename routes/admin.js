@@ -92,7 +92,7 @@ router.post('/update-statistics', checkJwt, (req, res) => {
 });
 
 //total number of users
-router.get('total-users', isAdmin, (req, res) => {
+router.get('/total-users', isAdmin, (req, res) => {
     User.countDocuments({}, (err, count) => {
         if (err) return err;
 
