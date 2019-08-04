@@ -5,6 +5,7 @@ const checkJwt = require('../middleware/check-jwt');
 const isAdmin = require('../middleware/is-admin');
 const cloudinary = require('cloudinary');
 const formidable = require('formidable');
+const User = require('../models/user');
 
 cloudinary.config({ 
     cloud_name: 'stylehint', 
@@ -88,6 +89,18 @@ router.post('/update-statistics', checkJwt, (req, res) => {
             })
         }
     });
+});
+
+//total number of users
+router.get('total-users', isAdmin, (req, res) => {
+    User.countDocuments({}, (err, count) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            totalUsers: count
+        })
+    })
 });
 
 //get number of active and daily users
