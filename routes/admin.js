@@ -103,6 +103,18 @@ router.get('/total-users', isAdmin, (req, res) => {
     })
 });
 
+//total number of hints
+router.get('/total-hints', isAdmin, (req, res) => {
+    Hint.countDocuments({}, (err, count) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            totalHints: count
+        })
+    })
+});
+
 //get number of active and daily users
 router.get('/get-statistics', isAdmin, (req, res) => {
     Statistics.findOne({createdAt: {$lt: new Date(), 
