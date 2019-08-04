@@ -123,7 +123,7 @@ router.get('/week-statistics', isAdmin, (req, res) => {
 });
 
 //get number of monthly users
-router.get('/month-statistics', isAdmin, (req, res) => {
+router.post('/month-statistics', isAdmin, (req, res) => {
     Statistics.find({createdAt: {$gte: new Date(req.body.year, req.body.month, req.body.day),
          $lt: new Date(req.body.year, req.body.month + 1, req.body.day)}}, (err, stats) => {
         if (err) return err;
@@ -142,7 +142,7 @@ router.get('/month-statistics', isAdmin, (req, res) => {
 });
 
 //get number of yearly users
-router.get('/year-statistics', isAdmin, (req, res) => {
+router.post('/year-statistics', isAdmin, (req, res) => {
     Statistics.find({createdAt: {$gte: new Date(req.body.year, 1, 1),
          $lt: new Date(req.body.year + 1, 1, 1)}}, (err, stats) => {
         if (err) return err;
