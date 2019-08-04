@@ -128,6 +128,7 @@ router.post('/month-statistics', isAdmin, (req, res) => {
          $lt: new Date(req.body.year, req.body.month + 1, 1)}}, (err, stats) => {
         if (err) return err;
 
+        console.log(stats);
         let monthlyTotal = 0;
         if (stats.length !== 0) {
             stats.forEach(record => {
