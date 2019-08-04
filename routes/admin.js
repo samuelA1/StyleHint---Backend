@@ -124,12 +124,10 @@ router.get('/week-statistics', isAdmin, (req, res) => {
 
 //get number of monthly users
 router.post('/month-statistics', isAdmin, (req, res) => {
-    Statistics.find({createdAt: {$gte: new Date(new Date().setDate(req.body.year, req.body.month, 1)),
-         $lt: new Date(new Date().setDate(req.body.year, req.body.month + 1, 1))}}, (err, stats) => {
+    Statistics.find({createdAt: {$gte: new Date(req.body.year, req.body.month, 1),
+         $lt: new Date(req.body.year, req.body.month, 30)}}, (err, stats) => {
         if (err) return err;
 
-        console.log(stats);
-        console.log(req.body.year, req.body.month);
         let monthlyTotal = 0;
         if (stats.length !== 0) {
             stats.forEach(record => {
