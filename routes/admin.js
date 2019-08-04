@@ -128,7 +128,7 @@ router.post('/month-statistics', isAdmin, (req, res) => {
         $gte: new Date(new Date().setDate(-26))}}, (err, stats) => {
         if (err) return err;
 
-        console.log(new Date(2019, 08, 01))
+        console.log(new Date(2019, 07, 01))
         console.log(new Date().setDate(-26))
         let monthlyTotal = 0;
         if (stats.length !== 0) {
