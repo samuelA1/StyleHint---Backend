@@ -103,7 +103,7 @@ router.get('/get-statistics', isAdmin, (req, res) => {
     });
 });
 
-//get number of active and daily users
+//get number of weekly users
 router.get('/week-statistics', isAdmin, (req, res) => {
     Statistics.find({createdAt: {$lt: new Date(), 
         $gte: new Date(new Date().setDate(new Date().getDate()-7))}}, (err, stats) => {
@@ -121,4 +121,43 @@ router.get('/week-statistics', isAdmin, (req, res) => {
         })
     });
 });
+
+//get number of monthly users
+router.get('/month-statistics', isAdmin, (req, res) => {
+    Statistics.find({createdAt: {$gte: new Date(req.body.year, req.body.month, req.body.day),
+         $lt: new Date(req.body.year, req.body.month + 1, req.body.day)}}, (err, stats) => {
+        if (err) return err;
+
+        let monthlyTotal = 0;
+        if (stats.length !== 0) {
+            stats.forEach(record => {
+                monthlyTotal += record['dailyUsers']
+            });
+        }
+        res.json({
+            success: true,
+            monthlyUsers: monthlyTotal
+        })
+    });
+});
+
+//get number of yearly users
+router.get('/year-statistics', isAdmin, (req, res) => {
+    Statistics.find({createdAt: {$gte: new Date(req.body.year, 1, 1),
+         $lt: new Date(req.body.year + 1, 1, 1)}}, (err, stats) => {
+        if (err) return err;
+
+        let yearlyTotal = 0;
+        if (stats.length !== 0) {
+            stats.forEach(record => {
+                yearlyTotal += record['dailyUsers']
+            });
+        }
+        res.json({
+            success: true,
+            yearlyUsers: yearlyTotal
+        })
+    });
+});
+
 module.exports = router;
