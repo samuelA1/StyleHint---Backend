@@ -93,7 +93,7 @@ router.post('/update-statistics', checkJwt, (req, res) => {
 
 router.get('/all-users', isAdmin, (req, res) => {
     User.find({})
-        .sort({'username': -1})
+        .sort({username: -1})
         .exec((err, users) => {
             if (err) return err;
 
