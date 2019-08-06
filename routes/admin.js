@@ -91,6 +91,19 @@ router.post('/update-statistics', checkJwt, (req, res) => {
     });
 });
 
+router.get('/all-users', isAdmin, (req, res) => {
+    User.find({})
+        .sort({'username': -1})
+        .exec((err, users) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                users: users
+            })
+        });
+});
+
 //total number of users
 router.get('/total-users', isAdmin, (req, res) => {
     User.countDocuments({}, (err, count) => {
