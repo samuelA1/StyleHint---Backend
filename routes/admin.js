@@ -104,6 +104,38 @@ router.get('/all-users', isAdmin, (req, res) => {
         });
 });
 
+//get single users
+router.get('/single-user/:id', isAdmin, (req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            user: user
+        })
+    });
+});
+
+//update user info
+router.post('/update-user/:id', isAdmin, (req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        if (err) return err;
+
+        if (req.body.username) user.username = req.body.username;
+        if (req.body.email) user.email = req.body.email;
+        if (req.body.password) user.password = req.body.password;
+        if (req.body.gender) user.gender = req.body.gender;
+        if (req.body.interest) user.interest = req.body.interest;
+        if (req.body.size) user.size = req.body.size;
+        if (req.body.isAdmin) user.isAdmin = req.body.isAdmin;
+        if (req.body.country) user.country = req.body.country;
+        res.json({
+            success: true,
+            message: 'update successful'
+        })
+    });
+});
+
 //total number of users
 router.get('/total-users', isAdmin, (req, res) => {
     User.countDocuments({}, (err, count) => {
