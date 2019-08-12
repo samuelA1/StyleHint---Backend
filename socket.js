@@ -11,7 +11,7 @@ module.exports = function (io) {
         });
 
         socket.on('logOut', (data) => {
-            io.emit('loggedIn', {activeUsers: io.sockets.server.engine.clientsCount});
+            io.emit('loggedOut', {activeUsers: io.sockets.server.engine.clientsCount});
         })
 
         //for sharing hints
