@@ -255,15 +255,17 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                     Notification.findById(req.query.notifyId, (err, notification) => {
                         if (err) return err;
 
-                        const notifyToRemove = notification.for.indexOf(user._id);
-                        notification.for.splice(notifyToRemove, 1);
+                        if (notification !== null) {
+                            const notifyToRemove = notification.for.indexOf(user._id);
+                            notification.for.splice(notifyToRemove, 1);
+                            if (user.notifications == -1) {
+                                user.notifications = 0;
+                            } else {
+                                user.notifications = user.notifications - 1;
+                            }
+                        }
                         const tipToRemove = user.tips.indexOf(req.params.id)
                         user.tips.splice(tipToRemove, 1);
-                        if (user.notifications == -1) {
-                            user.notifications = 0;
-                        } else {
-                            user.notifications = user.notifications - 1;
-                        }
                         user.save();
                         notification.save();
                         res.json({
