@@ -10,6 +10,10 @@ module.exports = function (io) {
             io.emit('loggedOut',  {activeUsers: io.sockets.server.engine.clientsCount});
         });
 
+        socket.on('logOut', (data) => {
+            io.emit('loggedIn', {activeUsers: io.sockets.server.engine.clientsCount});
+        })
+
         //for sharing hints
         socket.on('send', (data) => {
             data.friends.forEach(friend => {
