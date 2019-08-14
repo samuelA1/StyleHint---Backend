@@ -104,6 +104,20 @@ router.get('/all-users', isAdmin, (req, res) => {
         });
 });
 
+//sort users
+router.get('/sort-users', isAdmin, (req, res) => {
+    User.find({gender : {$regex : ".* "+ `${req.body.sort}`+ ".*"}})
+        .sort({username: 1})
+        .exec((err, users) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                users: users
+            })
+        });
+});
+
 //get single users
 router.get('/single-user/:id', isAdmin, (req, res) => {
     User.findById(req.params.id, (err, user) => {
