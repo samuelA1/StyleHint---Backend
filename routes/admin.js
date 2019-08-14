@@ -105,7 +105,7 @@ router.get('/all-users', isAdmin, (req, res) => {
 });
 
 //sort users
-router.get('/sort-users', isAdmin, (req, res) => {
+router.post('/sort-users', isAdmin, (req, res) => {
     User.find({gender : {$regex : ".* "+ `${req.body.sort}`+ ".*"}})
         .sort({username: 1})
         .exec((err, users) => {
