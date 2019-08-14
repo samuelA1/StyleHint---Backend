@@ -221,18 +221,18 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
         
                             const tipToRemove = userGotten.tips.indexOf(req.params.id)
                             userGotten.tips.splice(tipToRemove, 1);
-                            if (userGotten.notifications == -1) {
-                                userGotten.notifications = 0;
-                            } else {
-                                userGotten.notifications = userGotten.notifications - 1;
-                            }
+                            // if (userGotten.notifications == -1) {
+                            //     userGotten.notifications = 0;
+                            // } else {
+                            //     userGotten.notifications = userGotten.notifications - 1;
+                            // }
                             userGotten.save();
                         });
                     });
 
-                    Notification.remove({route: req.params.id}, (err) => {
-                        if (err) return err;
-                    })
+                    // Notification.remove({route: req.params.id}, (err) => {
+                    //     if (err) return err;
+                    // })
 
                     Tip.findByIdAndDelete(req.params.id, (err) => {
                         if (err) return err;
@@ -240,11 +240,11 @@ router.delete('/delete-tip/:id', checkJwt, (req, res) => {
                         
                         const tipToRemove = user.myTips.indexOf(req.params.id)
                         user.myTips.splice(tipToRemove, 1);
-                        if (user.notifications == -1) {
-                            user.notifications = 0;
-                        } else {
-                            user.notifications = user.notifications - tip.comments.length;
-                        }
+                        // if (user.notifications == -1) {
+                        //     user.notifications = 0;
+                        // } else {
+                        //     user.notifications = user.notifications - tip.comments.length;
+                        // }
                         user.save();
                         res.json({
                             success: true,
