@@ -144,14 +144,16 @@ router.post('/sort-users', isAdmin, (req, res) => {
 
 //get single users
 router.get('/single-user/:id', isAdmin, (req, res) => {
-    User.findById(req.params.id, (err, user) => {
-        if (err) return err;
+    User.findById(req.params.id)
+        .select(['-friends', '-tips', '-myTips', '-closet'])
+        .exec((err, user) => {
+            if (err) return err;
 
-        res.json({
-            success: true,
-            user: user
-        })
-    });
+            res.json({
+                success: true,
+                user: user
+            })
+        });
 });
 
 //update user info
