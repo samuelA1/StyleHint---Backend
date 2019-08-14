@@ -106,7 +106,7 @@ router.get('/all-users', isAdmin, (req, res) => {
 
 //sort users
 router.post('/sort-users', isAdmin, (req, res) => {
-    const exp =`/^female/i`
+    const exp ="/^"+req.body.sort+"/i"
     User.find({gender : {$regex : exp}})
             .sort({username: 1})
             .exec((err, users) => {
