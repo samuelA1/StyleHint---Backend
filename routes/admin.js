@@ -106,12 +106,12 @@ router.get('/all-users', isAdmin, (req, res) => {
 
 //sort users
 router.post('/sort-users', isAdmin, (req, res) => {
-    User.find({gender : {$regex : /^female/i}})
+    User.find({gender : {$regex : /^`${req.body.sort}`/i}})
             .sort({username: 1})
             .exec((err, users) => {
                 if (err) return err;
 
-                console.log(users)
+                console.log(req.body.sort)
                 res.json({
                     success: true,
                     users: users
