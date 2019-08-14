@@ -111,6 +111,7 @@ router.post('/sort-users', isAdmin, (req, res) => {
         .exec((err, users) => {
             if (err) return err;
 
+            console.log(users)
             res.json({
                 success: true,
                 users: users
