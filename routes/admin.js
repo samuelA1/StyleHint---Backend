@@ -106,19 +106,40 @@ router.get('/all-users', isAdmin, (req, res) => {
 
 //sort users
 router.post('/sort-users', isAdmin, (req, res) => {
-    const exp ="/^"+req.body.sort+"/i"
-    User.find({gender : {$regex : exp}})
+    if (req.body.sort == 'male') {
+        User.find({gender : {$regex : /^male/i}})
             .sort({username: 1})
             .exec((err, users) => {
                 if (err) return err;
 
-                console.log(req.body.sort)
-                console.log(exp)
                 res.json({
                     success: true,
                     users: users
                 })
-    });
+        });
+    } else if (req.body.sort == 'female') {
+        User.find({gender : {$regex : /^female/i}})
+            .sort({username: 1})
+            .exec((err, users) => {
+                if (err) return err;
+
+                res.json({
+                    success: true,
+                    users: users
+                })
+        });
+    } else {
+        User.find({gender: req.body.sort})
+            .sort({username: 1})
+            .exec((err, users) => {
+                if (err) return err;
+
+                res.json({
+                    success: true,
+                    users: users
+                })
+        });
+    }
 });
 
 //get single users
