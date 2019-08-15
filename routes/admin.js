@@ -163,12 +163,12 @@ router.post('/update-user/:id', isAdmin, (req, res) => {
 
         if (req.body.username) user.username = req.body.username;
         if (req.body.email) user.email = req.body.email;
-        if (req.body.password) user.password = req.body.password;
         if (req.body.gender) user.gender = req.body.gender;
         if (req.body.interest) user.interest = req.body.interest;
         if (req.body.size) user.size = req.body.size;
         if (req.body.isAdmin) user.isAdmin = req.body.isAdmin;
         if (req.body.country) user.country = req.body.country;
+        user.save();
         res.json({
             success: true,
             message: 'update successful'
