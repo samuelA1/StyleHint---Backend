@@ -67,6 +67,56 @@ router.post('/add-hint', isAdmin, (req, res) => {
     
 });
 
+//update hint
+router.post('/update-hint/:id', isAdmin, (req, res) => {
+    Hint.findById(req.params.id, (err, hint) => {
+        if (err) return err;
+
+        let form = new formidable.IncomingForm();
+
+        form.parse(req, (err, fields, files) => {
+            if (err) return err;
+
+            hint.owner = req.decoded.user._id;
+            if (fields.overview) hint.overview = fields.overview;
+            if (fields.recommendations) hint.recommendations = fields.recommendations;
+            if (fields.alternatives) hint.alternatives = fields.alternatives;
+            if (fields.dont) hint.dont = fields.dont;
+            if (fields.gender) hint.gender = fields.gender;
+            if (fields.size) {
+                fields.size.split(',').forEach(element => {
+                    hint.size.push(element);
+                });
+            }
+            if (fields.interest) {
+                fields.interest.split(',').forEach(element => {
+                    hint.interest.push(element);
+                });
+            }
+            if (fields.weather) {
+                fields.weather.split(',').forEach(element => {
+                    hint.weather.push(element);
+                });
+            }
+            if (fields.season) {
+                fields.season.split(',').forEach(element => {
+                    hint.season.push(element);
+                });
+            }
+            if (fields.occasion) {
+                fields.occasion.split(',').forEach(element => {
+                    hint.occasion.push(element);
+                });
+            }
+            res.json({
+                success: true,
+                message: 'Hint successfully updated'
+            });
+        });
+        });
+    
+});
+
 //update number of active and daily users
 router.post('/update-statistics', checkJwt, (req, res) => {
     Statistics.findOne({createdAt: {$lt: new Date(), 
@@ -100,6 +150,20 @@ router.get('/all-users', isAdmin, (req, res) => {
             res.json({
                 success: true,
                 users: users
+            })
+        });
+});
+
+//all hints
+router.get('/all-hints', isAdmin, (req, res) => {
+    Hint.find({})
+        .sort({createdAt: -1})
+        .exec((err, hints) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                hints: hints
             })
         });
 });
@@ -142,6 +206,20 @@ router.post('/sort-users', isAdmin, (req, res) => {
     }
 });
 
+router.post('/sort-hints', (req, res) => {
+    Hint.find({$and: [{gender: req.body.gender}, {occasion: req.body.occasion}]})
+   .sort({createdAt: -1})
+   .select(['_id','url', 'overview'])
+   .exec((err, hints) => {
+       if (err) return err;
+
+        res.json({
+            success: true,
+            hints: hints
+        })
+   });
+});
+
 //get single users
 router.get('/single-user/:id', isAdmin, (req, res) => {
     User.findById(req.params.id)
@@ -152,6 +230,20 @@ router.get('/single-user/:id', isAdmin, (req, res) => {
             res.json({
                 success: true,
                 user: user
+            })
+        });
+});
+
+//get single hint
+router.get('/single-hint/:id', isAdmin, (req, res) => {
+    Hint.findById(req.params.id)
+        .select(['-likedBy'])
+        .exec((err, hint) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                hint: hint
             })
         });
 });
