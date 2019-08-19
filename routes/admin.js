@@ -214,17 +214,31 @@ router.post('/sort-users', isAdmin, (req, res) => {
 });
 
 router.post('/sort-hints', (req, res) => {
-    Hint.find({$and: [{gender: req.body.gender}, {occasion: req.body.occasion}]})
-   .sort({createdAt: -1})
-   .select(['_id','url', 'overview'])
-   .exec((err, hints) => {
-       if (err) return err;
+    if (req.body.gender !== null || req.body.occasion !== null || req.body.interest !== null) {
+        Hint.find({$or: [{gender: req.body.gender}, {occasion: req.body.occasion}, {interest: req.body.interest}]})
+        .sort({createdAt: -1})
+        .select(['_id','url', 'overview'])
+        .exec((err, hints) => {
+            if (err) return err;
 
-        res.json({
-            success: true,
-            hints: hints
-        })
-   });
+                res.json({
+                    success: true,
+                    hints: hints
+                })
+        });
+    } else if (req.body.gender !== null && req.body.occasion !== null && req.body.interest !== null) {
+        Hint.find({$and: [{gender: req.body.gender}, {occasion: req.body.occasion}]})
+        .sort({createdAt: -1})
+        .select(['_id','url', 'overview'])
+        .exec((err, hints) => {
+            if (err) return err;
+
+                res.json({
+                    success: true,
+                    hints: hints
+                })
+        });
+    }
 });
 
 //get single users
