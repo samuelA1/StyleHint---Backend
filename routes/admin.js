@@ -214,7 +214,7 @@ router.post('/sort-users', isAdmin, (req, res) => {
 });
 
 router.post('/sort-hints', (req, res) => {
-    Hint.find({$or: [{gender: req.body.gender}, {occasion: req.body.occasion}]})
+    Hint.find({$and: [{gender: req.body.gender}, {occasion: req.body.occasion}]})
    .sort({createdAt: -1})
    .select(['_id','url', 'overview'])
    .exec((err, hints) => {
