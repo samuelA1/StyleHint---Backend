@@ -158,6 +158,7 @@ router.get('/all-users', isAdmin, (req, res) => {
 router.get('/all-hints', isAdmin, (req, res) => {
     Hint.find({})
         .sort({createdAt: -1})
+        .select(['_id', 'url'])
         .exec((err, hints) => {
             if (err) return err;
 
