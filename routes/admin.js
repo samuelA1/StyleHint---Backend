@@ -108,6 +108,7 @@ router.post('/update-hint/:id', isAdmin, (req, res) => {
                     hint.occasion.push(element);
                 });
             }
+            hint.save();
             res.json({
                 success: true,
                 message: 'Hint successfully updated'
