@@ -226,7 +226,7 @@ router.post('/sort-hints', (req, res) => {
                     hints: hints
                 })
         });
-    } else if (req.body.gender !== null || req.body.occasion !== null || req.body.interest !== null) {
+    } else  {
         Hint.find({$or: [{gender: req.body.gender}, {occasion: req.body.occasion}, {interest: req.body.interest}]})
         .sort({createdAt: -1})
         .select(['_id','url', 'overview'])
