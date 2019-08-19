@@ -84,26 +84,31 @@ router.post('/update-hint/:id', isAdmin, (req, res) => {
             if (fields.dont) hint.dont = fields.dont;
             if (fields.gender) hint.gender = fields.gender;
             if (fields.size) {
+                hint.size = [];
                 fields.size.split(',').forEach(element => {
                     hint.size.push(element);
                 });
             }
             if (fields.interest) {
+                hint.interest = [];
                 fields.interest.split(',').forEach(element => {
                     hint.interest.push(element);
                 });
             }
             if (fields.weather) {
+                hint.weather = [];
                 fields.weather.split(',').forEach(element => {
                     hint.weather.push(element);
                 });
             }
             if (fields.season) {
+                hint.season = [];
                 fields.season.split(',').forEach(element => {
                     hint.season.push(element);
                 });
             }
             if (fields.occasion) {
+                hint.occasion = [];
                 fields.occasion.split(',').forEach(element => {
                     hint.occasion.push(element);
                 });
