@@ -214,8 +214,8 @@ router.post('/sort-users', isAdmin, (req, res) => {
 });
 
 router.post('/sort-hints', (req, res) => {
-    if (req.body.gender !== null || req.body.occasion !== null || req.body.interest !== null) {
-        Hint.find({$or: [{gender: req.body.gender}, {occasion: req.body.occasion}, {interest: req.body.interest}]})
+    if (req.body.gender !== null && req.body.occasion !== null && req.body.interest !== null) {
+        Hint.find({$and: [{gender: req.body.gender}, {occasion: req.body.occasion}, {interest: req.body.interest}]})
         .sort({createdAt: -1})
         .select(['_id','url', 'overview'])
         .exec((err, hints) => {
@@ -226,8 +226,8 @@ router.post('/sort-hints', (req, res) => {
                     hints: hints
                 })
         });
-    } else if (req.body.gender !== null && req.body.occasion !== null && req.body.interest !== null) {
-        Hint.find({$and: [{gender: req.body.gender}, {occasion: req.body.occasion}, {interest: req.body.interest}]})
+    } else if (req.body.gender !== null || req.body.occasion !== null || req.body.interest !== null) {
+        Hint.find({$or: [{gender: req.body.gender}, {occasion: req.body.occasion}, {interest: req.body.interest}]})
         .sort({createdAt: -1})
         .select(['_id','url', 'overview'])
         .exec((err, hints) => {
