@@ -214,7 +214,8 @@ router.post('/sort-users', isAdmin, (req, res) => {
 });
 
 router.post('/sort-hints', (req, res) => {
-    if (req.body.gender !== null && req.body.occasion == null && req.body.interest == null) {
+    console.log(req.body.gender, req.body.occasion, req.body.interest)
+    if (`${req.body.gender}` !== null && req.body.occasion == null && req.body.interest == null) {
         Hint.find({gender: req.body.gender})
         .sort({createdAt: -1})
         .select(['_id','url', 'overview'])
