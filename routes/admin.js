@@ -229,7 +229,7 @@ router.post('/sort-hints', (req, res) => {
                     hints: hints
                 })
         });
-    } else if (req.body.gender == null && req.body.occasion !== null && req.body.interest == null) {
+    } else if (!req.body.gender && req.body.occasion  && !req.body.interest) {
         Hint.find({occasion: req.body.occasion})
         .sort({createdAt: -1})
         .select(['_id','url', 'overview'])
@@ -241,7 +241,7 @@ router.post('/sort-hints', (req, res) => {
                     hints: hints
                 })
         });
-    } else if (req.body.gender == null && req.body.occasion == null && req.body.interest !== null) {
+    } else if (!req.body.gender && !req.body.occasion  && req.body.interest) {
         Hint.find({interest: req.body.interest})
         .sort({createdAt: -1})
         .select(['_id','url', 'overview'])
@@ -253,33 +253,44 @@ router.post('/sort-hints', (req, res) => {
                     hints: hints
                 })
         });
+    } else if (req.body.gender && req.body.occasion ) {
+        Hint.find({$and: [{gender: req.body.gender}, {occasion: req.body.occasion}]})
+        .sort({createdAt: -1})
+        .select(['_id','url', 'overview'])
+        .exec((err, hints) => {
+            if (err) return err;
+
+                res.json({
+                    success: true,
+                    hints: hints
+                })
+        });
+    } else if (req.body.gender  && req.body.interest ) {
+        Hint.find({$and: [{gender: req.body.gender}, {interest: req.body.interest}]})
+        .sort({createdAt: -1})
+        .select(['_id','url', 'overview'])
+        .exec((err, hints) => {
+            if (err) return err;
+
+                res.json({
+                    success: true,
+                    hints: hints
+                })
+        });
+    } else if (req.body.occasion && req.body.interest) {
+        Hint.find({$and: [{occasion: req.body.occasion}, {interest: req.body.interest}]})
+        .sort({createdAt: -1})
+        .select(['_id','url', 'overview'])
+        .exec((err, hints) => {
+            if (err) return err;
+
+                res.json({
+                    success: true,
+                    hints: hints
+                })
+        });
     }
-    // if (req.body.gender !== null && req.body.occasion !== null && req.body.interest !== null) {
-    //     Hint.find({$and: [{gender: req.body.gender}, {occasion: req.body.occasion}, {interest: req.body.interest}]})
-    //     .sort({createdAt: -1})
-    //     .select(['_id','url', 'overview'])
-    //     .exec((err, hints) => {
-    //         if (err) return err;
-
-    //             res.json({
-    //                 success: true,
-    //                 hints: hints
-    //             })
-    //     });
-    // }
-    //  else  {
-    //     Hint.find({$or: [{gender: req.body.gender}, {occasion: req.body.occasion}, {interest: req.body.interest}]})
-    //     .sort({createdAt: -1})
-    //     .select(['_id','url', 'overview'])
-    //     .exec((err, hints) => {
-    //         if (err) return err;
-
-    //             res.json({
-    //                 success: true,
-    //                 hints: hints
-    //             })
-    //     });
-    // }
+    
 });
 
 //get single users
