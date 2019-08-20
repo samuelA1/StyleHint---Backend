@@ -227,7 +227,7 @@ router.post('/sort-hints', (req, res) => {
                 })
         });
     } else if (req.body.gender == null && req.body.occasion !== null && req.body.interest == null) {
-        Hint.find({gender: req.body.occasion})
+        Hint.find({occasion: req.body.occasion})
         .sort({createdAt: -1})
         .select(['_id','url', 'overview'])
         .exec((err, hints) => {
@@ -239,7 +239,7 @@ router.post('/sort-hints', (req, res) => {
                 })
         });
     } else if (req.body.gender == null && req.body.occasion == null && req.body.interest !== null) {
-        Hint.find({gender: req.body.interest})
+        Hint.find({interest: req.body.interest})
         .sort({createdAt: -1})
         .select(['_id','url', 'overview'])
         .exec((err, hints) => {
