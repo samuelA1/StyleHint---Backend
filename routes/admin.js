@@ -286,6 +286,18 @@ router.post('/sort-hints', (req, res) => {
                     hints: hints
                 })
         });
+    } else {
+        Hint.find({})
+        .sort({createdAt: -1})
+        .select(['_id', 'url'])
+        .exec((err, hints) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                hints: hints
+            })
+        });
     }
     
 });
