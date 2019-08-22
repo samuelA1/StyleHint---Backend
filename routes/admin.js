@@ -446,7 +446,7 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                    });
                    data.push(Object.assign({total: monthlyTotal}, month));
                    console.log(data);
-                   if (data[data.length - 1].rep == 11) {
+                   if (month.rep == 11) {
                     res.json({
                         success: true,
                         userData: data
@@ -455,7 +455,7 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                } else {
                 data.push(Object.assign({total: 0}, month))
                 console.log(data);
-                if (data[data.length - 1].rep == 11) {
+                if (month.rep == 11) {
                     res.json({
                         success: true,
                         userData: data
