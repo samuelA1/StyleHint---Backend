@@ -428,11 +428,11 @@ router.post('/month-statistics', isAdmin, (req, res) => {
 
 //get chart data
 router.post('/chart-statistics', isAdmin, (req, res) => {
-    let data = [];
     const months = [{month:'January', rep: 0},{month:'February', rep: 1}, {month:'March', rep: 2}, {month:'April', rep: 3}, {month:'May', rep: 4},
     {month:'June', rep: 5}, {month:'July', rep: 6}, {month:'August', rep: 7}, {month:'September', rep: 8}, {month:'October', rep: 9},
     {month:'November', rep: 10}, {month:'December', rep: 11}, ]
     if (req.body.year) {
+        let data = [];
         months.forEach(month => {
             Statistics.find({createdAt: {$gte: new Date(req.body.year, month.rep, 1),
                 $lt: new Date(req.body.year, month.rep + 1, 1)}}, (err, stats) => {
@@ -447,11 +447,12 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                    data.push(Object.assign({total: monthlyTotal}, month));
                    console.log(data)
                } else {
-                data.push(Object.assign({total: monthlyTotal}, month))
+                data.push(Object.assign({total: 0}, month))
                 console.log(data)
                }
            });
         });
+        console.log(data)
         res.json({
             success: true,
             userData: data
