@@ -290,13 +290,13 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                 callback(err, user);
             });
         },
-        function (user, callback) {
-            Notification.find({comment: tipId}, (err, notification) => {
-                if (err) return err;
+        // function (user, callback) {
+        //     Notification.find({comment: tipId}, (err, notification) => {
+        //         if (err) return err;
 
-                callback(err, user, notification.length)
-            });
-        },
+        //         callback(err, user, notification.length)
+        //     });
+        // },
         function (user, totalComments) {
             Tip.findById(tipId, (err, tip) => {
                 if (err) return err;
@@ -308,40 +308,42 @@ router.post('/auto-delete/:id', checkJwt, (req, res) => {
                         if (userWithMyTips.length == 0) {
                             const toRemove = user.myTips.indexOf(tipId)
                             user.myTips.splice(toRemove, 1);
-                            if (user.notifications == -1) {
-                                user.notifications = 0;
-                                user.save();
-                            } else {
-                                user.notifications = user.notifications - totalComments;
-                                user.save();
-                            }
+                            user.save();
+                            // if (user.notifications == -1) {
+                            //     user.notifications = 0;
+                            //     user.save();
+                            // } else {
+                            //     user.notifications = user.notifications - totalComments;
+                            //     user.save();
+                            // }
                         } else {
                             userWithMyTips.forEach(userWith => {
                                 const toRemove = user.myTips.indexOf(tipId)
                                 user.myTips.splice(toRemove, 1);
                                 const tipToRemove = userWith.tips.indexOf(tipId)
                                 userWith.tips.splice(tipToRemove, 1);
-                                if (userWith.notifications == -1) {
-                                    userWith.notifications = 0;
-                                    userWith.save();
-                                } else {
-                                    userWith.notifications = userWith.notifications - 1;
-                                    userWith.save();
-                                }
-                                if (user.notifications == -1) {
-                                    user.notifications = 0;
-                                    user.save();
-                                } else {
-                                    user.notifications = user.notifications - totalComments;
-                                    user.save();
-                                }
+                                user.save();
+                                // if (userWith.notifications == -1) {
+                                //     userWith.notifications = 0;
+                                //     userWith.save();
+                                // } else {
+                                //     userWith.notifications = userWith.notifications - 1;
+                                //     userWith.save();
+                                // }
+                                // if (user.notifications == -1) {
+                                //     user.notifications = 0;
+                                //     user.save();
+                                // } else {
+                                //     user.notifications = user.notifications - totalComments;
+                                //     user.save();
+                                // }
                             });
                         }
                     });
 
-                    Notification.deleteMany({route: tipId}, (err) => {
-                        if (err) return err;
-                    })
+                    // Notification.deleteMany({route: tipId}, (err) => {
+                    //     if (err) return err;
+                    // })
 
                     res.json({
                         success: true
