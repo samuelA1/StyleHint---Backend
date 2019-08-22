@@ -445,18 +445,25 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                        console.log(monthlyTotal)
                    });
                    data.push(Object.assign({total: monthlyTotal}, month));
-                   console.log(data)
+                   console.log(data);
+                   if (data[data.length - 1].rep == 11) {
+                    res.json({
+                        success: true,
+                        userData: data
+                    })
+                   }
                } else {
                 data.push(Object.assign({total: 0}, month))
-                console.log(data)
+                console.log(data);
+                if (data[data.length - 1].rep == 11) {
+                    res.json({
+                        success: true,
+                        userData: data
+                    })
+                }
                }
            });
         });
-        console.log(data)
-        res.json({
-            success: true,
-            userData: data
-        })
     }
     
 });
