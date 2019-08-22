@@ -451,12 +451,11 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                }
            });
         });
+        res.json({
+            success: true,
+            userData: data
+        })
     }
-    console.log(data);
-    res.json({
-        success: true,
-        userData: data
-    })
     
 });
 
