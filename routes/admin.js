@@ -438,15 +438,15 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                 $lt: new Date(req.body.year, month.rep + 1, 1)}}, (err, stats) => {
                if (err) return err;
        
-               var monthlyTotal = 0;
                if (stats.length !== 0) {
+                   var monthlyTotal = 0;
                    stats.forEach(record => {
                        monthlyTotal += record['dailyUsers'];
                        console.log(monthlyTotal)
                    });
-                   data.push(Object.assign({total: monthlyTotal}, {month}));
+                   data.push(Object.assign({total: monthlyTotal}, month));
                } else {
-                data.push(Object.assign({total: monthlyTotal}, {month}))
+                data.push(Object.assign({total: monthlyTotal}, month))
                }
            });
         });
