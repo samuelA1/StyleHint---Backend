@@ -444,6 +444,7 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                        monthlyTotal += record['dailyUsers'];
                        console.log(monthlyTotal)
                    });
+                   console.log(month)
                    data.push(Object.assign({total: monthlyTotal}, month));
                } else {
                 data.push(Object.assign({total: monthlyTotal}, month))
