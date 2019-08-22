@@ -442,10 +442,8 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                    var monthlyTotal = 0;
                    stats.forEach(record => {
                        monthlyTotal += record['dailyUsers'];
-                       console.log(monthlyTotal)
                    });
                    data.push(Object.assign({total: monthlyTotal}, month));
-                   console.log(data);
                    if (month.rep == 11) {
                     res.json({
                         success: true,
@@ -454,7 +452,6 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                    }
                } else {
                 data.push(Object.assign({total: 0}, month))
-                console.log(data);
                 if (month.rep == 11) {
                     res.json({
                         success: true,
