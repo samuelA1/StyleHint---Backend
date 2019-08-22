@@ -444,7 +444,7 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                        monthlyTotal += record['dailyUsers'];
                    });
                    data.push(Object.assign({total: monthlyTotal}, month));
-                   if (month.rep == 11) {
+                   if (data.length == 11) {
                     res.json({
                         success: true,
                         userData: data
@@ -452,7 +452,7 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                    }
                } else {
                 data.push(Object.assign({total: 0}, month))
-                if (month.rep == 11) {
+                if (data.length == 11) {
                     res.json({
                         success: true,
                         userData: data
