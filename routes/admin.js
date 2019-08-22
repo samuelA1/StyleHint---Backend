@@ -441,7 +441,8 @@ router.post('/chart-statistics', isAdmin, (req, res) => {
                var monthlyTotal = 0;
                if (stats.length !== 0) {
                    stats.forEach(record => {
-                       monthlyTotal += record['dailyUsers']
+                       monthlyTotal += record['dailyUsers'];
+                       console.log(monthlyTotal)
                    });
                    data.push(Object.assign({total: monthlyTotal}, {month}));
                } else {
