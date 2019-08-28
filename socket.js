@@ -19,7 +19,14 @@ module.exports = function (io) {
             data.friends.forEach(friend => {
                 io.emit('share', friend);
             });
-        })
+        });
+
+        //for sharing news
+        socket.on('inform', (data) => {
+            data.friends.forEach(friend => {
+                io.emit('informed', friend);
+            });
+        });
 
         //view notification
         socket.on('viewNotification', (ownerId) => {
@@ -44,6 +51,16 @@ module.exports = function (io) {
         //for deleting comments
         socket.on('deleteComment', (ownerId) => {
             io.emit('commentDeleted', ownerId)
+        });
+
+        //for adding news comments
+        socket.on('newsComment', (ownerId) => {
+            io.emit('newsCommented', ownerId)
+        });
+
+        //for deleting news comments
+        socket.on('deletenewsComment', (ownerId) => {
+            io.emit('newsCommentDeleted', ownerId)
         });
 
         //for deleting friends

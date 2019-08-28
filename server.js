@@ -14,6 +14,7 @@ const friendsRoute = require('./routes/friends');
 const tipsRoute = require('./routes/tips');
 const closetRoute = require('./routes/closets');
 const notificationsRoute = require('./routes/notifications');
+const newsRoute = require('./routes/news');
 
 mongoose.connect(config.db, {useNewUrlParser: true}, err => {
     err ? console.log('Can not connect to database') : console.log('Connected to database');
@@ -40,6 +41,7 @@ app.use('/api/tips', tipsRoute);
 app.use('/api/notifications', notificationsRoute);
 app.use('/api/closet', closetRoute);
 app.use('/api/search', searchRoutes);
+app.use('/api/news', newsRoute);
 
 
 

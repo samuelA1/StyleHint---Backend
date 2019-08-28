@@ -6,6 +6,7 @@ const isAdmin = require('../middleware/is-admin');
 const cloudinary = require('cloudinary');
 const formidable = require('formidable');
 const User = require('../models/user');
+const News = require('../models/news');
 
 cloudinary.config({ 
     cloud_name: 'stylehint', 
@@ -56,6 +57,33 @@ router.post('/add-hint', isAdmin, (req, res) => {
             if (error.url) {
                 hint.url = error.secure_url;
                 hint.save();
+
+                res.json({
+                    success: true,
+                    message: 'Hint successfully added'
+                });
+            }
+        });
+    });
+    
+});
+
+//add news
+router.post('/add-news', isAdmin, (req, res) => {
+    let form = new formidable.IncomingForm();
+    let news = new News();
+
+    form.parse(req, (err, fields, files) => {
+        if (err) return err;
+
+        news.owner = req.decoded.user._id;
+        if (fields.overview) news.overview = fields.overview;
+        if (fields.headline) news.headline = fields.headline;
+        if (fields.genre) news.genre = fields.genre;
+        cloudinary.uploader.upload(fields.image, function(error, result) {
+            if (error.url) {
+                news.url = error.secure_url;
+                news.save();
 
                 res.json({
                     success: true,
