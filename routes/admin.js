@@ -151,6 +151,43 @@ router.post('/update-hint/:id', isAdmin, (req, res) => {
     
 });
 
+//update news
+router.post('/update-news/:id', isAdmin, (req, res) => {
+    News.findById(req.params.id, (err, news) => {
+        if (err) return err;
+
+        let form = new formidable.IncomingForm();
+
+        form.parse(req, (err, fields, files) => {
+            if (err) return err;
+    
+            news.owner = req.decoded.user._id;
+            if (fields.overview) news.overview = fields.overview;
+            if (fields.headline) news.headline = fields.headline;
+            if (fields.genre) news.genre = fields.genre;
+            if (fields.image) {
+                cloudinary.uploader.upload(fields.image, function(error, result) {
+                    if (error.url) {
+                        news.url = error.secure_url;
+                        news.save();
+        
+                        res.json({
+                            success: true,
+                            message: 'News successfully updated'
+                        });
+                    }
+                });
+            } else {
+                news.save();
+                res.json({
+                    success: true,
+                    message: 'News successfully updated'
+                });
+            }
+        });
+    })
+});
+
 //update number of active and daily users
 router.post('/update-statistics', checkJwt, (req, res) => {
     Statistics.findOne({createdAt: {$lt: new Date(), 
