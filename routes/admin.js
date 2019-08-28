@@ -358,6 +358,30 @@ router.get('/single-hint/:id', isAdmin, (req, res) => {
         });
 });
 
+//delete hint
+router.delete('/delete-hint/:id', isAdmin, (req, res) => {
+    Hint.findByIdAndDelete(req.params.id, (err) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            message: 'Hint deleted'
+        })
+    });
+});
+
+//delete news
+router.delete('/delete-news/:id', isAdmin, (req, res) => {
+    News.findByIdAndDelete(req.params.id, (err) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            message: 'News deleted'
+        })
+    });
+});
+
 //update user info
 router.post('/update-user/:id', isAdmin, (req, res) => {
     User.findById(req.params.id, (err, user) => {
