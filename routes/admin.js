@@ -80,6 +80,7 @@ router.post('/add-news', isAdmin, (req, res) => {
         if (fields.overview) news.overview = fields.overview;
         if (fields.headline) news.headline = fields.headline;
         if (fields.genre) news.genre = fields.genre;
+        if (fields.citation) news.citation = fields.citation;
         cloudinary.uploader.upload(fields.image, function(error, result) {
             if (error.url) {
                 news.url = error.secure_url;
@@ -165,6 +166,7 @@ router.post('/update-news/:id', isAdmin, (req, res) => {
             if (fields.overview) news.overview = fields.overview;
             if (fields.headline) news.headline = fields.headline;
             if (fields.genre) news.genre = fields.genre;
+            if (fields.citation) news.citation = fields.citation;
             if (fields.image) {
                 cloudinary.uploader.upload(fields.image, function(error, result) {
                     if (error.url) {
