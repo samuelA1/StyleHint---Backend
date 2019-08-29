@@ -87,7 +87,7 @@ router.post('/add-news', isAdmin, (req, res) => {
 
                 res.json({
                     success: true,
-                    message: 'Hint successfully added'
+                    message: 'News successfully added'
                 });
             }
         });

@@ -5,17 +5,33 @@ const checkJwt = require('../middleware/check-jwt');
 
 //get all news
 router.get('/all', checkJwt, (req, res) => {
-    News.find({})
-    .sort({createdAt: -1})
-    .select(['-owner'])
-    .exec((err, news) => {
-        if (err) return err;
+    const perPage = 20;
+    const page = req.query.page;
+    async.waterfall([
+        function (callback) {
+            News.countDocuments({}, (err, count) => {
+                if (err) return err;
 
-        res.json({
-            success: true,
-            news: news
-        });
-    });
+                callback(err, count)
+            });
+        },
+        function (count) {
+            News.find({})
+                .limit(perPage)
+                .skip(page * perPage)
+                .sort({createdAt: -1})
+                .select(['-owner'])
+                .exec( (err, news) => {
+                    if (err) return err;
+
+                    res.json({
+                        success: true,
+                        news: news,
+                        totalNews: count
+                    })
+                });
+        }
+    ]);
 });
 
 //get a news
