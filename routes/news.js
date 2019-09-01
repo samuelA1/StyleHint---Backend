@@ -109,6 +109,7 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
                 news.save();
                 res.json({
                     success: true,
+                    commentId: comment['_id'],
                     message: 'Comment added',
                 })
             });
