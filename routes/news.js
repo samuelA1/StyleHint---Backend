@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const News = require('../models/news');
 const User = require('../models/user');
+const Notification = require('../models/notification');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
