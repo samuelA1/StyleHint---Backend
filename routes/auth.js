@@ -66,7 +66,8 @@ router.post('/onesignal-id/:id', (req, res) => {
         if (err) return err;
 
         if (userExist) {
-            userExist.oneSignalId = req.params.id;
+            const id = JSON.stringify(req.params.id)
+            userExist.oneSignalId = id;
             userExist.save();
             res.json({
                 success: true
