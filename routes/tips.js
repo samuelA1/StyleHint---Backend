@@ -5,6 +5,39 @@ const User = require('../models/user');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
+
+//send push notification
+var sendNotification = function(data) {
+    var headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic OTBiYjk0YTUtZTM2Ny00ZTdkLWEwZWItZmQyNjdjNWVhODVl"
+    };
+    
+    var options = {
+      host: "onesignal.com",
+      port: 443,
+      path: "/api/v1/notifications",
+      method: "POST",
+      headers: headers
+    };
+    
+    var https = require('https');
+    var req = https.request(options, function(res) {  
+      res.on('data', function(data) {
+        console.log("Response:");
+        console.log(JSON.parse(data));
+      });
+    });
+    
+    req.on('error', function(e) {
+      console.log("ERROR:");
+      console.log(e);
+    });
+    
+    req.write(JSON.stringify(data));
+    req.end();
+  };
+
 //add tip
 router.post('/add-tip', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, userSendingTip) => {
@@ -18,8 +51,22 @@ router.post('/add-tip', checkJwt, (req, res) => {
         tip.message = req.body.message;
         tip.hintId = req.body.hintId;
         const friends = req.body.friends;
+        let userIds = [];
         for (let i = 0; i < friends.length; i++) {
             const friendId = friends[i];
+            User.findById(friendId, (err, user) => {
+                if (err) return err;
+    
+                userIds.push(user['oneSignalId']);
+                if (userIds.length == friends.length) {
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        contents: {"en": `@${req.decoded.user.username} shared a hint with you`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
+                }
+            })
             tip.usersToSee.push(friendId);
             notification.for.push(friendId);
             notification.from = req.decoded.user._id;
@@ -116,6 +163,7 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
         },
         function (user) {
             let notification = new Notification();
+            let userIds = [];
             Tip.findById(req.params.id, (err, tip) => {
                 if (err) return err;
 
@@ -125,6 +173,17 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
                     notification.for.push(tip._id);
                 } else {
                     notification.for.push(tip.owner);
+                    User.findById(tip.owner, (err, user) => {
+                        if (err) return err;
+            
+                        userIds.push(user['oneSignalId']);
+                        var message = { 
+                            app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                            contents: {"en": `@${req.decoded.user.username} commented on one of your tips`},
+                            include_player_ids: userIds
+                        };
+                        sendNotification(message);
+                    })
                 }
                 notification.from = req.decoded.user._id;
                 notification.fromUsername = req.decoded.user.username;

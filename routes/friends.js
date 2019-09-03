@@ -4,12 +4,45 @@ const Notification = require('../models/notification');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
 
+//send push notification
+var sendNotification = function(data) {
+    var headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic OTBiYjk0YTUtZTM2Ny00ZTdkLWEwZWItZmQyNjdjNWVhODVl"
+    };
+    
+    var options = {
+      host: "onesignal.com",
+      port: 443,
+      path: "/api/v1/notifications",
+      method: "POST",
+      headers: headers
+    };
+    
+    var https = require('https');
+    var req = https.request(options, function(res) {  
+      res.on('data', function(data) {
+        console.log("Response:");
+        console.log(JSON.parse(data));
+      });
+    });
+    
+    req.on('error', function(e) {
+      console.log("ERROR:");
+      console.log(e);
+    });
+    
+    req.write(JSON.stringify(data));
+    req.end();
+  };
+
 //add firends
 router.post('/add-friend/:id', checkJwt, (req, res) => {
     User.findById(req.params.id, (err, userWithId) => {
         if (err) return err;
 
         let notification = new Notification();
+        let userIds = [];
 
         notification.for.push(req.params.id);
         notification.from = req.decoded.user._id;
@@ -17,6 +50,17 @@ router.post('/add-friend/:id', checkJwt, (req, res) => {
         notification.typeOf = 'accept';
         notification.message = 'accepted your friend request';
         notification.route = req.params.id;
+        User.findById(req.params.id, (err, user) => {
+            if (err) return err;
+    
+            userIds.push(user['oneSignalId']);
+            var message = { 
+                app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                contents: {"en": `@${req.decoded.user.username} accepted your friend request`},
+                include_player_ids: userIds
+            };
+            sendNotification(message);
+        })
 
         notification.save();
         userWithId.friends.push(req.decoded.user._id);
@@ -58,6 +102,7 @@ router.delete('/delete-notification/:id', checkJwt, (req, res) => {
 
 router.post('/request-friend/:id', checkJwt, (req, res) => {
     let notification = new Notification();
+    let userIds = [];
 
     notification.for.push(req.params.id);
     notification.from = req.decoded.user._id;
@@ -65,6 +110,17 @@ router.post('/request-friend/:id', checkJwt, (req, res) => {
     notification.typeOf = 'friend';
     notification.message = 'wants to add you as a friend';
     notification.route = req.params.id;
+    User.findById(req.params.id, (err, user) => {
+        if (err) return err;
+
+        userIds.push(user['oneSignalId']);
+        var message = { 
+            app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+            contents: {"en": `@${req.decoded.user.username} wants to add you as a friend`},
+            include_player_ids: userIds
+        };
+        sendNotification(message);
+    })
 
     notification.save();
     res.json({

@@ -67,6 +67,7 @@ router.post('/toggle-like/:id', checkJwt, (req, res) => {
     });
 });
 
+//send push notification
 var sendNotification = function(data) {
     var headers = {
       "Content-Type": "application/json; charset=utf-8",
@@ -111,10 +112,9 @@ router.post('/share-news/:id', checkJwt, (req, res) => {
 
             userIds.push(user['oneSignalId']);
             if (userIds.length == friends.length) {
-                console.log(userIds)
                 var message = { 
                     app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                    contents: {"en": `${req.decoded.user.username} just shared some news with you`},
+                    contents: {"en": `@${req.decoded.user.username} shared some news with you`},
                     include_player_ids: userIds
                 };
                 sendNotification(message);
