@@ -61,6 +61,26 @@ router.post('/auto-login', (req, res) => {
 
 });
 
+router.post('/onesignal-id/:id', (req, res) => {
+    User.findOne({$or: [{ email: req.body.email }, { username: req.body.username }]}, (err, userExist) => {
+        if (err) return err;
+
+        if (userExist) {
+            userExist.oneSignalId = req.params.id;
+            userExist.save();
+            res.json({
+                success: true
+            });
+        } else {
+            res.json({
+                success: false,
+                message: 'Authentication failed. Wrong user email or username'
+            });
+        }
+    })
+
+});
+
 //registration route
 router.post('/register', (req, res) => {
     async.waterfall([
