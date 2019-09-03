@@ -70,7 +70,7 @@ router.post('/onesignal-id/:id', (req, res) => {
         res.json({
             success: true
         });
-    })
+    });
 
 });
 
