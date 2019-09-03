@@ -128,7 +128,7 @@ router.post('/share-news/:id', checkJwt, (req, res) => {
     res.json({
         success: true,
         message: 'News shared'
-    })
+    });
 });
 
 
