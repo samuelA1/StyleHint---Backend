@@ -62,16 +62,55 @@ router.post('/toggle-like/:id', checkJwt, (req, res) => {
         }
         news.save();
         res.json({
-            success: true        })
+            success: true        
+        })
     });
 });
+
+var sendNotification = function(data) {
+    var headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic OTBiYjk0YTUtZTM2Ny00ZTdkLWEwZWItZmQyNjdjNWVhODVl"
+    };
+    
+    var options = {
+      host: "onesignal.com",
+      port: 443,
+      path: "/api/v1/notifications",
+      method: "POST",
+      headers: headers
+    };
+    
+    var https = require('https');
+    var req = https.request(options, function(res) {  
+      res.on('data', function(data) {
+        console.log("Response:");
+        console.log(JSON.parse(data));
+      });
+    });
+    
+    req.on('error', function(e) {
+      console.log("ERROR:");
+      console.log(e);
+    });
+    
+    req.write(JSON.stringify(data));
+    req.end();
+  };
+  
 
 //share news
 router.post('/share-news/:id', checkJwt, (req, res) => {
     let notification = new Notification();
     const friends = req.body.friends;
+    let userIds = [];
     for (let i = 0; i < friends.length; i++) {
         const friendId = friends[i];
+        User.findById(friendId, (err, user) => {
+            if (err) return err;
+
+            userIds.push(user['oneSignalId']);
+        })
         notification.for.push(friendId);
         notification.from = req.decoded.user._id;
         notification.fromUsername = req.decoded.user.username;
@@ -80,12 +119,20 @@ router.post('/share-news/:id', checkJwt, (req, res) => {
         notification.route = req.params.id;
     }
     notification.save();
+    var message = { 
+        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+        contents: {"en": `${req.decoded.user.username} just shared some news with you`},
+        include_player_ids: userIds
+    };
+    sendNotification(message);
     res.json({
         success: true,
         message: 'News shared'
     })
 });
 
+
+  
 //comment on news
 router.post('/add-comment/:id', checkJwt, (req, res) => {
     async.waterfall([
