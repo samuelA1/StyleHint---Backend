@@ -110,6 +110,14 @@ router.post('/share-news/:id', checkJwt, (req, res) => {
             if (err) return err;
 
             userIds.push(user['oneSignalId']);
+            if (i == friends.length) {
+                var message = { 
+                    app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                    contents: {"en": `${req.decoded.user.username} just shared some news with you`},
+                    include_player_ids: userIds
+                };
+                sendNotification(message);
+            }
         })
         notification.for.push(friendId);
         notification.from = req.decoded.user._id;
@@ -119,12 +127,6 @@ router.post('/share-news/:id', checkJwt, (req, res) => {
         notification.route = req.params.id;
     }
     notification.save();
-    var message = { 
-        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-        contents: {"en": `${req.decoded.user.username} just shared some news with you`},
-        include_player_ids: userIds
-    };
-    sendNotification(message);
     res.json({
         success: true,
         message: 'News shared'
