@@ -110,7 +110,7 @@ router.post('/share-news/:id', checkJwt, (req, res) => {
             if (err) return err;
 
             userIds.push(user['oneSignalId']);
-            if (i == friends.length) {
+            if (userIds.length == friends.length) {
                 console.log(userIds)
                 var message = { 
                     app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
