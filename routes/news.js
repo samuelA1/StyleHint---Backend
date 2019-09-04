@@ -50,7 +50,7 @@ router.get('/single/:id', checkJwt, (req, res) => {
 });
 
 //like and unlike a news
-router.post('/toggle-like/:id', checkJwt, (req, res) => {
+router.get('/toggle-like/:id', checkJwt, (req, res) => {
     News.findById(req.params.id, (err, news) => {
         if (err) return err;
 
