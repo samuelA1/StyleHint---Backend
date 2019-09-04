@@ -61,7 +61,8 @@ router.post('/add-tip', checkJwt, (req, res) => {
                 if (userIds.length == friends.length) {
                     var message = { 
                         app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                        contents: {"en": `@${req.decoded.user.username} shared a hint with you`},
+                        headings:{"en": `Tip`},
+                        contents: {"en": `@${req.decoded.user.username} shared a hint with you.`},
                         include_player_ids: userIds
                     };
                     sendNotification(message);
@@ -179,7 +180,8 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
                         userIds.push(user['oneSignalId']);
                         var message = { 
                             app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                            contents: {"en": `@${req.decoded.user.username} commented on one of your tips`},
+                            headings:{"en": `Comment`},
+                            contents: {"en": `@${req.decoded.user.username} commented on one of your tips.`},
                             include_player_ids: userIds
                         };
                         sendNotification(message);

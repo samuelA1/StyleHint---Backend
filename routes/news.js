@@ -114,7 +114,8 @@ router.post('/share-news/:id', checkJwt, (req, res) => {
             if (userIds.length == friends.length) {
                 var message = { 
                     app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                    contents: {"en": `@${req.decoded.user.username} shared some news with you`},
+                    headings:{"en": `News`},
+                    contents: {"en": `@${req.decoded.user.username} shared some news with you.`},
                     include_player_ids: userIds
                 };
                 sendNotification(message);

@@ -56,7 +56,8 @@ router.post('/add-friend/:id', checkJwt, (req, res) => {
             userIds.push(user['oneSignalId']);
             var message = { 
                 app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                contents: {"en": `@${req.decoded.user.username} accepted your friend request`},
+                headings:{"en": `Friend`},
+                contents: {"en": `@${req.decoded.user.username} accepted your friend request.`},
                 include_player_ids: userIds
             };
             sendNotification(message);
@@ -116,7 +117,8 @@ router.post('/request-friend/:id', checkJwt, (req, res) => {
         userIds.push(user['oneSignalId']);
         var message = { 
             app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-            contents: {"en": `@${req.decoded.user.username} wants to add you as a friend`},
+            headings:{"en": `Friend`},
+            contents: {"en": `@${req.decoded.user.username} wants to add you as a friend.`},
             include_player_ids: userIds
         };
         sendNotification(message);
