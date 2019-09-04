@@ -63,6 +63,11 @@ module.exports = function (io) {
             io.emit('newsCommentDeleted', ownerId)
         });
 
+        //toggle liking news
+        socket.on('toggleLike', (ownerId) => {
+            io.emit('toggleLiked', ownerId)
+        });
+
         //for deleting friends
         socket.on('deleteFriend', (ownerId) => {
             io.emit('friendDeleted', ownerId)
