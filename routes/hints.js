@@ -52,11 +52,11 @@ router.get('/occasion-hints', checkJwt, (req, res) => {
         {name: 'school'},
         {name: 'sport'},
         {name: 'birthday party'},
+        {name: 'date night'},
+        {name: 'church'},
+        {name: 'job interview'},
         {name: 'halloween'},
         {name: 'christmas'},
-        {name: 'church'},
-        {name: 'date night'},
-        {name: 'job interview'},
         {name: 'culture'},
     ]
 
