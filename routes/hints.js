@@ -46,6 +46,40 @@ router.post('/get-hints',checkJwt, (req, res) => {
     })
 });
 
+router.get('/occasion-hints', checkJwt, (req, res) => {
+    //occasion/event array
+    occasions = [
+        {name: 'school'},
+        {name: 'sport'},
+        {name: 'birthday party'},
+        {name: 'halloween'},
+        {name: 'christmas'},
+        {name: 'church'},
+        {name: 'date night'},
+        {name: 'job interview'},
+        {name: 'culture'},
+    ]
+
+    home = [];
+
+    occasions.forEach(occasion => {
+        Hint.find({occasion: occasion.name})
+        .sort({createdAt: -1})
+        .select(['url'])
+        .exec((err, hints) => {
+            if (err) return err;
+
+            home.push({occasion: occasion.name, url: hints[0]});
+            if (home.length == 9) {
+                res.json({
+                    success: true,
+                    hints: home
+                })
+            }
+        });
+    });
+});
+
 //get a single hint
 router.get('/get-single-hint/:id', checkJwt, (req, res) => {
     async.waterfall([
