@@ -56,8 +56,8 @@ router.get('/occasion-hints', checkJwt, (req, res) => {
         {name: 'church'},
         {name: 'job interview'},
         {name: 'halloween'},
-        {name: 'christmas'},
-        {name: 'culture'},
+        // {name: 'christmas'},
+        // {name: 'culture'},
     ]
 
     home = [];
