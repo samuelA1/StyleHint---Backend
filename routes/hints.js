@@ -70,7 +70,7 @@ router.get('/occasion-hints', checkJwt, (req, res) => {
             if (err) return err;
 
             home.push({occasion: occasion.name, url: hints[0]});
-            if (home.length == 9) {
+            if (home.length == 7) {
                 res.json({
                     success: true,
                     hints: home
