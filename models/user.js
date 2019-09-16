@@ -5,7 +5,7 @@ const algolia = require('mongoose-algolia');
 
 const UserSchema = new Schema({
     username: {type: String, lowercase: true, unique: true, required: true},
-    name: {type: String, lowercase: true, unique: true, required: true},
+    // name: {type: String, lowercase: true, unique: true, required: true},
     email: {type: String, lowercase: true, unique: true, required: true},
     password: String,
     picture: String,
