@@ -3,6 +3,7 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const async = require('async');
+const checkJwt = require('../middleware/check-jwt');
 var API_KEY = 'key-cd89dbc925b95695b194ca3ea9eedf3e';
 var DOMAIN = 'mg.thestylehint.com';
 var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
@@ -112,8 +113,8 @@ router.post('/register', (req, res) => {
                         const output = `
                         <div style="text-align: center; font-size: medium">
                             <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                            <h1>Welcome to StyleHint</h1>
-                            <p>Thank you for creating a StyleHint account. We're glad you have chosen us to help</p>
+                            <h1>Welcome to StyleHints</h1>
+                            <p>Thank you for creating a StyleHints account. We're glad you have chosen us to help</p>
                             <p>you improve upon your fashion and style by providing you with millions of fashion</p>
                             <p>ideas or hints, which take into account the climatic condition of your current location.</p>
                             <p>This will greatly improve your confidence in fashion and also save you time in picking out</p>
@@ -125,14 +126,14 @@ router.post('/register', (req, res) => {
                             <p style="margin-right: 140px"><b>Username: </b>${req.body.username}</p>
                         
                             <p>Please feel free to customize any of your account details at any time on the app.</p>
-                            <p>--The StyleHint Team.</p>
+                            <p>--The StyleHints Team.</p>
                         </div>
                         `
                         const data = {
-                            from: 'StyleHint <no-reply@thestylehint.com>',
+                            from: 'StyleHints <no-reply@thestylehint.com>',
                             to: `${req.body.email}`,
-                            subject: 'Welcome to StyleHint',
-                            text: 'The StyleHint Team',
+                            subject: 'Welcome to StyleHints',
+                            text: 'The StyleHints Team',
                             html: output
                         };
                           
@@ -150,6 +151,17 @@ router.post('/register', (req, res) => {
             }
         }
     ]);
+});
+
+//delete a user from database
+router.delete('/remove', checkJwt, (req, res) => {
+    User.findByIdAndRemove(req.decoded.user._id, (err) => {
+        if (err) return err;
+
+        res.json({
+            success: true
+        });
+    });
 });
 
 module.exports = router;

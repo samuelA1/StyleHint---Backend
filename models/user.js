@@ -5,10 +5,16 @@ const algolia = require('mongoose-algolia');
 
 const UserSchema = new Schema({
     username: {type: String, lowercase: true, unique: true, required: true},
+    name: {type: String, lowercase: true, unique: true, required: true},
     email: {type: String, lowercase: true, unique: true, required: true},
     password: String,
+    picture: String,
     oneSignalId: {type: String, default: ''},
     country: {type: String, lowercase:true, default: 'united states', required: true},
+    location: {
+      state: {type: String, lowercase: true},
+      country: {type: String, lowercase: true},
+    },
     gender: {type: String, lowercase: true, default: ''},
     size: {type: String, lowercase: true, default: ''},
     interest: {type: String, lowercase: true, default: ''},

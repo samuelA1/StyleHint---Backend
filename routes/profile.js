@@ -43,14 +43,14 @@ router.post('/email', checkJwt, (req, res) => {
                             <p><b>New email: </b>${req.body.email}</p>
                         
                             <p>Please feel free to customize any of your account details at any time on the app.</p>
-                            <p>--The StyleHint Team.</p>
+                            <p>--The StyleHints Team.</p>
                         </div>
                         `
                         const data = {
-                            from: 'StyleHint <no-reply@thestylehint.com>',
+                            from: 'StyleHints <no-reply@thestylehint.com>',
                             to: `${req.body.email}`,
                             subject: 'Email update confirmation',
-                            text: 'The StyleHint Team',
+                            text: 'The StyleHints Team',
                             html: output
                         };
                           
@@ -106,14 +106,14 @@ router.post('/username', checkJwt, (req, res) => {
                             <p><b>New username: </b>${req.body.username}</p>
                         
                             <p>Please feel free to customize any of your account details at any time on the app.</p>
-                            <p>--The StyleHint Team.</p>
+                            <p>--The StyleHints Team.</p>
                         </div>
                         `
                         const data = {
-                            from: 'StyleHint <no-reply@thestylehint.com>',
+                            from: 'StyleHints <no-reply@thestylehint.com>',
                             to: `${userWithId.email}`,
                             subject: 'Username update confirmation',
-                            text: 'The StyleHint Team',
+                            text: 'The StyleHints Team',
                             html: output
                         };
                           
@@ -152,14 +152,14 @@ router.post('/password', checkJwt, (req, res) => {
             </div>
             <div style="text-align: center; font-size: medium">
                 <p>Please feel free to customize any of your account details at any time on the app.</p>
-                <p>--The StyleHint Team.</p>
+                <p>--The StyleHints Team.</p>
             </div>
             `
             const data = {
-                from: 'StyleHint <no-reply@thestylehint.com>',
+                from: 'StyleHints <no-reply@thestylehint.com>',
                 to: `${userWithId.email}`,
                 subject: 'Password update confirmation',
-                text: 'The StyleHint Team',
+                text: 'The StyleHints Team',
                 html: output
             };
               
