@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Hint = require('../models/hint');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
+// const Product = require('../models/product');
 
 //get hints based on criteria
 router.post('/get-hints',checkJwt, (req, res) => {
@@ -52,9 +53,9 @@ router.get('/occasion-hints', checkJwt, (req, res) => {
         {name: 'school'},
         {name: 'sport'},
         {name: 'birthday party'},
-        {name: 'date night'},
+        // {name: 'date night'},
         {name: 'church'},
-        {name: 'job interview'},
+        // {name: 'job interview'},
         // {name: 'halloween'},
         // {name: 'christmas'},
         // {name: 'culture'},
@@ -70,7 +71,7 @@ router.get('/occasion-hints', checkJwt, (req, res) => {
             if (err) return err;
 
             home.push({occasion: occasion.name, url: hints[0]});
-            if (home.length == 6) {
+            if (home.length == 4) {
                 res.json({
                     success: true,
                     hints: home
@@ -108,17 +109,47 @@ router.get('/get-single-hint/:id', checkJwt, (req, res) => {
             .exec((err, hint) => {
                 if (err) return err;
                 
-                res.json({
-                    success: true,
-                    hint: hint,
-                    averageRating: Math.round(rating),
-                    numberOfRatings: numberOfRatings
-                });
+                // Product.findOne({hintId: hint._id}, (err, product) => {
+                //     if (err) return err;
+
+                //     if (product == null) {
+                        res.json({
+                            success: true,
+                            hint: hint,
+                            averageRating: Math.round(rating),
+                            numberOfRatings: numberOfRatings,
+                        });
+                    // } else {
+                    //     res.json({
+                    //         success: true,
+                    //         hint: hint,
+                    //         averageRating: Math.round(rating),
+                    //         numberOfRatings: numberOfRatings,
+                    //         price: product.price,
+                    //         productId: product._id
+                    //     });
+                    // }
+                   
+                // })
             });
             
         }
     ])
 });
+
+// //get product
+// router.get('/customer-product/:id', checkJwt, (req, res) => {
+//     Product.findById(req.params.id)
+//         .populate('owner')
+//         .exec((err, product) => {
+//             if (err) return err;
+
+//             res.json({
+//                 success: true,
+//                 product: product
+//             })
+//         });
+// });
 
 //get suggestions
 router.post('/suggestions', checkJwt, (req, res) => {
