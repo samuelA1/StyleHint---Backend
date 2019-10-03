@@ -300,7 +300,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                           <p>--The StyleHints Team.</p>
                       </div>
                       `
-                      const data = {
+                      const cnfrm = {
                           from: 'StyleHints <no-reply@thestylehint.com>',
                           to: `${req.decoded.user.email}`,
                           subject: 'Order placed',
@@ -308,7 +308,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                           html: confirmation
                       };
                         
-                      mailgun.messages().send(data, (error, body) => {
+                      mailgun.messages().send(cnfrm, (error, body) => {
                           if (error) return error;
                       });
 
