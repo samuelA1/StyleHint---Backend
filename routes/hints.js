@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Hint = require('../models/hint');
 const checkJwt = require('../middleware/check-jwt');
 const async = require('async');
-// const Product = require('../models/product');
+const Product = require('../models/product');
 
 //get hints based on criteria
 router.post('/get-hints',checkJwt, (req, res) => {
@@ -109,28 +109,28 @@ router.get('/get-single-hint/:id', checkJwt, (req, res) => {
             .exec((err, hint) => {
                 if (err) return err;
                 
-                // Product.findOne({hintId: hint._id}, (err, product) => {
-                //     if (err) return err;
+                Product.findOne({hintId: hint._id}, (err, product) => {
+                    if (err) return err;
 
-                //     if (product == null) {
+                    if (product == null) {
                         res.json({
                             success: true,
                             hint: hint,
                             averageRating: Math.round(rating),
                             numberOfRatings: numberOfRatings,
                         });
-                    // } else {
-                    //     res.json({
-                    //         success: true,
-                    //         hint: hint,
-                    //         averageRating: Math.round(rating),
-                    //         numberOfRatings: numberOfRatings,
-                    //         price: product.price,
-                    //         productId: product._id
-                    //     });
-                    // }
+                    } else {
+                        res.json({
+                            success: true,
+                            hint: hint,
+                            averageRating: Math.round(rating),
+                            numberOfRatings: numberOfRatings,
+                            price: product.price,
+                            productId: product._id
+                        });
+                    }
                    
-                // })
+                });
             });
             
         }
@@ -138,18 +138,18 @@ router.get('/get-single-hint/:id', checkJwt, (req, res) => {
 });
 
 // //get product
-// router.get('/customer-product/:id', checkJwt, (req, res) => {
-//     Product.findById(req.params.id)
-//         .populate('owner')
-//         .exec((err, product) => {
-//             if (err) return err;
+router.get('/customer-product/:id', checkJwt, (req, res) => {
+    Product.findById(req.params.id)
+        .populate('owner')
+        .exec((err, product) => {
+            if (err) return err;
 
-//             res.json({
-//                 success: true,
-//                 product: product
-//             })
-//         });
-// });
+            res.json({
+                success: true,
+                product: product
+            })
+        });
+});
 
 //get suggestions
 router.post('/suggestions', checkJwt, (req, res) => {

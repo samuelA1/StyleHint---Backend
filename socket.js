@@ -33,6 +33,11 @@ module.exports = function (io) {
             io.emit('notificationViewed', ownerId)
         });
 
+        //for rdesign review
+        socket.on('designReview', (ownerId) => {
+            io.emit('desgnReviewed', ownerId)
+        });
+
         //friend request
         socket.on('friendRequest', (friendId) => {
             io.emit('friendRequested', friendId)

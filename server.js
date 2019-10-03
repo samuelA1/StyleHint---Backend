@@ -9,12 +9,14 @@ const authRoute = require('./routes/auth');
 const customizeRoute = require('./routes/customize');
 const profileRoute = require('./routes/profile');
 const adminRoute = require('./routes/admin');
+const designerRoute = require('./routes/designer');
 const hintsRoute = require('./routes/hints');
 const friendsRoute = require('./routes/friends');
 const tipsRoute = require('./routes/tips');
 const closetRoute = require('./routes/closets');
 const notificationsRoute = require('./routes/notifications');
 const newsRoute = require('./routes/news');
+const businessRoute = require('./routes/business');
 
 mongoose.connect(config.db, {useNewUrlParser: true}, err => {
     err ? console.log('Can not connect to database') : console.log('Connected to database');
@@ -35,6 +37,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/customize', customizeRoute);
 app.use('/api/profile', profileRoute);
 app.use('/api/admin', adminRoute);
+app.use('/api/designer', designerRoute);
 app.use('/api/hints', hintsRoute);
 app.use('/api/friends', friendsRoute);
 app.use('/api/tips', tipsRoute);
@@ -42,6 +45,7 @@ app.use('/api/notifications', notificationsRoute);
 app.use('/api/closet', closetRoute);
 app.use('/api/search', searchRoutes);
 app.use('/api/news', newsRoute);
+app.use('/api/business', businessRoute);
 
 
 

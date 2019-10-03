@@ -12,7 +12,7 @@ var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
 //login route
 router.post('/login', (req, res) => {
     User.findOne({$or: [{ email: req.body.email }, { username: req.body.username }]})
-    .select(['-friends', '-tips', '-myTips', '-closet'])
+    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
     .exec((err, userExist) => {
         if (err) return err;
 

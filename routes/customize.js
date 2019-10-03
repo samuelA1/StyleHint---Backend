@@ -5,7 +5,7 @@ const User = require('../models/user');
 //route to customize size, gender and interest
 router.post('/customize', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-    .select(['-friends', '-tips', '-myTips', '-closet'])
+    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
     .exec((err, userWithId) => {
         if (err) return err;
 

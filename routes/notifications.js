@@ -68,6 +68,37 @@ router.get('/notifications', checkJwt, (req, res) => {
     ])
 });
 
+//get admin notifications
+router.get('/admin-notifications', checkJwt, (req, res) => {
+    const perPage = 20;
+    const page = req.query.page;
+    async.waterfall([
+        function (callback) {
+            Notification.countDocuments({fromUsername: 'admin'}, (err, count) => {
+                if (err) return err;
+
+                callback(err, count)
+            });
+        },
+        function (count) {
+            Notification.find({fromUsername: 'admin'})
+                .limit(perPage)
+                .skip(page * perPage)
+                .sort({createdAt: -1})
+                .select(['-for'])
+                .exec( (err, notification) => {
+                    if (err) return err;
+
+                    res.json({
+                        success: true,
+                        notifications: notification,
+                        totalNotifications: count
+                    })
+                });
+        }
+    ])
+});
+
 //get friends request
 router.get('/friendRequests', checkJwt, (req, res) => {
    

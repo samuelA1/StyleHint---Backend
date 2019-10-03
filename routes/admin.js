@@ -2,6 +2,8 @@ const router = require('express').Router();
 const Hint = require('../models/hint');
 const Statistics = require('../models/statistics');
 const checkJwt = require('../middleware/check-jwt');
+const Product = require('../models/product');
+const Notification = require('../models/notification');
 const isAdmin = require('../middleware/is-admin');
 const cloudinary = require('cloudinary');
 const formidable = require('formidable');
@@ -433,6 +435,14 @@ router.post('/update-user/:id', isAdmin, (req, res) => {
         if (req.body.interest) user.interest = req.body.interest;
         if (req.body.size) user.size = req.body.size;
         if (req.body.isAdmin) user.isAdmin = req.body.isAdmin;
+        if (req.body.isDesigner) user.isDesigner = req.body.isDesigner;
+        if (req.body.stripeAcct) user.stripeAcct = req.body.stripeAcct;
+        if (req.body.occasions) {
+            user.category = [];
+            req.body.occasions.split(',').forEach(occasion => {
+                user.category.push(occasion);
+            });
+        }
         if (req.body.country) user.country = req.body.country;
         user.save();
         res.json({
@@ -574,6 +584,491 @@ router.post('/year-statistics', isAdmin, (req, res) => {
             yearlyUsers: yearlyTotal
         })
     });
+});
+
+/************************************************************************************************************************************** */
+                                                                 // DESIGNERS
+//send push notification
+var sendNotification = function(data) {
+    var headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Basic OTBiYjk0YTUtZTM2Ny00ZTdkLWEwZWItZmQyNjdjNWVhODVl"
+    };
+    
+    var options = {
+      host: "onesignal.com",
+      port: 443,
+      path: "/api/v1/notifications",
+      method: "POST",
+      headers: headers
+    };
+    
+    var https = require('https');
+    var req = https.request(options, function(res) {  
+      res.on('data', function(data) {
+        console.log("Response:");
+        console.log(JSON.parse(data));
+      });
+    });
+    
+    req.on('error', function(e) {
+      console.log("ERROR:");
+      console.log(e);
+    });
+    
+    req.write(JSON.stringify(data));
+    req.end();
+  };
+
+//product approval process
+router.post('/review-process/:id', isAdmin, (req, res) => {
+    Product.findById(req.params.id, (err, product) => {
+        if (err) return err;
+
+        let notification = new Notification();
+
+
+        if (req.body.review == 'ok') {
+            let hint = new Hint();
+
+            hint.owner = product.owner;
+            hint.url = product.mainImage;
+            if (req.body.overview) hint.overview = req.body.overview;
+            if (req.body.recommendations) hint.recommendations = req.body.recommendations;
+            if (req.body.alternatives) hint.alternatives = req.body.alternatives;
+            if (req.body.dont) hint.dont = req.body.dont;
+            if (req.body.gender) hint.gender = req.body.gender;
+            if (req.body.size) {
+                req.body.size.split(',').forEach(element => {
+                    hint.size.push(element);
+                });
+            }
+            if (req.body.interest) {
+                req.body.interest.split(',').forEach(element => {
+                    hint.interest.push(element);
+                });
+            }
+            if (req.body.weather) {
+                req.body.weather.split(',').forEach(element => {
+                    hint.weather.push(element);
+                });
+            }
+            if (req.body.season) {
+                req.body.season.split(',').forEach(element => {
+                    hint.season.push(element);
+                });
+            }
+            if (req.body.occasion) {
+                req.body.occasion.split(',').forEach(element => {
+                    hint.occasion.push(element);
+                });
+            }
+            
+            product.hintId = hint._id;
+            product.isPublished = 'approved';
+            product.reviewedBy = req.decoded.user._id;
+
+            hint.save();
+            product.save();
+
+            User.findById(product.owner, (err, designer) => {
+                if (err) return err;
+
+                    //push notification
+                userIds.push(designer['oneSignalId']);
+                var message = { 
+                    app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                    headings:{"en": `Review decision`},
+                    contents: {"en": `A decision has been made on one or more of your submitted products.`},
+                    include_player_ids: userIds
+                };
+                sendNotification(message);
+                
+                //in app notification
+                notification.for.push(designer._id);
+                notification.fromUsername = 'StyleHints';
+                notification.typeOf = 'decision';
+                notification.message = 'One or more of your products is out of stock.';
+                notification.save();
+
+                res.json({
+                    success: true
+                })
+            });
+        } else {
+            product.isPublished = 'denied';
+            product.reason = req.body.reason;
+            product.reviewedBy = req.decoded.user._id;
+
+
+            product.save();
+
+            User.findById(product.owner, (err, designer) => {
+                if (err) return err;
+
+                    //push notification
+                userIds.push(designer['oneSignalId']);
+                var message = { 
+                    app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                    headings:{"en": `Review decision`},
+                    contents: {"en": `A decision has been made on one or more of your submitted products.`},
+                    include_player_ids: userIds
+                };
+                sendNotification(message);
+                
+                //in app notification
+                notification.for.push(designer._id);
+                notification.fromUsername = 'StyleHints';
+                notification.typeOf = 'decision';
+                notification.message = 'One or more of your products is out of stock.';
+                notification.save();
+
+                res.json({
+                    success: true
+                })
+            });
+        }
+    });
+});
+
+//get all reviews by status products
+router.post('/review-status', isAdmin, (req, res) => {
+    Product.find({isPublished: req.body.reviewType}, (err, reviews) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            reviews: reviews
+        })
+    });
+});
+
+//reviewed by me
+router.get('/me-reviewed', isAdmin, (req, res) => {
+    Product.find({reviewedBy: req.decoded.user._id}, (err, reviews) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            reviews: reviews
+        })
+    });
+});
+
+
+//oders for day
+router.get('/daily-orders', isAdmin, (req, res) => {
+    Order.find({orderedAt: {$lt: new Date(), 
+        $gte: new Date(new Date().setDate(new Date().getDate()-1))}})
+        .populate('from')
+        .populate('for')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                orders: orders
+            })
+        });
+});
+
+//orders for week
+router.get('/weekly-orders', isAdmin, (req, res) => {
+    Order.find( {orderedAt: {$lt: new Date(), 
+        $gte: new Date(new Date().setDate(new Date().getDate()-7))}})
+        .populate('from')
+        .populate('for')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                orders: orders
+            })
+        });
+});
+
+//orders for month
+router.get('/monthly-orders', isAdmin, (req, res) => {
+    Order.find({orderedAt: {$gte: new Date(req.body.year, req.body.month, 1),
+        $lt: new Date(req.body.year, req.body.month + 1, 1)}})
+        .populate('from')
+        .populate('for')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                orders: orders
+            })
+        });
+});
+
+//orders for year
+router.get('/yearly-orders', isAdmin, (req, res) => {
+    Order.find({orderedAt: {$gte: new Date(req.body.year, 1, 1),
+        $lt: new Date(req.body.year + 1, 1, 1)}})
+        .populate('from')
+        .populate('for')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                orders: orders
+            })
+        });
+});
+
+//chart data for orders
+router.post('/chart-orders', isAdmin, (req, res) => {
+    const months = [{month:'January', rep: 0},{month:'February', rep: 1}, {month:'March', rep: 2}, {month:'April', rep: 3}, {month:'May', rep: 4},
+    {month:'June', rep: 5}, {month:'July', rep: 6}, {month:'August', rep: 7}, {month:'September', rep: 8}, {month:'October', rep: 9},
+    {month:'November', rep: 10}, {month:'December', rep: 11}, ]
+    if (req.body.year) {
+        let data = [];
+        months.forEach(month => {
+            Order.find({orderedAt: {$gte: new Date(req.body.year, month.rep, 1),
+                $lt: new Date(req.body.year, month.rep + 1, 1)}}, (err, stats) => {
+               if (err) return err;
+       
+               if (stats.length !== 0) {
+                   var monthlyTotal = 0;
+                   stats.forEach(orders => {
+                       monthlyTotal += orders.length;
+                   });
+                   data.push(Object.assign({total: monthlyTotal}, month));
+                   if (data.length == 12) {
+                    res.json({
+                        success: true,
+                        orderData: data
+                    })
+                   }
+               } else {
+                data.push(Object.assign({total: 0}, month))
+                if (data.length == 12) {
+                    res.json({
+                        success: true,
+                        orderData: data
+                    })
+                }
+               }
+           });
+        });
+    }
+    
+});
+
+//finances for day
+router.get('/daily-finances', isAdmin, (req, res) => {
+    Order.find({orderedAt: {$lt: new Date(), 
+        $gte: new Date(new Date().setDate(new Date().getDate()-1))}})
+        .populate('from')
+        .populate('for')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            let totalOrders = orders.length;
+            let totalSold = 0;
+            let totalCompanyReceived = 0;
+            let totalDesignerReceived = 0;
+            let totalQuantity = 0;
+
+            for (let i = 0; i < orders.length; i++) {
+                totalSold += orders[i].totalPaid;
+                totalCompanyReceived += orders[i].companyReceived;
+                totalDesignerReceived += orders[i].designerReceived;
+                totalQuantity += orders[i].quantity;
+               if (i == orders.length) {
+                res.json({
+                    success: true,
+                    totalOrders: totalOrders,
+                    totalSold: totalSold,
+                    totalQuantity: totalQuantity,
+                    totalCompanyReceived: totalCompanyReceived,
+                    totalDesignerReceived: totalDesignerReceived
+    
+                })
+               }
+                
+            }
+
+        });
+});
+
+//finances for week
+router.get('/weekly-finances', isAdmin, (req, res) => {
+    Order.find( {orderedAt: {$lt: new Date(), 
+        $gte: new Date(new Date().setDate(new Date().getDate()-7))}})
+        .populate('from')
+        .populate('for')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            let totalOrders = orders.length;
+            let totalSold = 0;
+            let totalCompanyReceived = 0;
+            let totalDesignerReceived = 0;
+            let totalQuantity = 0;
+
+            for (let i = 0; i < orders.length; i++) {
+                totalSold += orders[i].totalPaid;
+                totalCompanyReceived += orders[i].companyReceived;
+                totalDesignerReceived += orders[i].designerReceived;
+                totalQuantity += orders[i].quantity;
+               if (i == orders.length) {
+                res.json({
+                    success: true,
+                    totalOrders: totalOrders,
+                    totalSold: totalSold,
+                    totalQuantity: totalQuantity,
+                    totalCompanyReceived: totalCompanyReceived,
+                    totalDesignerReceived: totalDesignerReceived
+    
+                })
+               }
+                
+            }
+        });
+});
+
+//finances for month
+router.get('/monthly-finances', isAdmin, (req, res) => {
+    Order.find({orderedAt: {$gte: new Date(req.body.year, req.body.month, 1),
+        $lt: new Date(req.body.year, req.body.month + 1, 1)}})
+        .populate('from')
+        .populate('for')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            let totalOrders = orders.length;
+            let totalSold = 0;
+            let totalCompanyReceived = 0;
+            let totalDesignerReceived = 0;
+            let totalQuantity = 0;
+
+            for (let i = 0; i < orders.length; i++) {
+                totalSold += orders[i].totalPaid;
+                totalCompanyReceived += orders[i].companyReceived;
+                totalDesignerReceived += orders[i].designerReceived;
+                totalQuantity += orders[i].quantity;
+               if (i == orders.length) {
+                res.json({
+                    success: true,
+                    totalOrders: totalOrders,
+                    totalSold: totalSold,
+                    totalQuantity: totalQuantity,
+                    totalCompanyReceived: totalCompanyReceived,
+                    totalDesignerReceived: totalDesignerReceived
+    
+                })
+               }
+                
+            }
+        });
+});
+
+//finances for year
+router.get('/yearly-finances', isAdmin, (req, res) => {
+    Order.find({orderedAt: {$gte: new Date(req.body.year, 1, 1),
+        $lt: new Date(req.body.year + 1, 1, 1)}})
+        .populate('from')
+        .populate('for')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            let totalOrders = orders.length;
+            let totalSold = 0;
+            let totalCompanyReceived = 0;
+            let totalDesignerReceived = 0;
+            let totalQuantity = 0;
+
+            for (let i = 0; i < orders.length; i++) {
+                totalSold += orders[i].totalPaid;
+                totalCompanyReceived += orders[i].companyReceived;
+                totalDesignerReceived += orders[i].designerReceived;
+                totalQuantity += orders[i].quantity;
+               if (i == orders.length) {
+                res.json({
+                    success: true,
+                    totalOrders: totalOrders,
+                    totalSold: totalSold,
+                    totalQuantity: totalQuantity,
+                    totalCompanyReceived: totalCompanyReceived,
+                    totalDesignerReceived: totalDesignerReceived
+    
+                })
+               }
+                
+            }
+        });
+});
+
+//chart data for finances
+router.post('/chart-finances', isAdmin, (req, res) => {
+    const months = [{month:'January', rep: 0},{month:'February', rep: 1}, {month:'March', rep: 2}, {month:'April', rep: 3}, {month:'May', rep: 4},
+    {month:'June', rep: 5}, {month:'July', rep: 6}, {month:'August', rep: 7}, {month:'September', rep: 8}, {month:'October', rep: 9},
+    {month:'November', rep: 10}, {month:'December', rep: 11}, ]
+    if (req.body.year) {
+        let data = [];
+        months.forEach(month => {
+            Order.find({orderedAt: {$gte: new Date(req.body.year, month.rep, 1),
+                $lt: new Date(req.body.year, month.rep + 1, 1)}}, (err, stats) => {
+               if (err) return err;
+       
+               if (stats.length !== 0) {
+                   var monthlyTotal = 0;
+                   stats.forEach(order => {
+                       monthlyTotal += order.totalPaid;
+                   });
+                   data.push(Object.assign({total: monthlyTotal}, month));
+                   if (data.length == 12) {
+                    res.json({
+                        success: true,
+                        financesData: data
+                    })
+                   }
+               } else {
+                data.push(Object.assign({total: 0}, month))
+                if (data.length == 12) {
+                    res.json({
+                        success: true,
+                        financesData: data
+                    })
+                }
+               }
+           });
+        });
+    }
+    
+});
+
+//get all orders and finances
+router.get('/finances-orders', isAdmin, (req, res) => {
+    Order.find({})
+        .populate('from')
+        .populate('product')
+        .exec((err, orders) => {
+            if (err) return err;
+    
+            totalSold = 0;
+            orders.forEach(order => {
+                totalSold += order.totalPaid;
+            });
+            res.json({
+                success: true,
+                orders: orders,
+                totalSold: totalSold
+            });
+        });
 });
 
 module.exports = router;

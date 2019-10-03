@@ -2,9 +2,17 @@ const router = require('express').Router();
 const checkJwt = require('../middleware/check-jwt');
 const User = require('../models/user');
 const async = require('async');
+const cloudinary = require('cloudinary');
+const formidable = require('formidable');
 var API_KEY = 'key-cd89dbc925b95695b194ca3ea9eedf3e';
 var DOMAIN = 'mg.thestylehint.com';
 var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
+
+cloudinary.config({ 
+    cloud_name: 'stylehint', 
+    api_key: '829432514282953', 
+    api_secret: 'CJnItspl_V5HLIl_phgAWYsdbL4' 
+});
 
 //change email address
 router.post('/email', checkJwt, (req, res) => {
@@ -245,6 +253,152 @@ router.post('/size', checkJwt, (req, res) => {
             success: true,
             user: userWithId,
             message: 'Size update successful'
+        });
+    });
+});
+
+//edit profile picture
+router.post('/edit-picture', checkJwt, (req, res) => {
+    let form = new formidable.IncomingForm();
+
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+        form.parse(req, (err, fields, files) => {
+            if (err) return err;
+
+            cloudinary.uploader.upload(fields.image, function(error, result) {
+                if (error.url) {
+                    user.picture = error.secure_url;
+                    user.save();
+    
+                    res.json({
+                        success: true,
+                        url: error.secure_url,
+                        message: 'profile picture successfully updated'
+                    });
+                }
+            });
+        })
+    });
+});
+
+//add address
+router.post('/add-address', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+        user.addresses.push(
+            {
+                main: req.body.main,
+                city: req.body.city,
+                state: req.body.state,
+                country: req.body.country,
+                zip: req.body.zip,
+                isDefault: req.body.isDefault
+            }
+        )
+
+        user.save();
+        res.json({
+            success: true,
+            message: 'Address successfully added'
+        });
+    });
+});
+
+
+//edit address
+router.post('/edit-address/:id', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+       let addr =  user.addresses.find(a => a._id == req.params.id);
+       if (req.body.main) addr.main = req.body.main;
+       if (req.body.city) addr.city = req.body.city;
+       if (req.body.country) addr.country = req.body.country;
+       if (req.body.state) addr.state = req.body.state;
+       if (req.body.zip) addr.zip = req.body.zip;
+       if (req.body.isDefault) addr.isDefault = req.body.isDefault;
+
+       user.save();
+        res.json({
+            success: true,
+            message: 'Address successfully updated'
+        });
+    });
+});
+
+//delete address
+router.post('/delete-address/:id', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+       user.addresses.splice(user.addresses.findIndex(a => a._id == req.params.id), 1);
+
+       user.save();
+        res.json({
+            success: true,
+            message: 'Address successfully deleted'
+        });
+    });
+});
+
+//add card
+router.post('/add-card', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+        user.cards.push(
+            {
+                number: req.body.number,
+                expMonth: req.body.expMonth,
+                expYear: req.body.expYear,
+                cvc: req.body.cvc,
+                zip: req.body.zip,
+            }
+        )
+
+        user.save();
+        res.json({
+            success: true,
+            message: 'Card successfully added'
+        });
+    });
+});
+
+
+//edit card
+router.post('/edit-card/:id', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+       let card =  user.cards.find(a => a._id == req.params.id);
+       if (req.body.number) card.number = req.body.number;
+       if (req.body.expMonth) card.expMonth = req.body.expMonth;
+       if (req.body.expYear) card.expYear = req.body.expYear;
+       if (req.body.zip) card.zip = req.body.zip;
+       if (req.body.cvc) card.cvc = req.body.cvc;
+
+       user.save();
+        res.json({
+            success: true,
+            message: 'Card successfully updated'
+        });
+    });
+});
+
+//delete card
+router.post('/delete-card/:id', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+       user.cards.splice(user.cards.findIndex(a => a._id == req.params.id), 1);
+
+       user.save();
+        res.json({
+            success: true,
+            message: 'Card successfully deleted'
         });
     });
 });

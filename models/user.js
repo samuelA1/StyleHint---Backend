@@ -5,7 +5,7 @@ const algolia = require('mongoose-algolia');
 
 const UserSchema = new Schema({
     username: {type: String, lowercase: true, unique: true, required: true},
-    // name: {type: String, lowercase: true, unique: true, required: true},
+    name: {type: String, lowercase: true, unique: true, required: true},
     email: {type: String, lowercase: true, unique: true, required: true},
     password: String,
     picture: String,
@@ -15,10 +15,34 @@ const UserSchema = new Schema({
       state: {type: String, lowercase: true},
       country: {type: String, lowercase: true},
     },
+    addresses: [
+      {
+        main: {type: String, default: ''},
+        city: {type: String, default: ''},
+        state: {type: String, default: ''},
+        country: {type: String, default: ''},
+        zip: {type: Number},
+      }
+    ],
+    cards: [
+      {
+        number: {type: Number},
+        expMonth: {type: Number},
+        expYear: {type: Number},
+        cvc: {type: Number},
+        zip: {type: Number},
+      }
+    ],
+    designers: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    cart: [{type: Schema.Types.ObjectId, ref: 'Product'}],
+    category:  [{type: String, default: ''}],
+    description: {type: String, default: ''},
     gender: {type: String, lowercase: true, default: ''},
     size: {type: String, lowercase: true, default: ''},
     interest: {type: String, lowercase: true, default: ''},
     isAdmin: {type: Boolean, default: false},
+    isDesigner: {type: Boolean, default: false},
+    stripeAcct: {type: String, default: ''},
     tips: [{type: Schema.Types.ObjectId, ref: 'Tip'}],
     myTips: [{type: Schema.Types.ObjectId, ref: 'Tip'}],
     friends: [{type: Schema.Types.ObjectId, ref: 'User'}],
@@ -30,7 +54,7 @@ UserSchema.plugin(algolia, {
     appId: 'X1ROWG5RKS',
     apiKey: '39c62197312b40a371657727f4df78cf',
     indexName: 'stylehint',
-    selector: '_id username',
+    selector: '_id username name picture',
     defaults: {
       author: 'uknown'
     },
