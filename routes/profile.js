@@ -344,13 +344,12 @@ router.post('/edit-address/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-       let addr =  user.addresses.find(a => a._id == req.params.id);
-       if (req.body.main) addr.main = req.body.main;
-       if (req.body.city) addr.city = req.body.city;
-       if (req.body.country) addr.country = req.body.country;
-       if (req.body.state) addr.state = req.body.state;
-       if (req.body.zip) addr.zip = req.body.zip;
-       if (req.body.isDefault) addr.isDefault = req.body.isDefault;
+       let addrIndex =  user.addresses.findIndex(a => a._id == req.params.id);
+       if (req.body.main) user.addresses[addrIndex].main = req.body.main;
+       if (req.body.city) user.addresses[addrIndex].city = req.body.city;
+       if (req.body.country) user.addresses[addrIndex].country = req.body.country;
+       if (req.body.state) user.addresses[addrIndex].state = req.body.state;
+       if (req.body.zip) user.addresses[addrIndex].zip = req.body.zip;
 
        user.save();
         res.json({
