@@ -189,6 +189,23 @@ router.post('/password', checkJwt, (req, res) => {
     });
 });
 
+//change name
+router.post('/name', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id)
+    .select(['-friends', '-tips', '-myTips', '-closet'])
+    .exec( (err, userWithId) => {
+        if (err) return err;
+
+        if(req.body.name) userWithId.name = req.body.name;
+        userWithId.save();
+        res.json({
+            success: true,
+            user: userWithId,
+            message: 'Name update successful'
+        });
+    });
+});
+
 //change country
 router.post('/country', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
