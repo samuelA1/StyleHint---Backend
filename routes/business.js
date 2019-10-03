@@ -167,6 +167,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
 
                 order.for = designer._id;
                 order.from = req.decoded.user._id;
+                if (req.body.address.name) order.address.name = req.body.address.name;
                 if (req.body.address.main) order.address.main = req.body.address.main;
                 if (req.body.address.city) order.address.city = req.body.address.city;
                 if (req.body.address.state) order.address.state = req.body.address.state;

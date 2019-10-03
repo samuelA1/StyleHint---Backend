@@ -312,7 +312,6 @@ router.post('/add-address', checkJwt, (req, res) => {
                 state: req.body.state,
                 country: req.body.country,
                 zip: req.body.zip,
-                isDefault: req.body.isDefault
             }
         )
 
@@ -360,6 +359,22 @@ router.post('/edit-address/:id', checkJwt, (req, res) => {
         });
     });
 });
+
+//get single address
+router.get('/single-address/:id', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+       let address = user.addresses.find(a => a._id == req.params.id);
+
+       user.save();
+        res.json({
+            success: true,
+            address: address
+        });
+    });
+});
+
 
 //delete address
 router.post('/delete-address/:id', checkJwt, (req, res) => {

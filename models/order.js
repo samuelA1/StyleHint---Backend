@@ -5,6 +5,7 @@ const OrderSchema = new Schema({
     for: {type: Schema.Types.ObjectId, ref: 'User'},
     from: {type: Schema.Types.ObjectId, ref: 'User'},
     address: {
+        name: {type: String, default: ''},
         main: {type: String, default: ''},
         city: {type: String, default: ''},
         state: {type: String, default: ''},
