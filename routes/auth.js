@@ -97,6 +97,7 @@ router.post('/register', (req, res) => {
                 if (req.body.country) user.country = req.body.country;
                 if (req.body.password) user.password = req.body.password;
                 if (req.body.username) user.username = req.body.username;
+                if (req.body.name) user.name = req.body.name;
 
                 User.findOne({email: req.body.email}, (err, userExist) => {
                     if (err) return err;
