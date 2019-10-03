@@ -282,7 +282,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                       });
 
                       //email notification for customer
-                      const output = `
+                      const confirmation = `
                       <div style="text-align: center; font-size: medium">
                           <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
                           <h1>Order confirmation.</h1>
@@ -305,7 +305,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                           to: `${req.decoded.user.email}`,
                           subject: 'Order placed',
                           text: 'The StyleHints Team',
-                          html: output
+                          html: confirmation
                       };
                         
                       mailgun.messages().send(data, (error, body) => {
