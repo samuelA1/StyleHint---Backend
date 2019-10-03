@@ -419,17 +419,32 @@ router.post('/edit-card/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-       let card =  user.cards.find(a => a._id == req.params.id);
-       if (req.body.number) card.number = req.body.number;
-       if (req.body.expMonth) card.expMonth = req.body.expMonth;
-       if (req.body.expYear) card.expYear = req.body.expYear;
-       if (req.body.zip) card.zip = req.body.zip;
-       if (req.body.cvc) card.cvc = req.body.cvc;
+       let cardIndex =  user.cards.findIndex(a => a._id == req.params.id);
+       if (req.body.number) user.cards[cardIndex].number = req.body.number;
+       if (req.body.expMonth) user.cards[cardIndex].expMonth = req.body.expMonth;
+       if (req.body.expYear) user.cards[cardIndex].expYear = req.body.expYear;
+       if (req.body.zip) user.cards[cardIndex].zip = req.body.zip;
+       if (req.body.cvc) user.cards[cardIndex].cvc = req.body.cvc;
 
        user.save();
         res.json({
             success: true,
             message: 'Card successfully updated'
+        });
+    });
+});
+
+//get single  card
+router.get('/single-card/:id', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+       let card = user.cards.find(a => a._id == req.params.id);
+
+       user.save();
+        res.json({
+            success: true,
+            card: card
         });
     });
 });
