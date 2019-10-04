@@ -326,7 +326,7 @@ router.post('/add-address', checkJwt, (req, res) => {
 //get all cards and addresses
 router.get('/card-address', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-     .select('addresses', 'cards')
+     .select(['addresses', 'cards'])
      .exec((err, user) => {
         if (err) return err;
 
