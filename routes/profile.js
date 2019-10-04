@@ -398,8 +398,7 @@ router.post('/add-card', checkJwt, (req, res) => {
         user.cards.push(
             {
                 number: req.body.number,
-                expMonth: req.body.expMonth,
-                expYear: req.body.expYear,
+                expMonthYear: req.body.exp,
                 cvc: req.body.cvc,
                 zip: req.body.zip,
             }
