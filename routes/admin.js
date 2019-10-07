@@ -785,7 +785,11 @@ router.get('/alerts', isAdmin, (req, res) => {
 
 //get all reviews by status products
 router.post('/review-status', isAdmin, (req, res) => {
+    const perPage = 20;
+    const page = req.query.page;
     Product.find({isPublished: req.body.reviewType})
+        .limit(perPage)
+        .skip(page * perPage)
         .sort({createdAt: -1})
         .exec((err, reviews) => {
             if (err) return err;
@@ -794,7 +798,7 @@ router.post('/review-status', isAdmin, (req, res) => {
                 success: true,
                 reviews: reviews
             })
-        });
+    });
 });
 
 //reviewed by me
