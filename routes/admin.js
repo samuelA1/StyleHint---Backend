@@ -437,10 +437,10 @@ router.post('/update-user/:id', isAdmin, (req, res) => {
         if (req.body.isAdmin) user.isAdmin = req.body.isAdmin;
         if (req.body.isDesigner) user.isDesigner = req.body.isDesigner;
         if (req.body.stripeAcct) user.stripeAcct = req.body.stripeAcct;
-        if (req.body.occasions) {
+        if (req.body.category) {
             user.category = [];
-            req.body.occasions.split(',').forEach(occasion => {
-                user.category.push(occasion);
+            req.body.category.split(',').forEach(cat => {
+                user.category.push(cat);
             });
         }
         if (req.body.country) user.country = req.body.country;
