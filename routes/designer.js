@@ -56,19 +56,17 @@ router.post('/add-product', isDesigner, (req, res) => {
         };
 
         
-        cloudinary.uploader.upload(fields.mainImage, function(error, result) {
-            console.log(error);
-            console.log(result);
-            if (error.url) {
-                product.mainImage = error.secure_url;
-                
-            }
-        });
-        // cloudinary.uploader.upload(fields.imgOne, function(error, result) {
+        // cloudinary.uploader.upload(fields.mainImage, function(error, result) {
         //     if (error.url) {
-        //         product.imgOne = error.secure_url;
+        //         product.mainImage = error.secure_url;
+                
         //     }
         // });
+        cloudinary.uploader.upload(fields.imgOne, function(error, result) {
+            if (error.url) {
+                product.imgOne = error.secure_url;
+            }
+        });
         // cloudinary.uploader.upload(fields.imgTwo, function(error, result) {
         //     if (error.url) {
         //         product.imgTwo = error.secure_url;
