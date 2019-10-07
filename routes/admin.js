@@ -778,7 +778,7 @@ router.get('/alerts', isAdmin, (req, res) => {
 
         res.json({
             success: true,
-            2w: alert[0].numberOfAlerts
+            numberOfAlerts: alert[0].numberOfAlerts
         })
     });
 });
