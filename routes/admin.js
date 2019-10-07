@@ -440,34 +440,35 @@ router.post('/update-user/:id', isAdmin, (req, res) => {
         if (req.body.size) user.size = req.body.size;
         if (req.body.isAdmin) user.isAdmin = req.body.isAdmin;
         if (req.body.isDesigner) {
-            user.isDesigner = req.body.isDesigner
-            //send email
-            const output = `
-            <div style="text-align: center; font-size: medium">
-                <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                <h1>Congratulations and Welcome</h1>
-                <p>Congratulation on opening a StyleHint Designer Account. We're glad you have chosen us to help</p>
-                <p>you promote your fashion, designer and clothing business. While this may be a sometimes tough journey,</p>
-                <p>we are here to make sure we can help you as much as possible, in order to make your business and journey</p>
-                <p>as easy as possible. We know this the first step in taking your online business to next level, and we will make sure</p>
-                <p>we treat it as such. Feel free to reach out to us at anytime with any questions and we'll be glad to help you </p>
-                <p>as much as we can. </p>
-            </div>
-            <div style="text-align: center; font-size: medium">
-                <p>--The StyleHints Team.</p>
-            </div>
-            `
-            const data = {
-                from: 'StyleHints <no-reply@thestylehint.com>',
-                to: `${req.body.email}`,
-                subject: 'Congratulations and Welcome',
-                text: 'The StyleHints Team',
-                html: output
-            };
-              
-            mailgun.messages().send(data, (error, body) => {
-                if (error) return error;
-            });
+            user.isDesigner = req.body.isDesigner;
+            if (req.body.isDesigner == true) {
+                    //send email
+                const output = `
+                <div style="text-align: center; font-size: medium">
+                    <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                    <h1>Congratulations and Welcome</h1>
+                    <p>Congratulation on opening a StyleHint Designer Account. We're glad you have chosen us to help</p>
+                    <p>you promote your fashion, designer and clothing business. While this may be a sometimes tough journey,</p>
+                    <p>we are here to make sure we can help you as much as possible, in order to make your business and journey</p>
+                    <p>as easy as possible. We know this the first step in taking your online business to next level, and we will make sure</p>
+                    <p>we treat it as such. Feel free to reach out to us at anytime with any questions and we'll be glad to help you as much as we can. </p>
+                </div>
+                <div style="text-align: center; font-size: medium">
+                    <p>--The StyleHints Team.</p>
+                </div>
+                `
+                const data = {
+                    from: 'StyleHints <no-reply@thestylehint.com>',
+                    to: `${req.body.email}`,
+                    subject: 'Congratulations and Welcome',
+                    text: 'The StyleHints Team',
+                    html: output
+                };
+                
+                mailgun.messages().send(data, (error, body) => {
+                    if (error) return error;
+                });
+            }
         };
         if (req.body.stripeAcct) user.stripeAcct = req.body.stripeAcct;
         if (req.body.category) {
