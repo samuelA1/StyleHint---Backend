@@ -778,21 +778,23 @@ router.get('/alerts', isAdmin, (req, res) => {
 
         res.json({
             success: true,
-            numberOfAlerts: alert[0].numberOfAlerts
+            2w: alert[0].numberOfAlerts
         })
     });
 });
 
 //get all reviews by status products
 router.post('/review-status', isAdmin, (req, res) => {
-    Product.find({isPublished: req.body.reviewType}, (err, reviews) => {
-        if (err) return err;
-
-        res.json({
-            success: true,
-            reviews: reviews
-        })
-    });
+    Product.find({isPublished: req.body.reviewType})
+        .sort({createdAt: -1})
+        .exec((err, reviews) => {
+            if (err) return err;
+    
+            res.json({
+                success: true,
+                reviews: reviews
+            })
+        });
 });
 
 //reviewed by me

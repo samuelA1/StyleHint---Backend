@@ -13,7 +13,8 @@ const ProductSchema = new Schema({
     info: [{size: {type: String, default: 'small'}, quantity: {type: Number, default: 0}}],
     isPublished: {type: String, default: ''},
     reason: {type: String, default: ''},
-    reviewedBy: {type: Schema.Types.ObjectId, ref: 'User'}
+    reviewedBy: {type: Schema.Types.ObjectId, ref: 'User'},
+    createdAt: {type: Date, default: Date.now}
 });
 
 module.exports = mongoose.model('Product', ProductSchema);
