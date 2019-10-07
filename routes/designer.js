@@ -62,20 +62,20 @@ router.post('/add-product', isDesigner, (req, res) => {
                 
             }
         });
-        cloudinary.uploader.upload(fields.imgOne, function(error, result) {
-            if (error.url) {
-                product.imgOne = error.secure_url;
-            }
-        });
-        cloudinary.uploader.upload(fields.imgTwo, function(error, result) {
-            if (error.url) {
-                product.imgTwo = error.secure_url;
-            }
-        });
-        cloudinary.uploader.upload(fields.imgThree, function(error, result) {
-            if (error.url) {
-                product.imgThree = error.secure_url;
-            }
+        // cloudinary.uploader.upload(fields.imgOne, function(error, result) {
+        //     if (error.url) {
+        //         product.imgOne = error.secure_url;
+        //     }
+        // });
+        // cloudinary.uploader.upload(fields.imgTwo, function(error, result) {
+        //     if (error.url) {
+        //         product.imgTwo = error.secure_url;
+        //     }
+        // });
+        // cloudinary.uploader.upload(fields.imgThree, function(error, result) {
+        //     if (error.url) {
+        //         product.imgThree = error.secure_url;
+        //     }
         });
 
         product.isPublished = 'review'
