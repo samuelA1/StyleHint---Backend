@@ -42,6 +42,8 @@ router.post('/add-product', isDesigner, (req, res) => {
     form.parse(req, (err, fields, files) => {
         if (err) return err;
 
+        console.log(fields);
+
         product.owner = req.decoded.user._id;
         if (fields.price) product.price = fields.price;
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
