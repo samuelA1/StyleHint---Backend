@@ -473,7 +473,7 @@ router.post('/update-user/:id', isAdmin, (req, res) => {
         if (req.body.stripeAcct) user.stripeAcct = req.body.stripeAcct;
         if (req.body.category) {
             user.category = [];
-            req.body.category.split(',').forEach(cat => {
+            req.body.category.forEach(cat => {
                 user.category.push(cat);
             });
         }
