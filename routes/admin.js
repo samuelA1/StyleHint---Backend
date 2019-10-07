@@ -441,7 +441,7 @@ router.post('/update-user/:id', isAdmin, (req, res) => {
         if (req.body.isAdmin) user.isAdmin = req.body.isAdmin;
         if (req.body.isDesigner) {
             user.isDesigner = req.body.isDesigner;
-            if (req.body.isDesigner == true) {
+            if (req.body.isDesigner == 'true') {
                     //send email
                 const output = `
                 <div style="text-align: center; font-size: medium">
