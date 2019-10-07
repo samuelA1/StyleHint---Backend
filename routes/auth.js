@@ -94,6 +94,7 @@ router.post('/register', (req, res) => {
             } else {
                 let user = new User();
                 if (req.body.email) user.email = req.body.email;
+                if (req.body.picture) user.picture = req.body.picture;
                 if (req.body.country) user.country = req.body.country;
                 if (req.body.password) user.password = req.body.password;
                 if (req.body.username) user.username = req.body.username;
