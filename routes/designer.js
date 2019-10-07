@@ -86,33 +86,32 @@ router.post('/add-product', isDesigner, (req, res) => {
         Alert.find({}, (err, alert) => {
             if (err) return err;
 
-            // if (alert == null) {
-            //     let alert = new Alert();
-            //     alert.numberOfAlerts = 1
-            //     alert.save();
-            //     notification.fromUsername = 'admin';
-            //     notification.typeOf = 'review';
-            //     notification.message = 'A designer just submitted a product for review.';
-            //     notification.route = product._id;
-            //     notification.save();
-            //     res.json({
-            //         success: true,
-            //         message: 'Product successfully added.'
-            //     });
-            // } else {
-            //     alert[0].numberOfAlerts++
-            //     alert[0].save();
-            //     notification.fromUsername = 'admin';
-            //     notification.typeOf = 'review';
-            //     notification.message = 'A designer just submitted a product for review.';
-            //     notification.route = product._id;
-            //     notification.save();
-            //     res.json({
-            //         success: true,
-            //         message: 'Product successfully added.'
-            //     });
-            // }
-            console.log(alert);
+            if (alert == []) {
+                let alert = new Alert();
+                alert.numberOfAlerts = 1
+                alert.save();
+                notification.fromUsername = 'admin';
+                notification.typeOf = 'review';
+                notification.message = 'A designer just submitted a product for review.';
+                notification.route = product._id;
+                notification.save();
+                res.json({
+                    success: true,
+                    message: 'Product successfully added.'
+                });
+            } else {
+                alert[0].numberOfAlerts++
+                alert[0].save();
+                notification.fromUsername = 'admin';
+                notification.typeOf = 'review';
+                notification.message = 'A designer just submitted a product for review.';
+                notification.route = product._id;
+                notification.save();
+                res.json({
+                    success: true,
+                    message: 'Product successfully added.'
+                });
+            }
         })
 
        
