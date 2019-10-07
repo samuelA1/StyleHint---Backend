@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Hint = require('../models/hint');
+const Alert = require('../models/alert');
 const Statistics = require('../models/statistics');
 const checkJwt = require('../middleware/check-jwt');
 const Product = require('../models/product');
@@ -661,108 +662,113 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
         if (err) return err;
 
         let notification = new Notification();
+        Alert.find({}, (err, alert) => {
+            if (err) return err;
 
+            alert[0].numberOfAlerts--
+            alert[0].save();
 
-        if (req.body.review == 'ok') {
-            let hint = new Hint();
-
-            hint.owner = product.owner;
-            hint.url = product.mainImage;
-            if (req.body.overview) hint.overview = req.body.overview;
-            if (req.body.recommendations) hint.recommendations = req.body.recommendations;
-            if (req.body.alternatives) hint.alternatives = req.body.alternatives;
-            if (req.body.dont) hint.dont = req.body.dont;
-            if (req.body.gender) hint.gender = req.body.gender;
-            if (req.body.size) {
-                req.body.size.split(',').forEach(element => {
-                    hint.size.push(element);
-                });
-            }
-            if (req.body.interest) {
-                req.body.interest.split(',').forEach(element => {
-                    hint.interest.push(element);
-                });
-            }
-            if (req.body.weather) {
-                req.body.weather.split(',').forEach(element => {
-                    hint.weather.push(element);
-                });
-            }
-            if (req.body.season) {
-                req.body.season.split(',').forEach(element => {
-                    hint.season.push(element);
-                });
-            }
-            if (req.body.occasion) {
-                req.body.occasion.split(',').forEach(element => {
-                    hint.occasion.push(element);
-                });
-            }
-            
-            product.hintId = hint._id;
-            product.isPublished = 'approved';
-            product.reviewedBy = req.decoded.user._id;
-
-            hint.save();
-            product.save();
-
-            User.findById(product.owner, (err, designer) => {
-                if (err) return err;
-
-                    //push notification
-                userIds.push(designer['oneSignalId']);
-                var message = { 
-                    app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                    headings:{"en": `Review decision`},
-                    contents: {"en": `A decision has been made on one or more of your submitted products.`},
-                    include_player_ids: userIds
-                };
-                sendNotification(message);
+            if (req.body.review == 'ok') {
+                let hint = new Hint();
+    
+                hint.owner = product.owner;
+                hint.url = product.mainImage;
+                if (req.body.overview) hint.overview = req.body.overview;
+                if (req.body.recommendations) hint.recommendations = req.body.recommendations;
+                if (req.body.alternatives) hint.alternatives = req.body.alternatives;
+                if (req.body.dont) hint.dont = req.body.dont;
+                if (req.body.gender) hint.gender = req.body.gender;
+                if (req.body.size) {
+                    req.body.size.split(',').forEach(element => {
+                        hint.size.push(element);
+                    });
+                }
+                if (req.body.interest) {
+                    req.body.interest.split(',').forEach(element => {
+                        hint.interest.push(element);
+                    });
+                }
+                if (req.body.weather) {
+                    req.body.weather.split(',').forEach(element => {
+                        hint.weather.push(element);
+                    });
+                }
+                if (req.body.season) {
+                    req.body.season.split(',').forEach(element => {
+                        hint.season.push(element);
+                    });
+                }
+                if (req.body.occasion) {
+                    req.body.occasion.split(',').forEach(element => {
+                        hint.occasion.push(element);
+                    });
+                }
                 
-                //in app notification
-                notification.for.push(designer._id);
-                notification.fromUsername = 'StyleHints';
-                notification.typeOf = 'decision';
-                notification.message = 'One or more of your products is out of stock.';
-                notification.save();
-
-                res.json({
-                    success: true
-                })
-            });
-        } else {
-            product.isPublished = 'denied';
-            product.reason = req.body.reason;
-            product.reviewedBy = req.decoded.user._id;
-
-
-            product.save();
-
-            User.findById(product.owner, (err, designer) => {
-                if (err) return err;
-
-                    //push notification
-                userIds.push(designer['oneSignalId']);
-                var message = { 
-                    app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                    headings:{"en": `Review decision`},
-                    contents: {"en": `A decision has been made on one or more of your submitted products.`},
-                    include_player_ids: userIds
-                };
-                sendNotification(message);
-                
-                //in app notification
-                notification.for.push(designer._id);
-                notification.fromUsername = 'StyleHints';
-                notification.typeOf = 'decision';
-                notification.message = 'One or more of your products is out of stock.';
-                notification.save();
-
-                res.json({
-                    success: true
-                })
-            });
-        }
+                product.hintId = hint._id;
+                product.isPublished = 'approved';
+                product.reviewedBy = req.decoded.user._id;
+    
+                hint.save();
+                product.save();
+    
+                User.findById(product.owner, (err, designer) => {
+                    if (err) return err;
+    
+                        //push notification
+                    userIds.push(designer['oneSignalId']);
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        headings:{"en": `Review decision`},
+                        contents: {"en": `A decision has been made on one or more of your submitted products.`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
+                    
+                    //in app notification
+                    notification.for.push(designer._id);
+                    notification.fromUsername = 'StyleHints';
+                    notification.typeOf = 'decision';
+                    notification.message = 'One or more of your products is out of stock.';
+                    notification.save();
+    
+                    res.json({
+                        success: true
+                    })
+                });
+            } else {
+                product.isPublished = 'denied';
+                product.reason = req.body.reason;
+                product.reviewedBy = req.decoded.user._id;
+    
+    
+                product.save();
+    
+                User.findById(product.owner, (err, designer) => {
+                    if (err) return err;
+    
+                        //push notification
+                    userIds.push(designer['oneSignalId']);
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        headings:{"en": `Review decision`},
+                        contents: {"en": `A decision has been made on one or more of your submitted products.`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
+                    
+                    //in app notification
+                    notification.for.push(designer._id);
+                    notification.fromUsername = 'StyleHints';
+                    notification.typeOf = 'decision';
+                    notification.message = 'One or more of your products is out of stock.';
+                    notification.save();
+    
+                    res.json({
+                        success: true
+                    })
+                });
+            }
+        })
     });
 });
 
