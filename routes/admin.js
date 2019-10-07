@@ -772,6 +772,17 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
     });
 });
 
+router.get('/alerts', isAdmin, (req, res) => {
+    Alert.find({}, (err, alert) => {
+        if (err) return err;
+
+        res.json({
+            success: true,
+            numberOfAlerts: alert[0].numberOfAlerts
+        })
+    });
+});
+
 //get all reviews by status products
 router.post('/review-status', isAdmin, (req, res) => {
     Product.find({isPublished: req.body.reviewType}, (err, reviews) => {
