@@ -10,10 +10,7 @@ const ProductSchema = new Schema({
     imgTwo: {type: String, default: ''},
     imgThree: {type: String, default: ''},
     whatYouSell: {type: String, default: ''},
-    info: [{size: {type: String, default: 'small'}, quantity: {type: Number, default: 0}},
-           {size: {type: String, default: 'medium'}, quantity: {type: Number, default: 0}},
-           {size: {type: String, default: 'large'}, quantity: {type: Number, default: 0}}
-    ],
+    info: [{size: {type: String, default: 'small'}, quantity: {type: Number, default: 0}}],
     isPublished: {type: String, default: ''},
     reason: {type: String, default: ''},
     reviewedBy: {type: Schema.Types.ObjectId, ref: 'User'}
