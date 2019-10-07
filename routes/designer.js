@@ -57,6 +57,8 @@ router.post('/add-product', isDesigner, (req, res) => {
 
         
         cloudinary.uploader.upload(fields.mainImage, function(error, result) {
+            console.log(error);
+            console.log(result);
             if (error.url) {
                 product.mainImage = error.secure_url;
                 
