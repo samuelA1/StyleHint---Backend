@@ -86,7 +86,7 @@ router.post('/add-product', isDesigner, (req, res) => {
         Alert.find({}, (err, alert) => {
             if (err) return err;
 
-            if (alert == []) {
+            if (alert.length == 0) {
                 let alert = new Alert();
                 alert.numberOfAlerts = 1
                 alert.save();
