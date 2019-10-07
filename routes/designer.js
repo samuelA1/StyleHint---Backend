@@ -42,7 +42,7 @@ router.post('/add-product', isDesigner, (req, res) => {
     form.parse(req, (err, fields, files) => {
         if (err) return err;
 
-        console.log(fields);
+        console.log(fields.imgOne);
 
         product.owner = req.decoded.user._id;
         if (fields.price) product.price = fields.price;
@@ -58,27 +58,27 @@ router.post('/add-product', isDesigner, (req, res) => {
         };
 
         
-        // cloudinary.uploader.upload(fields.mainImage, function(error, result) {
-        //     if (error.url) {
-        //         product.mainImage = error.secure_url;
+        cloudinary.uploader.upload(fields.mainImage, function(error, result) {
+            if (error.url) {
+                product.mainImage = error.secure_url;
                 
-        //     }
-        // });
+            }
+        });
         cloudinary.uploader.upload(fields.imgOne, function(error, result) {
             if (error.url) {
                 product.imgOne = error.secure_url;
             }
         });
-        // cloudinary.uploader.upload(fields.imgTwo, function(error, result) {
-        //     if (error.url) {
-        //         product.imgTwo = error.secure_url;
-        //     }
-        // });
-        // cloudinary.uploader.upload(fields.imgThree, function(error, result) {
-        //     if (error.url) {
-        //         product.imgThree = error.secure_url;
-        //     }
-        // });
+        cloudinary.uploader.upload(fields.imgTwo, function(error, result) {
+            if (error.url) {
+                product.imgTwo = error.secure_url;
+            }
+        });
+        cloudinary.uploader.upload(fields.imgThree, function(error, result) {
+            if (error.url) {
+                product.imgThree = error.secure_url;
+            }
+        });
 
         product.isPublished = 'review'
 
