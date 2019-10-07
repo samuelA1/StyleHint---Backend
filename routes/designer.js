@@ -42,8 +42,6 @@ router.post('/add-product', isDesigner, (req, res) => {
     form.parse(req, (err, fields, files) => {
         if (err) return err;
 
-        console.log(fields.imgOne);
-
         product.owner = req.decoded.user._id;
         if (fields.price) product.price = fields.price;
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
@@ -57,32 +55,38 @@ router.post('/add-product', isDesigner, (req, res) => {
             product.info.push({size: 'large', quantity: fields.large})
         };
 
+        product.isPublished = 'review'
+
+
         
         cloudinary.uploader.upload(fields.mainImage, function(error, result) {
             if (error.url) {
                 product.mainImage = error.secure_url;
-                
+                product.save();
             }
         });
         cloudinary.uploader.upload(fields.imgOne, function(error, result) {
             if (error.url) {
                 product.imgOne = error.secure_url;
+                product.save();
             }
         });
+
         cloudinary.uploader.upload(fields.imgTwo, function(error, result) {
             if (error.url) {
                 product.imgTwo = error.secure_url;
+                product.save();
             }
         });
         cloudinary.uploader.upload(fields.imgThree, function(error, result) {
             if (error.url) {
                 product.imgThree = error.secure_url;
+                product.save();
             }
         });
 
-        product.isPublished = 'review'
 
-        product.save();
+
 
         notification.fromUsername = 'admin';
         notification.typeOf = 'review';
