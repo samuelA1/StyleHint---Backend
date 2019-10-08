@@ -737,7 +737,8 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
                     notification.save();
     
                     res.json({
-                        success: true
+                        success: true,
+                        message: 'Product approved'
                     })
                 });
             } else {
@@ -770,7 +771,8 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
                     notification.save();
     
                     res.json({
-                        success: true
+                        success: true,
+                        message: 'Response submitted'
                     })
                 });
             }
