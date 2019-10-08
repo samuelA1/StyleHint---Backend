@@ -680,27 +680,27 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
                 if (req.body.dont) hint.dont = req.body.dont;
                 if (req.body.gender) hint.gender = req.body.gender;
                 if (req.body.size) {
-                    req.body.size.split(',').forEach(element => {
+                    req.body.size.forEach(element => {
                         hint.size.push(element);
                     });
                 }
                 if (req.body.interest) {
-                    req.body.interest.split(',').forEach(element => {
+                    req.body.interest.forEach(element => {
                         hint.interest.push(element);
                     });
                 }
                 if (req.body.weather) {
-                    req.body.weather.split(',').forEach(element => {
+                    req.body.weather.forEach(element => {
                         hint.weather.push(element);
                     });
                 }
                 if (req.body.season) {
-                    req.body.season.split(',').forEach(element => {
+                    req.body.season.forEach(element => {
                         hint.season.push(element);
                     });
                 }
                 if (req.body.occasion) {
-                    req.body.occasion.split(',').forEach(element => {
+                    req.body.occasion.forEach(element => {
                         hint.occasion.push(element);
                     });
                 }
