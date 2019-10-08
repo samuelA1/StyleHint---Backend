@@ -787,18 +787,31 @@ router.get('/alerts', isAdmin, (req, res) => {
 router.post('/review-status', isAdmin, (req, res) => {
     const perPage = 20;
     const page = req.query.page;
-    Product.find({isPublished: req.body.reviewType})
-        .limit(perPage)
-        .skip(page * perPage)
-        .sort({createdAt: -1})
-        .exec((err, reviews) => {
-            if (err) return err;
-    
-            res.json({
-                success: true,
-                reviews: reviews
-            })
-    });
+    async.waterfall([
+        function (callback) {
+            Product.countDocuments({isPublished: req.body.reviewType}, (err, count) => {
+                if (err) return err;
+
+                callback(err, count)
+            });
+        },
+        function (count) {
+            Product.find({isPublished: req.body.reviewType})
+            .limit(perPage)
+            .skip(page * perPage)
+            .sort({createdAt: -1})
+            .exec((err, reviews) => {
+                if (err) return err;
+        
+                res.json({
+                    success: true,
+                    reviews: reviews,
+                    totalReviews: count
+                })
+            });
+
+        }
+    ]);
 });
 
 //reviewed by me
