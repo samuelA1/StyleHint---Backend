@@ -38,7 +38,6 @@ router.post('/edit-primary-info', isDesigner, (req, res) => {
 router.post('/add-product', isDesigner, (req, res) => {
     let form = new formidable.IncomingForm();
     let product = new Product();
-    let notification = new Notification();
 
     form.parse(req, (err, fields, files) => {
         if (err) return err;
@@ -90,11 +89,6 @@ router.post('/add-product', isDesigner, (req, res) => {
                 let alert = new Alert();
                 alert.numberOfAlerts = 1
                 alert.save();
-                notification.fromUsername = 'admin';
-                notification.typeOf = 'review';
-                notification.message = 'A designer just submitted a product for review.';
-                notification.route = product._id;
-                notification.save();
                 res.json({
                     success: true,
                     message: 'Product successfully added.'
@@ -102,11 +96,6 @@ router.post('/add-product', isDesigner, (req, res) => {
             } else {
                 alert[0].numberOfAlerts++
                 alert[0].save();
-                notification.fromUsername = 'admin';
-                notification.typeOf = 'review';
-                notification.message = 'A designer just submitted a product for review.';
-                notification.route = product._id;
-                notification.save();
                 res.json({
                     success: true,
                     message: 'Product successfully added.'

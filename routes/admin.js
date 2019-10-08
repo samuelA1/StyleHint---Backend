@@ -663,6 +663,7 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
         if (err) return err;
 
         let notification = new Notification();
+        
         Alert.find({}, (err, alert) => {
             if (err) return err;
 
@@ -714,16 +715,19 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
     
                 User.findById(product.owner, (err, designer) => {
                     if (err) return err;
+
+                    let userIds = [];
+
     
                         //push notification
-                    // userIds.push(designer['oneSignalId']);
-                    // var message = { 
-                    //     app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                    //     headings:{"en": `Review decision`},
-                    //     contents: {"en": `A decision has been made on one or more of your submitted products.`},
-                    //     include_player_ids: userIds
-                    // };
-                    // sendNotification(message);
+                    userIds.push(designer['oneSignalId']);
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        headings:{"en": `Review decision`},
+                        contents: {"en": `A decision has been made on one or more of your submitted products.`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
                     
                     //in app notification
                     notification.for.push(designer._id);
@@ -747,15 +751,16 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
                 User.findById(product.owner, (err, designer) => {
                     if (err) return err;
     
+                    let userIds = [];
                         //push notification
-                    // userIds.push(designer['oneSignalId']);
-                    // var message = { 
-                    //     app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                    //     headings:{"en": `Review decision`},
-                    //     contents: {"en": `A decision has been made on one or more of your submitted products.`},
-                    //     include_player_ids: userIds
-                    // };
-                    // sendNotification(message);
+                    userIds.push(designer['oneSignalId']);
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        headings:{"en": `Review decision`},
+                        contents: {"en": `A decision has been made on one or more of your submitted products.`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
                     
                     //in app notification
                     notification.for.push(designer._id);

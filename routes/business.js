@@ -189,6 +189,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
 
                     //send email and notification for product out of stock.
                     if (product.info[sizeIndex].quantity == 0) {
+                        let userIds = [];
                         //push notification
                         userIds.push(designer['oneSignalId']);
                         var message = { 
@@ -242,6 +243,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
 
                     //send email and notification to designer
                     //push notification
+                    let userIds = [];
                     userIds.push(designer['oneSignalId']);
                     var message = { 
                         app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
