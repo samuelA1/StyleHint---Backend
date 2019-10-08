@@ -150,27 +150,6 @@ router.post('/edit-product', isDesigner, (req, res) => {
     });
 });
 
-//edit image position
-router.post('/main-image/:id', isDesigner, (req, res) => {
-    Product.findById(req.params.id, (err, product) => {
-        if (err) return err;
-
-        product.mainImage = req.body.newMain;
-        if (req.body.from == 'imgOne') {
-            product.imgOne = req.body.replaced;
-        } else if (req.body.from == 'imgTwo') {
-            product.imgTwo = req.body.replaced;
-        } else {
-            product.imgThree = req.body.replaced;
-        }
-
-        product.save();
-        res.json({
-            success: true
-        })
-    });
-});
-
 //get all orders
 router.get('/all-orders', isDesigner, (req, res) => {
     Order.find({for: req.decoded.user._id})

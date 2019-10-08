@@ -35,7 +35,7 @@ module.exports = function (io) {
 
         //for design review
         socket.on('designReview', (ownerId) => {
-            io.emit('reviewDecision', ownerId)
+            io.emit('designReviewed', ownerId)
         });
 
         //after review
