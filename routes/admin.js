@@ -729,7 +729,7 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
                     notification.for.push(designer._id);
                     notification.fromUsername = 'StyleHints';
                     notification.typeOf = 'decision';
-                    notification.message = 'One or more of your products is out of stock.';
+                    notification.message = 'A decision has just been made on one or more of your products. Navigate to the designer section';
                     notification.save();
     
                     res.json({
@@ -761,7 +761,7 @@ router.post('/review-process/:id', isAdmin, (req, res) => {
                     notification.for.push(designer._id);
                     notification.fromUsername = 'StyleHints';
                     notification.typeOf = 'decision';
-                    notification.message = 'One or more of your products is out of stock.';
+                    notification.message = 'A decision has just been made on one or more of your products. Navigate to the Designer section to find out the decision';
                     notification.save();
     
                     res.json({
