@@ -10,6 +10,7 @@ const cloudinary = require('cloudinary');
 const formidable = require('formidable');
 const User = require('../models/user');
 const News = require('../models/news');
+const async = require('async');
 var API_KEY = 'key-cd89dbc925b95695b194ca3ea9eedf3e';
 var DOMAIN = 'mg.thestylehint.com';
 var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
