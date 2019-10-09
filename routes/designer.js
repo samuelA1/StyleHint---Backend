@@ -108,6 +108,37 @@ router.post('/add-product', isDesigner, (req, res) => {
     
 });
 
+//get all reviews by status products
+router.post('/review-status', isDesigner, (req, res) => {
+    const perPage = 20;
+    const page = req.query.page;
+    async.waterfall([
+        function (callback) {
+            Product.countDocuments({$and: [{owner: req.decoded.user._id}, {isPublished: req.body.reviewType}]}, (err, count) => {
+                if (err) return err;
+
+                callback(err, count)
+            });
+        },
+        function (count) {
+            Product.find({$and: [{owner: req.decoded.user._id}, {isPublished: req.body.reviewType}]})
+            .limit(perPage)
+            .skip(page * perPage)
+            .sort({createdAt: -1})
+            .exec((err, reviews) => {
+                if (err) return err;
+        
+                res.json({
+                    success: true,
+                    reviews: reviews,
+                    totalReviews: count
+                })
+            });
+
+        }
+    ]);
+});
+
 //delete product
 router.delete('/delete-product/:id', isDesigner, (req, res) => {
     Product.findByIdAndRemove(req.params.id, (err) => {
