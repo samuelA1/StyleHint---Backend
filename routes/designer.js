@@ -74,13 +74,13 @@ router.post('/add-product', isDesigner, (req, res) => {
                                     if (error.url) {
                                         product.imgThree = error.secure_url;
                                     }
+                                    product.save();
                                 });
                             }
                         });
                     }
                 });
             }
-            product.save();
         });
 
         Alert.find({}, (err, alert) => {
