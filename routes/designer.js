@@ -165,6 +165,8 @@ router.post('/edit-product/:id', isDesigner, (req, res) => {
 
         if (product.info[0].quantity > 0 && product.info[1].quantity > 0 && product.info[2].quantity > 0) {
             product.oos = false;
+        } else {
+            product.oos = true;
         }
 
         product.save();
