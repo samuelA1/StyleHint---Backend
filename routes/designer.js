@@ -6,6 +6,7 @@ const Notification = require('../models/notification');
 const isDesigner = require('../middleware/is-designer');
 const cloudinary = require('cloudinary');
 const formidable = require('formidable');
+const async = require('async');
 const User = require('../models/user');
 
 cloudinary.config({ 
