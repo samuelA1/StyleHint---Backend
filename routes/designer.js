@@ -153,7 +153,7 @@ router.delete('/delete-product/:id', isDesigner, (req, res) => {
 });
 
 //edit product
-router.post('/edit-product', isDesigner, (req, res) => {
+router.post('/edit-product/:id', isDesigner, (req, res) => {
     Product.findById(req.params.id, (err, product) => {
         if (err) return err;
 
