@@ -157,9 +157,9 @@ router.post('/edit-product/:id', isDesigner, (req, res) => {
     Product.findById(req.params.id, (err, product) => {
         if (err) return err;
 
-        if (fields.small) product.info[0].quantity = fields.small;
-        if (fields.medium) product.info[1].quantity = fields.medium;
-        if (fields.large) product.info[2].quantity = fields.large;
+        if (req.body.small) product.info[0].quantity = req.body.small;
+        if (req.body.medium) product.info[1].quantity = req.body.medium;
+        if (req.body.large) product.info[2].quantity = req.body.large;
         if (req.body.price) product.price = req.body.price;
         if (req.body.whatYouSell) product.whatYouSell = req.body.whatYouSell;
 
@@ -170,7 +170,7 @@ router.post('/edit-product/:id', isDesigner, (req, res) => {
         product.save();
         res.json({
             success: true,
-            message: 'Product successfully edited.'
+            message: 'Product successfully updated.'
         });
     });
 });
