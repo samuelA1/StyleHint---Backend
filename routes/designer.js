@@ -73,7 +73,6 @@ router.post('/add-product', isDesigner, (req, res) => {
                                 cloudinary.uploader.upload(fields.imgThree, function(error, result) {
                                     if (error.url) {
                                         product.imgThree = error.secure_url;
-                                        product.save();
                                     }
                                 });
                             }
@@ -81,6 +80,7 @@ router.post('/add-product', isDesigner, (req, res) => {
                     }
                 });
             }
+            product.save();
         });
 
         Alert.find({}, (err, alert) => {
