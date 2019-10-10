@@ -109,29 +109,29 @@ router.post('/add-product', isDesigner, (req, res) => {
 });
 
 //get all reviews by status products
-router.post('/review-status', isDesigner, (req, res) => {
+router.post('/product-status', isDesigner, (req, res) => {
     const perPage = 20;
     const page = req.query.page;
     async.waterfall([
         function (callback) {
-            Product.countDocuments({$and: [{owner: req.decoded.user._id}, {isPublished: req.body.reviewType}]}, (err, count) => {
+            Product.countDocuments({$and: [{owner: req.decoded.user._id}, {isPublished: req.body.statusType}]}, (err, count) => {
                 if (err) return err;
 
                 callback(err, count)
             });
         },
         function (count) {
-            Product.find({$and: [{owner: req.decoded.user._id}, {isPublished: req.body.reviewType}]})
+            Product.find({$and: [{owner: req.decoded.user._id}, {isPublished: req.body.statusType}]})
             .limit(perPage)
             .skip(page * perPage)
             .sort({createdAt: -1})
-            .exec((err, reviews) => {
+            .exec((err, products) => {
                 if (err) return err;
         
                 res.json({
                     success: true,
-                    reviews: reviews,
-                    totalReviews: count
+                    products: products,
+                    totalProducts: count
                 })
             });
 
