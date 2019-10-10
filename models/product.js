@@ -11,6 +11,7 @@ const ProductSchema = new Schema({
     imgThree: {type: String, default: ''},
     whatYouSell: {type: String, default: ''},
     info: [{size: {type: String, default: 'small'}, quantity: {type: Number, default: 0}}],
+    oos: {type: Boolean, default: false}, //for out of stock products
     isPublished: {type: String, default: ''},
     reason: {type: String, default: ''},
     reviewedBy: {type: Schema.Types.ObjectId, ref: 'User'},

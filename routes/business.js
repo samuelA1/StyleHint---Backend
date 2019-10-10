@@ -189,6 +189,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
 
                     //send email and notification for product out of stock.
                     if (product.info[sizeIndex].quantity == 0) {
+                        product.oos = true;
                         let userIds = [];
                         //push notification
                         userIds.push(designer['oneSignalId']);
@@ -202,7 +203,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                         
                         //in app notification
                         notification.for.push(designer._id);
-                           notification.fromUsername = 'StyleHints';
+                        notification.fromUsername = 'StyleHints';
                         notification.typeOf = 'oos';
                         notification.message = 'One or more of your products is out of stock.';
                         notification.save();

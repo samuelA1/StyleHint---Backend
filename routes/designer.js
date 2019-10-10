@@ -163,6 +163,10 @@ router.post('/edit-product', isDesigner, (req, res) => {
         if (req.body.price) product.price = req.body.price;
         if (req.body.whatYouSell) product.whatYouSell = req.body.whatYouSell;
 
+        if (product.info[0].quantity > 0 && product.info[1].quantity > 0 && product.info[2].quantity > 0) {
+            product.oos = false;
+        }
+
         product.save();
         res.json({
             success: true,
