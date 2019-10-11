@@ -57,6 +57,24 @@ router.post('/select-design', checkJwt, (req, res) => {
     });
 });
 
+router.get('/all-designs', checkJwt, (req, res) => {
+    const occasions = ['school','sport','birthday','halloween','christmas','church','date night','job interview','culture'];
+    let designers = [];
+    occasions.forEach(occasion => {
+        User.find({$and: [{isDesigner: true}, {category: occasion}]}, (err, designs) => {
+            if (err) return err;
+
+            designers.push({occasion: occasion, designers: designs});
+            if (designers.length == 9) {
+                res.json({
+                    success: true,
+                    designers: designers
+                })
+            }
+        });
+    });
+});
+
 //remove designer
 router.post('/remove-design/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
