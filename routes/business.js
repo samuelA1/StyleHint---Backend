@@ -57,6 +57,7 @@ router.post('/select-design', checkJwt, (req, res) => {
     });
 });
 
+//get all designers
 router.get('/all-designs', checkJwt, (req, res) => {
     const occasions = ['school','sport','birthday','halloween','christmas','church','date night','job interview','culture'];
     let designers = [];
@@ -74,6 +75,21 @@ router.get('/all-designs', checkJwt, (req, res) => {
         });
     });
 });
+
+//get designers by occasion
+router.post('/designer-occasion', checkJwt, (req, res) => {
+    User.find({$and: [{isDesigner: true}, {category: req.body.occasion}]}, (err, designs) => {
+        if (err) return err;
+
+        let designers = [];
+        designers.push({occasion: occasion, designers: designs});
+        res.json({
+            success: true,
+            designers: designers
+        })
+    });
+});
+
 
 //remove designer
 router.post('/remove-design/:id', checkJwt, (req, res) => {
