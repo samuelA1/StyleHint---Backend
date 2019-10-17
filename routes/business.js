@@ -82,7 +82,7 @@ router.post('/designer-occasion', checkJwt, (req, res) => {
         if (err) return err;
 
         let designers = [];
-        designers.push({occasion: occasion, designers: designs});
+        designers.push({occasion: req.body.occasion, designers: designs});
         res.json({
             success: true,
             designers: designers
