@@ -114,7 +114,7 @@ router.get('/cart-designers', checkJwt, (req, res) => {
         res.json({
             sucess: true,
             cart: user.cart.length,
-            cart: user.designers.length
+            designers: user.designers.length
         });
     });
 });
