@@ -4,6 +4,7 @@ const User = require('../models/user');
 const Order = require('../models/order');
 const Notification = require('../models/notification');
 const Product = require('../models/product');
+const async = require('async');
 const stripe = require('stripe')('sk_test_B6s4mzE9c5qSyvJ3B2oxUELh00k4vnnAVT');
 var API_KEY = 'key-cd89dbc925b95695b194ca3ea9eedf3e';
 var DOMAIN = 'mg.thestylehint.com';
@@ -74,6 +75,52 @@ router.get('/all-designs', checkJwt, (req, res) => {
             }
         });
     });
+});
+
+//get all prefered designers
+router.get('/prefered-designers', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id)
+        .populate('designers')
+        .select('designers')
+        .exec((err, user) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                designers: user.designers
+            })
+        })
+});
+
+//get all products of prefered designer
+router.post('/product-status', isDesigner, (req, res) => {
+    const perPage = 20;
+    const page = req.query.page;
+    async.waterfall([
+        function (callback) {
+            Product.countDocuments({$and: [{owner: req.body.owner}, {isPublished: 'approved'}]}, (err, count) => {
+                if (err) return err;
+
+                callback(err, count)
+            });
+        },
+        function (count) {
+            Product.find({$and: [{owner: req.body.owner}, {isPublished: 'approved'}]})
+            .limit(perPage)
+            .skip(page * perPage)
+            .sort({createdAt: -1})
+            .exec((err, products) => {
+                if (err) return err;
+        
+                res.json({
+                    success: true,
+                    products: products,
+                    totalProducts: count
+                })
+            });
+
+        }
+    ]);
 });
 
 //get designers by occasion

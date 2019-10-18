@@ -2,7 +2,6 @@ const router = require('express').Router();
 const Order = require('../models/order');
 const Alert = require('../models/alert');
 const Product = require('../models/product');
-const Notification = require('../models/notification');
 const isDesigner = require('../middleware/is-designer');
 const cloudinary = require('cloudinary');
 const formidable = require('formidable');
