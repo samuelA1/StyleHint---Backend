@@ -93,7 +93,7 @@ router.get('/prefered-designers', checkJwt, (req, res) => {
 });
 
 //get all products of prefered designer
-router.post('/product-status', isDesigner, (req, res) => {
+router.post('/product-status', checkJwt, (req, res) => {
     const perPage = 20;
     const page = req.query.page;
     async.waterfall([
