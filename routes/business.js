@@ -52,7 +52,7 @@ router.post('/select-design', checkJwt, (req, res) => {
 
         user.save();
         res.json({
-            sucess: true
+            success: true
         });
     });
 });
