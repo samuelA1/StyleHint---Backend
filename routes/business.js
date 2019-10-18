@@ -106,6 +106,19 @@ router.post('/remove-design/:id', checkJwt, (req, res) => {
     });
 });
 
+// get number of items in cart and number of designers
+router.get('/cart-designers', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+        res.json({
+            sucess: true,
+            cart: user.cart.length,
+            cart: user.designers.length
+        });
+    });
+});
+
 //add to cart
 router.post('/add-cart/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
