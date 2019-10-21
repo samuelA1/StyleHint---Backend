@@ -46,6 +46,7 @@ router.post('/add-tip', checkJwt, (req, res) => {
         let tip = new Tip();
         let notification = new Notification();
         tip.owner = req.decoded.user._id;
+        tip.picture = userSendingTip.picture
         tip.ownerUsername = userSendingTip.username;
         tip.imageUrl = req.body.imageUrl;
         tip.message = req.body.message;
