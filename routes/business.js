@@ -60,7 +60,7 @@ router.post('/select-design', checkJwt, (req, res) => {
 
 //get all designers
 router.get('/all-designs', checkJwt, (req, res) => {
-    const occasions = ['school','sport','birthday','halloween','christmas','church','date night','job interview','culture'];
+    const occasions = ['school','sport','birthday party','halloween','christmas','church','date night','job interview','culture'];
     let designers = [];
     occasions.forEach(occasion => {
         User.find({$and: [{isDesigner: true}, {category: occasion}]}, (err, designs) => {
