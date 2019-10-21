@@ -45,6 +45,9 @@ router.post('/add-product', isDesigner, (req, res) => {
         product.owner = req.decoded.user._id;
         if (fields.price) product.price = fields.price;
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
+        if (fields.xsmall) {
+            product.info.push({size: 'xsmall', quantity: fields.small})
+        };
         if (fields.small) {
             product.info.push({size: 'small', quantity: fields.small})
         };
@@ -53,6 +56,9 @@ router.post('/add-product', isDesigner, (req, res) => {
         };
         if (fields.large) {
             product.info.push({size: 'large', quantity: fields.large})
+        };
+        if (fields.xlarge) {
+            product.info.push({size: 'xlarge', quantity: fields.large})
         };
 
         product.isPublished = 'review'
