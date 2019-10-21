@@ -195,7 +195,8 @@ router.post('/add-comment/:id', checkJwt, (req, res) => {
                 let comment = {
                     commenter: user['username'],
                     comment: req.body.comment,
-                    commenterId: user['_id']
+                    commenterId: user['_id'],
+                    picture: user['picture']
                 }
                 tip.comments.push(comment);
                 tip.save();
