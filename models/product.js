@@ -10,6 +10,7 @@ const ProductSchema = new Schema({
     imgTwo: {type: String, default: ''},
     imgThree: {type: String, default: ''},
     whatYouSell: {type: String, default: ''},
+    type: {type: String, default: ''},
     shoe: [{color:{type: String, lowercase: true, default: ''} ,
             info: [{size: {type: Number, default: 0}, quantity: {type: Number, default: 0}}]}],
     cloth: [{color:{type: String, lowercase: true, default: ''} ,
