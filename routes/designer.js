@@ -45,6 +45,7 @@ router.post('/add-product', isDesigner, (req, res) => {
         product.owner = req.decoded.user._id;
         if (fields.price) product.price = fields.price;
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
+        if (fields.colors) product.colors = fields.colors.split(',');
         if (fields.xsmall) {
             product.info.push({size: 'xsmall', quantity: fields.small})
         };
