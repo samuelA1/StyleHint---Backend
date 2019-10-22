@@ -47,7 +47,7 @@ router.post('/add-product', isDesigner, (req, res) => {
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
         if (fields.colors) product.colors = fields.colors.split(',');
         if (fields.xsmall) {
-            product.info.push({size: 'xsmall', quantity: fields.small})
+            product.info.push({size: 'xsmall', quantity: fields.xsmall})
         };
         if (fields.small) {
             product.info.push({size: 'small', quantity: fields.small})
@@ -59,7 +59,7 @@ router.post('/add-product', isDesigner, (req, res) => {
             product.info.push({size: 'large', quantity: fields.large})
         };
         if (fields.xlarge) {
-            product.info.push({size: 'xlarge', quantity: fields.large})
+            product.info.push({size: 'xlarge', quantity: fields.xlarge})
         };
 
         product.isPublished = 'review'
