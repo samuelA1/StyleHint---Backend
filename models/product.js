@@ -10,8 +10,11 @@ const ProductSchema = new Schema({
     imgTwo: {type: String, default: ''},
     imgThree: {type: String, default: ''},
     whatYouSell: {type: String, default: ''},
-    info: [{size: {type: String, default: 'small'}, quantity: {type: Number, default: 0}}],
-    colors: [{type: String, lowercase: true, default: ''}],
+    shoe: [{color:{type: String, lowercase: true, default: ''} ,
+            info: [{size: {type: Number, default: 0}, quantity: {type: Number, default: 0}}]}],
+    cloth: [{color:{type: String, lowercase: true, default: ''} ,
+            info: [{size: {type: String, default: ''}, quantity: {type: Number, default: 0}}]
+    }],
     oos: {type: Boolean, default: false}, //for out of stock products
     isPublished: {type: String, default: ''},
     reason: {type: String, default: ''},

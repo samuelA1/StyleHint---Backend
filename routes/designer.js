@@ -46,22 +46,17 @@ router.post('/add-product', isDesigner, (req, res) => {
         if (fields.price) product.price = fields.price;
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
         if (fields.colors) product.colors = fields.colors.split(',');
-        if (fields.xsmall) {
-            product.info.push({size: 'xsmall', quantity: fields.xsmall})
-        };
-        if (fields.small) {
-            product.info.push({size: 'small', quantity: fields.small})
-        };
-        if (fields.medium) {
-            product.info.push({size: 'medium', quantity: fields.medium})
-        };
-        if (fields.large) {
-            product.info.push({size: 'large', quantity: fields.large})
-        };
-        if (fields.xlarge) {
-            product.info.push({size: 'xlarge', quantity: fields.xlarge})
-        };
-
+        if (fields.cloth) {
+            fields.cloth.forEach(p => {
+                product.cloth.push(p);
+            });
+        }
+        if (fields.shoe) {
+            fields.shoe.forEach(p => {
+                product.shoe.push(p);
+            });
+        }
+       
         product.isPublished = 'review'
         
         cloudinary.uploader.upload(fields.mainImage, function(error, result) {
