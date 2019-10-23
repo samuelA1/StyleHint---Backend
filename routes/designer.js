@@ -45,8 +45,8 @@ router.post('/add-product', isDesigner, (req, res) => {
         product.owner = req.decoded.user._id;
         if (fields.price) product.price = fields.price;
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
-        if (fields.colors) product.colors = fields.colors.split(',');
         if (fields.cloth) {
+            console.log(JSON.parse(fields.cloth))
             fields.cloth.forEach(p => {
                 product.cloth.push(p);
             });
@@ -55,8 +55,7 @@ router.post('/add-product', isDesigner, (req, res) => {
             fields.shoe.forEach(p => {
                 product.shoe.push(p);
             });
-        }
-       
+        }       
         product.isPublished = 'review'
         
         cloudinary.uploader.upload(fields.mainImage, function(error, result) {
