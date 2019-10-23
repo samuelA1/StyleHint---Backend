@@ -47,6 +47,7 @@ router.post('/add-product', isDesigner, (req, res) => {
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
         if (fields.colors) product.colors = fields.colors.split(',');
         if (fields.cloth) {
+            console.log(fields.cloth)
             fields.cloth.forEach(p => {
                 product.cloth.push(p);
             });
