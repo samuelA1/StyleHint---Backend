@@ -46,13 +46,14 @@ router.post('/add-product', isDesigner, (req, res) => {
         if (fields.price) product.price = fields.price;
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
         if (fields.cloth) {
-            console.log(JSON.parse(fields.cloth))
-            fields.cloth.forEach(p => {
+            const cloth = JSON.parse(fields.cloth);
+            cloth.forEach(p => {
                 product.cloth.push(p);
             });
         }
         if (fields.shoe) {
-            fields.shoe.forEach(p => {
+            const shoe = JSON.parse(fields.shoe);
+            shoe.forEach(p => {
                 product.shoe.push(p);
             });
         }       
