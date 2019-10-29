@@ -162,12 +162,14 @@ router.post('/edit-product/:id', isDesigner, (req, res) => {
         if (req.body.price) product.price = req.body.price;
         if (req.body.whatYouSell) product.whatYouSell = req.body.whatYouSell;
         if (req.body.cloth) {
+            product.cloth = [];
             const cloth = req.body.cloth;
             cloth.forEach(p => {
                 product.cloth.push(p);
             });
         }
         if (req.body.shoe) {
+            product.shoe = [];
             const shoe =req.body.shoe;
             shoe.forEach(p => {
                 product.shoe.push(p);
