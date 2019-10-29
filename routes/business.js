@@ -97,7 +97,6 @@ router.get('/unchosen-designers', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-        const chosenDesigners = user.designers;
         const occasions = ['school','sport','birthday party','halloween','christmas','church','date night','job interview','culture'];
         let designers = [];
         occasions.forEach(occasion => {
@@ -107,8 +106,9 @@ router.get('/unchosen-designers', checkJwt, (req, res) => {
                 let filteredDesigners = [];
 
                 designs.forEach(des => {
-                    if (chosenDesigners.some(d => d === des._id)) {
-                        console.log(chosenDesigners.some(d => d === des._id));
+                    console.log(des);
+                    if (user.designers.some(d => d === des._id)) {
+                        console.log(user.designers.some(d => d === des._id));
                         filteredDesigners.push(des);
                     }
                 });
