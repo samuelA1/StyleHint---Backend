@@ -92,6 +92,40 @@ router.get('/prefered-designers', checkJwt, (req, res) => {
         })
 });
 
+//get unselected designers
+router.get('/unchosen-designers', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+        const chosenDesigners = user.designers;
+        const occasions = ['school','sport','birthday party','halloween','christmas','church','date night','job interview','culture'];
+        let designers = [];
+        occasions.forEach(occasion => {
+            User.find({$and: [{isDesigner: true}, {category: occasion}]}, (err, designs) => {
+                if (err) return err;
+
+                let filteredDesigners = [];
+
+                designs.forEach(des => {
+                    if (chosenDesigners.some(d => d !== des._id)) {
+                        filteredDesigners.push(des);
+                    }
+                });
+                
+    
+                designers.push({occasion: occasion, designers: filteredDesigners});
+                if (designers.length == 9) {
+                    console.log(designers);
+                    res.json({
+                        success: true,
+                        designers: designers
+                    })
+                }
+            });
+        });
+    })
+});
+
 //get all products of prefered designer
 router.post('/product-status', checkJwt, (req, res) => {
     const perPage = 20;

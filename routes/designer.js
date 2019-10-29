@@ -20,11 +20,9 @@ router.post('/edit-primary-info', isDesigner, (req, res) => {
         if (err) return err;
 
         if (req.body.description) user.description = req.body.description;
-        if (req.body.occasions) {
+        if (req.body.category) {
             user.category = [];
-            req.body.occasions.split(',').forEach(occasion => {
-                user.category.push(occasion);
-            });
+            user.category.push(req.body.category);
         }
         user.save();
         res.json({
