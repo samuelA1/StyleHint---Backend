@@ -44,6 +44,7 @@ router.post('/add-product', isDesigner, (req, res) => {
 
         product.owner = req.decoded.user._id;
         if (fields.price) product.price = fields.price;
+        if (fields.type) product.type = fields.type;
         if (fields.whatYouSell) product.whatYouSell = fields.whatYouSell;
         if (fields.cloth) {
             const cloth = JSON.parse(fields.cloth);
@@ -158,17 +159,20 @@ router.post('/edit-product/:id', isDesigner, (req, res) => {
     Product.findById(req.params.id, (err, product) => {
         if (err) return err;
 
-        if (req.body.small) product.info[0].quantity = req.body.small;
-        if (req.body.medium) product.info[1].quantity = req.body.medium;
-        if (req.body.large) product.info[2].quantity = req.body.large;
         if (req.body.price) product.price = req.body.price;
         if (req.body.whatYouSell) product.whatYouSell = req.body.whatYouSell;
-
-        if (product.info[0].quantity > 0 && product.info[1].quantity > 0 && product.info[2].quantity > 0) {
-            product.oos = false;
-        } else {
-            product.oos = true;
+        if (req.body.cloth) {
+            const cloth = req.body.cloth;
+            cloth.forEach(p => {
+                product.cloth.push(p);
+            });
         }
+        if (req.body.shoe) {
+            const shoe =req.body.shoe;
+            shoe.forEach(p => {
+                product.shoe.push(p);
+            });
+        }     
 
         product.save();
         res.json({
