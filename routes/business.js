@@ -107,7 +107,7 @@ router.get('/unchosen-designers', checkJwt, (req, res) => {
 
                 designs.forEach(des => {
                     if (user.designers.some(d => d == '"' + des._id + '"')) {
-                        console.log(user.designers.some(d => d == `${des._id}`));
+                        console.log(user.designers.filter(d => d == `${des._id}`));
                         filteredDesigners.push(des);
                     }
                 });
