@@ -19,7 +19,7 @@
     "formidable": "^1.2.1",
     "jsonwebtoken": "^8.5.1",
     "mailgun-js": "^0.22.0",
-    "mongoose": "^5.5.13",
+    "mongoose": "^5.7.5",
     "mongoose-algolia": "^1.8.0",
     "morgan": "^1.9.1",
     "socket.io": "^2.2.0",
