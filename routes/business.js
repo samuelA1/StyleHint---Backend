@@ -106,7 +106,7 @@ router.get('/unchosen-designers', checkJwt, (req, res) => {
                 let filteredDesigners = [];
 
                 designs.forEach(des => {
-                    console.log(des);
+                    console.log(user.designers);
                     if (user.designers.some(d => d === des._id)) {
                         console.log(user.designers.some(d => d === des._id));
                         filteredDesigners.push(des);
