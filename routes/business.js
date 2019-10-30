@@ -110,7 +110,7 @@ router.get('/unchosen-designers', checkJwt, (req, res) => {
                     //     filteredDesigners.push(des);
                     // }
                     
-                    console.log(user.designers.filter(d => d == des._id));
+                    console.log(user.designers.filter(d => d === des._id));
                     console.log(des._id);
                     console.log(user.designers[0]);
                     
