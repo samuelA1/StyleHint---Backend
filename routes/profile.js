@@ -32,7 +32,7 @@ router.post('/email', checkJwt, (req, res) => {
                 });
             } else {
                 User.findById(req.decoded.user._id)
-                .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
+                .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart', '-wishlist'])
                 .exec((err, userWithId) => {
                     if (err) return err;
             
@@ -95,7 +95,7 @@ router.post('/username', checkJwt, (req, res) => {
                 });
             } else {
                 User.findById(req.decoded.user._id)
-                .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
+                .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart', '-wishlist'])
                 .exec((err, userWithId) => {
                     if (err) return err;
             
@@ -142,7 +142,7 @@ router.post('/username', checkJwt, (req, res) => {
 //change password
 router.post('/password', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
+    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart', '-wishlist'])
     .exec((err, userWithId) => {
         if (err) return err;
 
@@ -192,7 +192,7 @@ router.post('/password', checkJwt, (req, res) => {
 //change name
 router.post('/name', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
+    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart', '-wishlist'])
     .exec( (err, userWithId) => {
         if (err) return err;
 
@@ -209,7 +209,7 @@ router.post('/name', checkJwt, (req, res) => {
 //change country
 router.post('/country', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
+    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart', '-wishlist'])
     .exec( (err, userWithId) => {
         if (err) return err;
 
@@ -226,7 +226,7 @@ router.post('/country', checkJwt, (req, res) => {
 //change gender
 router.post('/gender', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
+    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart', '-wishlist'])
     .exec((err, userWithId) => {
         if (err) return err;
 
@@ -243,7 +243,7 @@ router.post('/gender', checkJwt, (req, res) => {
 //change interest
 router.post('/interest', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
+    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart', '-wishlist'])
     .exec( (err, userWithId) => {
         if (err) return err;
 
@@ -260,7 +260,7 @@ router.post('/interest', checkJwt, (req, res) => {
 //change size
 router.post('/size', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart'])
+    .select(['-friends', '-tips', '-myTips', '-closet', '-addresses', '-cards', '-designers', '-cart', '-wishlist'])
     .exec((err, userWithId) => {
         if (err) return err;
 

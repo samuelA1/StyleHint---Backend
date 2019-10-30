@@ -222,16 +222,36 @@ router.post('/add-cart/:id', checkJwt, (req, res) => {
     });
 });
 
-//get items in card
-router.get('/get-cart', checkJwt, (req, res) => {
+//add to cart
+router.post('/add-wishlist/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
+        user.wishlist.push(req.params.id);
+
+        user.save();
         res.json({
             success: true,
-            cart: user.cart
-        })
+            message: 'Product added to wishlist'
+        });
     });
+});
+
+//get items in cart and wishlist
+router.get('/get-cart-wishlist', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id)
+        .populate('cart')
+        .populate('wishlist')
+        .select(['cart', 'wishlist'])
+        .exec((err, user) => {
+            if (err) return err;
+    
+            res.json({
+                success: true,
+                cart: user.cart,
+                wishlist: user.wishlist
+            })
+        })
 });
 
 //remove item from cart
@@ -245,6 +265,22 @@ router.post('/remove-from-cart/:id', checkJwt, (req, res) => {
         res.json({
             success: true,
             message: 'Product removed from cart'
+        })
+    });
+});
+
+//remove item from wishlist
+router.post('/remove-from-wishlist/:id', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+        user.wishlist.splice(user.wishlist.findIndex(c => c == req.params.id), 1);
+        user.cart.push(req.params.id);
+
+        user.save();
+        res.json({
+            success: true,
+            message: 'Product added to cart'
         })
     });
 });
@@ -319,63 +355,121 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                 Product.findById(req.body.productId, (err, product) => {
                     if (err) return err;
 
-                    let sizeIndex = product.info.findIndex(p => p.size == req.body.size);
-                    product.info[sizeIndex].quantity  -= req.body.quantity;
+                    if (product.type == 'clothing') {
+                        let sizeIndex = product.cloth.info.findIndex(p => p.size == req.body.size);
+                        product.cloth.info[sizeIndex].quantity  -= req.body.quantity;
 
-                    //send email and notification for product out of stock.
-                    if (product.info[sizeIndex].quantity == 0) {
-                        product.oos = true;
-                        let userIds = [];
-                        //push notification
-                        userIds.push(designer['oneSignalId']);
-                        var message = { 
-                            app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                            headings:{"en": `Out of Stock`},
-                            contents: {"en": `One or more of your products is out of stock.`},
-                            include_player_ids: userIds
-                        };
-                        sendNotification(message);
-                        
-                        //in app notification
-                        notification.for.push(designer._id);
-                        notification.fromUsername = 'StyleHints';
-                        notification.typeOf = 'oos';
-                        notification.message = 'One or more of your products is out of stock.';
-                        notification.save();
+                        //send email and notification for product out of stock.
+                        if (product.cloth.info[sizeIndex].quantity == 0) {
+                            product.oos = true;
+                            let userIds = [];
+                            //push notification
+                            userIds.push(designer['oneSignalId']);
+                            var message = { 
+                                app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                                headings:{"en": `Out of Stock`},
+                                contents: {"en": `One or more of your products is out of stock.`},
+                                include_player_ids: userIds
+                            };
+                            sendNotification(message);
+                            
+                            //in app notification
+                            notification.for.push(designer._id);
+                            notification.fromUsername = 'StyleHints';
+                            notification.typeOf = 'oos';
+                            notification.message = 'One or more of your products is out of stock.';
+                            notification.save();
 
-                        //email notification
-                        const output = `
-                        <div style="text-align: center; font-size: medium">
-                            <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                            <h1>Product out of stock</h1>
-                            <p>Hello Designer,</p>
-                            <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
-                            <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
+                            //email notification
+                            const output = `
                             <div style="text-align: center; font-size: medium">
-                                <p>1. Log onto the app, and move to the designer's section.</p>
-                                <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
-                                <p>3. Click on the product with the <b>out of stock label</b></p>
-                                <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
-                                <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
-                                <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
-                                <p>--The StyleHints Team.</p>
+                                <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                                <h1>Product out of stock</h1>
+                                <p>Hello Designer,</p>
+                                <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
+                                <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
+                                <div style="text-align: center; font-size: medium">
+                                    <p>1. Log onto the app, and move to the designer's section.</p>
+                                    <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
+                                    <p>3. Click on the product with the <b>out of stock label</b></p>
+                                    <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
+                                    <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
+                                    <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
+                                    <p>--The StyleHints Team.</p>
+                                </div>
                             </div>
-                        </div>
-                        `
-                        const data = {
-                            from: 'StyleHints <no-reply@thestylehint.com>',
-                            to: `${designer.email}`,
-                            subject: 'Out of Stock',
-                            text: 'The StyleHints Team',
-                            html: output
-                        };
-                          
-                        mailgun.messages().send(data, (error, body) => {
-                            if (error) return error;
-                        });
-                    }
+                            `
+                            const data = {
+                                from: 'StyleHints <no-reply@thestylehint.com>',
+                                to: `${designer.email}`,
+                                subject: 'Out of Stock',
+                                text: 'The StyleHints Team',
+                                html: output
+                            };
+                            
+                            mailgun.messages().send(data, (error, body) => {
+                                if (error) return error;
+                            });
+                        }
+                        product.save();
+                    } else {
+                        let sizeIndex = product.shoe.info.findIndex(p => p.size == req.body.size);
+                        product.shoe.info[sizeIndex].quantity  -= req.body.quantity;
 
-                    product.save();
+                        //send email and notification for product out of stock.
+                        if (product.shoe.info[sizeIndex].quantity == 0) {
+                            product.oos = true;
+                            let userIds = [];
+                            //push notification
+                            userIds.push(designer['oneSignalId']);
+                            var message = { 
+                                app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                                headings:{"en": `Out of Stock`},
+                                contents: {"en": `One or more of your products is out of stock.`},
+                                include_player_ids: userIds
+                            };
+                            sendNotification(message);
+                            
+                            //in app notification
+                            notification.for.push(designer._id);
+                            notification.fromUsername = 'StyleHints';
+                            notification.typeOf = 'oos';
+                            notification.message = 'One or more of your products is out of stock.';
+                            notification.save();
+
+                            //email notification
+                            const output = `
+                            <div style="text-align: center; font-size: medium">
+                                <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                                <h1>Product out of stock</h1>
+                                <p>Hello Designer,</p>
+                                <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
+                                <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
+                                <div style="text-align: center; font-size: medium">
+                                    <p>1. Log onto the app, and move to the designer's section.</p>
+                                    <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
+                                    <p>3. Click on the product with the <b>out of stock label</b></p>
+                                    <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
+                                    <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
+                                    <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
+                                    <p>--The StyleHints Team.</p>
+                                </div>
+                            </div>
+                            `
+                            const data = {
+                                from: 'StyleHints <no-reply@thestylehint.com>',
+                                to: `${designer.email}`,
+                                subject: 'Out of Stock',
+                                text: 'The StyleHints Team',
+                                html: output
+                            };
+                            
+                            mailgun.messages().send(data, (error, body) => {
+                                if (error) return error;
+                            });
+                        }
+                        product.save();
+                    }
 
                     //send email and notification to designer
                     //push notification
