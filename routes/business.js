@@ -208,11 +208,11 @@ router.get('/cart-designers', checkJwt, (req, res) => {
 });
 
 //add to cart
-router.post('/add-cart/:id', checkJwt, (req, res) => {
+router.post('/add-cart', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-        user.cart.push(req.params.id);
+        user.cart.push(req.body.item);
 
         user.save();
         res.json({
@@ -223,11 +223,11 @@ router.post('/add-cart/:id', checkJwt, (req, res) => {
 });
 
 //add to cart
-router.post('/add-wishlist/:id', checkJwt, (req, res) => {
+router.post('/add-wishlist', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-        user.wishlist.push(req.params.id);
+        user.wishlist.push(req.body.item);
 
         user.save();
         res.json({
@@ -240,8 +240,6 @@ router.post('/add-wishlist/:id', checkJwt, (req, res) => {
 //get items in cart and wishlist
 router.get('/get-cart-wishlist', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id)
-        .populate('cart')
-        .populate('wishlist')
         .select(['cart', 'wishlist'])
         .exec((err, user) => {
             if (err) return err;
@@ -259,7 +257,7 @@ router.post('/remove-from-cart/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-        user.cart.splice(user.cart.findIndex(c => c == req.params.id), 1);
+        user.cart.splice(user.cart.findIndex(c => c._id == req.params.id), 1);
 
         user.save();
         res.json({
@@ -274,8 +272,8 @@ router.post('/remove-from-wishlist/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-        user.wishlist.splice(user.wishlist.findIndex(c => c == req.params.id), 1);
-        user.cart.push(req.params.id);
+        user.wishlist.splice(user.wishlist.findIndex(c => c._id == req.params.id), 1);
+        user.cart.push(req.body.item);
 
         user.save();
         res.json({

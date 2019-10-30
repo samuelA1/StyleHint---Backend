@@ -34,8 +34,28 @@ const UserSchema = new Schema({
       }
     ],
     designers: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    cart: [{type: Schema.Types.ObjectId, ref: 'Product'}],
-    wishlist: [{type: Schema.Types.ObjectId, ref: 'Product'}],
+    cart: [
+      {
+        size: String,
+        color: String,
+        img: String,
+        quantity: Number,
+        whatYouSell: String,
+        price: Number,
+        productId: String
+      }
+    ],
+    wishlist: [
+      {
+        size: String,
+        color: String,
+        img: String,
+        quantity: Number,
+        whatYouSell: String,
+        price: Number,
+        productId: String
+      }
+    ],
     category:  [{type: String, default: ''}],
     description: {type: String, default: ''},
     gender: {type: String, lowercase: true, default: ''},
