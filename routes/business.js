@@ -94,53 +94,37 @@ router.get('/prefered-designers', checkJwt, (req, res) => {
 
 //get unselected designers
 router.get('/unchosen-designers', checkJwt, (req, res) => {
-    User.findById(req.decoded.user._id, (err, user) => {
-        if (err) return err;
+    User.findById(req.decoded.user._id)
+        .populate('designers')
+        .select('designers')
+        .exec((err, user) => {
+            if (err) return err;
 
-        const occasions = ['school','sport','birthday party','halloween','christmas','church','date night','job interview','culture'];
-        let designers = [];
-        occasions.forEach(occasion => {
-            User.find({$and: [{isDesigner: true}, {category: occasion}]}, (err, designs) => {
-                if (err) return err;
+            const occasions = ['school','sport','birthday party','halloween','christmas','church','date night','job interview','culture'];
+            let designers = [];
+            occasions.forEach(occasion => {
+                User.find({$and: [{isDesigner: true}, {category: occasion}]}, (err, designs) => {
+                    if (err) return err;
 
-                let filteredDesigners = [];
+                    let filteredDesigners = [];
 
-                // designs.forEach(des => {
-                //     if (user.designers.some(d => d == '"' + des._id + '"')) {
-                //         filteredDesigners.push(des);
-                //     }
+                    designs.forEach(des => {
+                        if (user.designers.some(d => d.username !== des.username)) {
+                            filteredDesigners.push(des);
+                        }
+                    });
                     
-                //     console.log(user.designers.filter(d => d === des._id));
-                //     console.log(des._id);
-                //     console.log(user.designers[0]);
-                    
-                // });
-
-                for (let i = 0; i < user.designers.length; i++) {
-                    if(filter(user.designers[i])) {
-                        console.log(true)
-                    } else {
-                        console.log(false)
-                    }
-                    
-                }
         
-                function filter(e) {
-                     return designs.some((u) => {
-                          return u._id === e
-                    })
-                }
-                
-    
-                designers.push({occasion: occasion, designers: filteredDesigners});
-                if (designers.length == 9) {
-                    res.json({
-                        success: true,
-                        designers: designers
-                    })
-                }
+                    designers.push({occasion: occasion, designers: filteredDesigners});
+                    if (designers.length == 9) {
+                        console.log(designers);
+                        res.json({
+                            success: true,
+                            designers: designers
+                        })
+                    }
+                });
             });
-        });
     })
 });
 
