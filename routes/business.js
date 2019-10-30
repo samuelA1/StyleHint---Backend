@@ -127,7 +127,7 @@ router.get('/unchosen-designers', checkJwt, (req, res) => {
         
                 function filter(e) {
                      return designs.some((u) => {
-                          return u._id == e
+                          return u._id === e
                     })
                 }
                 
