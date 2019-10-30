@@ -107,24 +107,15 @@ router.get('/unchosen-designers', checkJwt, (req, res) => {
                     if (err) return err;
 
                     let filteredDesigners = [];
-
-                    // designs.forEach(des => {
-                    //     if (user.designers.some(d => d.username !== des.username)) {
-                    //         filteredDesigners.push(des);
-                    //     }
-                    // });
-
-                    for (let i = 0; i < user.designers.length; i++) {
-                        if(filter(user.designers[i])) {
-                           console.log(true)
-                        } else {
-                            console.log(false)
+                    for (let i = 0; i < designs.length; i++) {
+                        if(!filter(designs[i])) {
+                           filteredDesigners.push(designs[i]);
                         }
                         
                     }
             
                     function filter(e) {
-                         return designs.some((u) => {
+                         return user.designers.some((u) => {
                               return u.username == e.username
                         })
                     }
