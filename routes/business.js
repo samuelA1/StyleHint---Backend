@@ -252,6 +252,21 @@ router.get('/get-cart-wishlist', checkJwt, (req, res) => {
         })
 });
 
+//update item in cart
+router.post('/update-cart/:id', checkJwt, (req, res) => {
+    User.findById(req.decoded.user._id, (err, user) => {
+        if (err) return err;
+
+        const itemIndex = user.cart.findIndex(c => c._id == req.params.id);
+        user.cart[itemIndex].quantity = req.query.quantity;
+
+        user.save();
+        res.json({
+            success: true,
+        })
+    });
+});
+
 //remove item from cart
 router.post('/remove-from-cart/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
