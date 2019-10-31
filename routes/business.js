@@ -263,7 +263,8 @@ router.post('/update-cart/:id', checkJwt, (req, res) => {
             if (err) return err;
 
             if (product.type == 'clothing') {
-                let sizeIndex = product.cloth.info.findIndex(p => p.size == req.body.size);
+                let clothIndex = product.cloth.findIndex(p => p.color == req.body.color);
+                let sizeIndex = product.cloth[clothIndex].info.findIndex(p => p.size == req.body.size)
                 if (req.query.quantity > product.cloth.info[sizeIndex].quantity) {
                     res.json({
                         success: false,
@@ -279,7 +280,8 @@ router.post('/update-cart/:id', checkJwt, (req, res) => {
                     });
                 }
             } else {
-                let sizeIndex = product.shoe.info.findIndex(p => p.size == req.body.size);
+                let clothIndex = product.cloth.findIndex(p => p.color == req.body.color);
+                let sizeIndex = product.cloth[clothIndex].info.findIndex(p => p.size == req.body.size)
                 if (req.query.quantity > product.shoe.info[sizeIndex].quantity) {
                     res.json({
                         success: false,
