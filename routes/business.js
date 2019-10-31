@@ -395,6 +395,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                 order.product = req.body.productId;
                 order.quantity = req.body.quantity;
                 order.size = req.body.size;
+                order.color = req.body.color;
                 order.totalPaid = req.body.amount;
                 order.companyReceived = Math.floor(amountPayable - order.fees);
                 order.designerReceived = designerReceived;

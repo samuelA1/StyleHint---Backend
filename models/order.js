@@ -12,6 +12,7 @@ const OrderSchema = new Schema({
         country: {type: String, default: ''}
     },
     size: {type: String, lowercase: true, default: ''},
+    color: {type: String, lowercase: true, default: ''},
     product: {type: Schema.Types.ObjectId, ref: 'Product'},
     quantity: {type: Number, default: 1},
     orderedAt: {type: Date, default: Date.now},
