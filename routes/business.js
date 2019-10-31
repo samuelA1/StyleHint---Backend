@@ -252,18 +252,50 @@ router.get('/get-cart-wishlist', checkJwt, (req, res) => {
         })
 });
 
+
+
 //update item in cart
 router.post('/update-cart/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
-        const itemIndex = user.cart.findIndex(c => c._id == req.params.id);
-        user.cart[itemIndex].quantity = req.query.quantity;
+        Product.findById(req.body.id, (err, product) => {
+            if (err) return err;
 
-        user.save();
-        res.json({
-            success: true,
-        })
+            if (product.type == 'clothing') {
+                let sizeIndex = product.cloth.info.findIndex(p => p.size == req.body.size);
+                if (req.query.quantity > product.cloth.info[sizeIndex].quantity) {
+                    res.json({
+                        success: false,
+                        message: 'Sorry, the quantity you selected is more than the quantity of this product in stock. Please select a quantity lower than this.'
+                    })
+                } else {
+                    const itemIndex = user.cart.findIndex(c => c._id == req.params.id);
+                    user.cart[itemIndex].quantity = req.query.quantity;
+
+                    user.save();
+                    res.json({
+                        success: true,
+                    });
+                }
+            } else {
+                let sizeIndex = product.shoe.info.findIndex(p => p.size == req.body.size);
+                if (req.query.quantity > product.shoe.info[sizeIndex].quantity) {
+                    res.json({
+                        success: false,
+                        message: 'Sorry, the quantity you selected is more than the quantity of this product in stock. Please select a quantity lower than this.'
+                    })
+                } else {
+                    const itemIndex = user.cart.findIndex(c => c._id == req.params.id);
+                    user.cart[itemIndex].quantity = req.query.quantity;
+
+                    user.save();
+                    res.json({
+                        success: true,
+                    });
+                }
+            }
+        });
     });
 });
 
