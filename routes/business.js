@@ -223,11 +223,13 @@ router.post('/add-cart', checkJwt, (req, res) => {
 });
 
 //add to cart
-router.post('/add-wishlist', checkJwt, (req, res) => {
+router.post('/add-wishlist/:id', checkJwt, (req, res) => {
     User.findById(req.decoded.user._id, (err, user) => {
         if (err) return err;
 
         user.wishlist.push(req.body.item);
+        user.cart.splice(user.cart.findIndex(c => c._id == req.params.id), 1);
+
 
         user.save();
         res.json({
