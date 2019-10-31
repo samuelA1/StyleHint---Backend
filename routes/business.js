@@ -265,7 +265,7 @@ router.post('/update-cart/:id', checkJwt, (req, res) => {
             if (product.type == 'clothing') {
                 let clothIndex = product.cloth.findIndex(p => p.color == req.body.color);
                 let sizeIndex = product.cloth[clothIndex].info.findIndex(p => p.size == req.body.size)
-                if (req.query.quantity > product.cloth.info[sizeIndex].quantity) {
+                if (req.query.quantity >product.cloth[clothIndex].info[sizeIndex].quantity) {
                     res.json({
                         success: false,
                         message: 'Sorry, the quantity you selected is more than the quantity of this product in stock. Please select a quantity lower than this.'
