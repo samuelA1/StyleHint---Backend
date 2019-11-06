@@ -603,12 +603,12 @@ router.post('/pay', checkJwt, (req, res) => {
                                 <div style="text-align: center; font-size: medium">
                                         <h2>Details</h2>
                                         <p><b>Order#: ${order._id}</b></p>
+                                        <p><b>Total products: ${p.quantity}</b></p>
                                         <p><b>Order total: $${req.body.amount}</b></p>
                                         <p><b>Ordered on: ${today}</b></p>
                                         <p>--The StyleHints Team.</p>
                                 </div>
                 
-                                <p>--The StyleHints Team.</p>
                             </div>
                             `
                             const cnfrm = {
