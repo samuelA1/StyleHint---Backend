@@ -361,8 +361,6 @@ router.post('/pay', checkJwt, (req, res) => {
 
             User.findById(product.owner, (err, designer) => {
                 if (err) return err;
-
-                console.log(req.body)
         
                 let stripeToken = req.body.stripeToken;
                 let amountPayable = req.body.amount;
@@ -397,6 +395,7 @@ router.post('/pay', checkJwt, (req, res) => {
                       }, (err, transfer) => {
                         if (err) return err;
                         console.log(err);
+                        console.log(transfer);
         
                         order.for = designer._id;
                         order.from = req.decoded.user._id;
