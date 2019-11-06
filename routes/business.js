@@ -491,7 +491,7 @@ router.post('/pay', checkJwt, (req, res) => {
                                 product.save();
                             } else if(product.type == 'shoe'){
                                 let shoeIndex = product.shoe.findIndex(s => s.color == p.color);
-                                let sizeIndex = product.shoe[shoeIndex].info.findIndex(s => s.size == p.size);
+                                let sizeIndex = product.shoe[shoeIndex].info.findIndex(s => s.size == parseInt(p.size));
                                 product.shoe[shoeIndex].info[sizeIndex].quantity  -= p.quantity;
                 
                                 //send email and notification for product out of stock.
