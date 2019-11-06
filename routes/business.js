@@ -370,7 +370,7 @@ router.post('/pay', checkJwt, (req, res) => {
                 
         
                 //customer payment
-                stripe.charge.create({
+                stripe.charges.create({
                     amount: amountPayable,
                     currency: 'usd',
                     transaction: 'customer charged',
