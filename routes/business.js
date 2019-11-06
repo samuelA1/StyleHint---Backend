@@ -266,7 +266,7 @@ router.post('/update-cart/:id', checkJwt, (req, res) => {
 
             if (product.type == 'clothing') {
                 let clothIndex = product.cloth.findIndex(p => p.color == req.body.color);
-                let sizeIndex = product.cloth[clothIndex].info.findIndex(p => p.size == req.body.size)
+                let sizeIndex = product.cloth[clothIndex].info.findIndex(p => p.size == req.body.size);
                 if (req.query.quantity > product.cloth[clothIndex].info[sizeIndex].quantity) {
                     res.json({
                         success: false,
@@ -381,7 +381,7 @@ router.post('/pay', checkJwt, (req, res) => {
                     });
                     }).then(function(charge) {
                         if (charge.payment_method_details.card.country == "US") {
-                            order.fees = ((2.9 * req.body.amount) / 100) + 0.30;
+                            order.fees = Math.ceil(((2.9 * req.body.amount) / 100) + 0.30);
                         } else {
                             order.fees = 1
                         }
@@ -409,11 +409,12 @@ router.post('/pay', checkJwt, (req, res) => {
                             order.save();
             
                             if (product.type == 'clothing') {
-                                let sizeIndex = product.cloth.info.findIndex(p => p.size == req.body.size);
-                                product.cloth.info[sizeIndex].quantity  -= req.body.quantity;
+                                let clothIndex = product.cloth.findIndex(c => c.color == p.color);
+                                let sizeIndex = product.cloth[clothIndex].info.findIndex(c => c.size == p.size);
+                                product.cloth[clothIndex].info[sizeIndex].quantity  -= p.quantity;
                 
                                 //send email and notification for product out of stock.
-                                if (product.cloth.info[sizeIndex].quantity == 0) {
+                                if (product.cloth[clothIndex].info[sizeIndex].quantity == 0) {
                                     product.oos = true;
                                     let userIds = [];
                                     //push notification
@@ -466,11 +467,12 @@ router.post('/pay', checkJwt, (req, res) => {
                                 }
                                 product.save();
                             } else {
-                                let sizeIndex = product.shoe.info.findIndex(p => p.size == req.body.size);
-                                product.shoe.info[sizeIndex].quantity  -= req.body.quantity;
+                                let shoeIndex = product.shoe.findIndex(s => s.color == p.color);
+                                let sizeIndex = product.shoe[shoeIndex].info.findIndex(s => s.size == p.size);
+                                product.shoe[shoeIndex].info[sizeIndex].quantity  -= p.quantity;
                 
                                 //send email and notification for product out of stock.
-                                if (product.shoe.info[sizeIndex].quantity == 0) {
+                                if (product.shoe[shoeIndex].info[sizeIndex].quantity == 0) {
                                     product.oos = true;
                                     let userIds = [];
                                     //push notification
