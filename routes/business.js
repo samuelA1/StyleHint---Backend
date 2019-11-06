@@ -383,7 +383,7 @@ router.post('/pay', checkJwt, (req, res) => {
                     console.log(err);
                     console.log(charge)
         
-                    if (charge.payment_method_details.country == "US") {
+                    if (charge.country == "US") {
                         order.fees = ((2.9 * amountPayable) / 100) + 0.30;
                     } else {
                         order.fees = 1
