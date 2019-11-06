@@ -349,7 +349,7 @@ router.post('/clear-cart', checkJwt, (req, res) => {
 });
 
 //charge or payments
-router.post('/orders', checkJwt, (req, res) => {
+router.post('/pay', checkJwt, (req, res) => {
     let order = new Order();
     let notification = new Notification();
 
