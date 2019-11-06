@@ -389,7 +389,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         return stripe.transfers.create({
                             amount: designerReceived,
                             currency: "usd",
-                            destination: "acct_1CSSoCKoacolWWL9",
+                            destination: "acct_1FK4NKCxx6oi39mC",
                             transfer_group: `ORDER_${order._id}`
                         }).then(function(transfer) {
                             console.log(transfer);
