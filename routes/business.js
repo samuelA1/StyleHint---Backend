@@ -381,7 +381,7 @@ router.post('/pay', checkJwt, (req, res) => {
                     });
                     }).then(function(charge) {
                         console.log(charge);
-                        if (charge.payment_method_details.country == "US") {
+                        if (charge.payment_method_details.card.country == "US") {
                             order.fees = ((2.9 * req.body.amount) / 100) + 0.30;
                         } else {
                             order.fees = 1
