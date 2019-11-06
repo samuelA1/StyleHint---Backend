@@ -353,6 +353,8 @@ router.post('/pay', checkJwt, (req, res) => {
     let order = new Order();
     let notification = new Notification();
 
+    console.log(req.body);
+
     req.body.products.forEach(p => {
         order.products.push(p);
 
@@ -395,7 +397,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         transfer_group: `ORDER_${order._id}`
                       }, (err, transfer) => {
                         if (err) return err;
-                        
+
                         console.log(err);
                         console.log(transfer);
         
