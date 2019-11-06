@@ -353,8 +353,6 @@ router.post('/pay', checkJwt, (req, res) => {
     let order = new Order();
     let notification = new Notification();
 
-    console.log(req.body);
-
     req.body.products.forEach(p => {
         order.products.push(p);
 
@@ -381,8 +379,11 @@ router.post('/pay', checkJwt, (req, res) => {
                         customer: customer.id
                     });
                     }).then(function(charge) {
-                        console.log(charge);
-
+                        if (charge.payment_method_details.country == "US") {
+                            order.fees = ((2.9 * amountPayable) / 100) + 0.30;
+                        } else {
+                            order.fees = 1
+                        }
                         //payment to designer
                         return stripe.transfers.create({
                             amount: designerReceived,
@@ -616,11 +617,7 @@ router.post('/pay', checkJwt, (req, res) => {
 
                 //     console.log(err);
         
-                //     if (charge.payment_method_details.country == "US") {
-                //         order.fees = ((2.9 * amountPayable) / 100) + 0.30;
-                //     } else {
-                //         order.fees = 1
-                //     }
+                
         
                     
                 // });
