@@ -5,7 +5,7 @@ const Order = require('../models/order');
 const Notification = require('../models/notification');
 const Product = require('../models/product');
 const async = require('async');
-const stripe = require('stripe')('sk_test_JhQBQU6jpKWVJgOr7vAz1PuO');
+const stripe = require('stripe')('sk_test_B6s4mzE9c5qSyvJ3B2oxUELh00k4vnnAVT');
 var API_KEY = 'key-cd89dbc925b95695b194ca3ea9eedf3e';
 var DOMAIN = 'mg.thestylehint.com';
 var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
@@ -389,7 +389,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         return stripe.transfers.create({
                             amount: designerReceived,
                             currency: "usd",
-                            destination: "acct_1FK4NKCxx6oi39mC",
+                            destination: designer.stripeAcct,
                             transfer_group: `ORDER_${order._id}`
                         }).then(function(transfer) {
                             console.log(transfer);
