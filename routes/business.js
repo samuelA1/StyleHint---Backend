@@ -376,14 +376,14 @@ router.post('/pay', checkJwt, (req, res) => {
                     amount: amountPayable,
                     currency: 'usd',
                     transaction: 'customer charged',
-                    source: stripeToken
+                    source: 'tok_visa'
                 }, (err, charge) => {
                     if (err) return err;
 
                     console.log(err);
                     console.log(charge)
         
-                    if (charge.card.country == "US") {
+                    if (charge.payment_method_details.country == "US") {
                         order.fees = ((2.9 * amountPayable) / 100) + 0.30;
                     } else {
                         order.fees = 1
