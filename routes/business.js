@@ -387,15 +387,15 @@ router.post('/orders/:id', checkJwt, (req, res) => {
 
                 order.for = designer._id;
                 order.from = req.decoded.user._id;
-                if (req.body.address.name) order.address.name = req.body.address.name;
+                if (req.body.address.name) order.address.zip = req.body.address.zip;
                 if (req.body.address.main) order.address.main = req.body.address.main;
                 if (req.body.address.city) order.address.city = req.body.address.city;
                 if (req.body.address.state) order.address.state = req.body.address.state;
                 if (req.body.address.country) order.address.country = req.body.address.country;
-                order.product = req.body.productId;
-                order.quantity = req.body.quantity;
-                order.size = req.body.size;
-                order.color = req.body.color;
+                req.body.products.forEach(p => {
+                    order.products.push(p);
+                });
+
                 order.totalPaid = req.body.amount;
                 order.companyReceived = Math.floor(amountPayable - order.fees);
                 order.designerReceived = designerReceived;
