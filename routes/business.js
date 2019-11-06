@@ -377,6 +377,8 @@ router.post('/pay', checkJwt, (req, res) => {
                     source: stripeToken
                 }, (err, charge) => {
                     if (err) return err;
+                    console.log(err);
+                    console.log(charge)
         
                     if (charge.payment_method_details.country == "US") {
                         order.fees = ((2.9 * amountPayable) / 100) + 0.30;
@@ -392,6 +394,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         transfer_group: `ORDER_${order._id}`
                       }, (err, transfer) => {
                         if (err) return err;
+                        console.log(err);
         
                         order.for = designer._id;
                         order.from = req.decoded.user._id;
