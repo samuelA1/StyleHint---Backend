@@ -380,7 +380,6 @@ router.post('/pay', checkJwt, (req, res) => {
                         transfer_group: `ORDER_${order._id}`
                     });
                     }).then(function(charge) {
-                        console.log(charge);
                         if (charge.payment_method_details.card.country == "US") {
                             order.fees = ((2.9 * req.body.amount) / 100) + 0.30;
                         } else {
@@ -605,23 +604,6 @@ router.post('/pay', checkJwt, (req, res) => {
                             })
                         });
                     })
-                
-        
-                // //customer payment
-                // stripe.charges.create({
-                //     amount: amountPayable,
-                //     currency: 'usd',
-                //     transaction: 'customer charged',
-                //     source: 'tok_visa'
-                // }, (err, charge) => {
-                //     if (err) return err;
-
-                //     console.log(err);
-        
-                
-        
-                    
-                // });
             });
         });
     });
