@@ -350,58 +350,68 @@ router.post('/clear-cart', checkJwt, (req, res) => {
 
 //charge or payments
 router.post('/orders/:id', checkJwt, (req, res) => {
-    User.findById(req.params.id, (err, designer) => {
-        if (err) return err;
+    let order = new Order();
+    let notification = new Notification();
 
-        let stripeToken = req.body.stripeToken;
-        let amountPayable = req.body.amount;
-        let designerToReceive = amountPayable - ((15 * amountPayable) / 100)
-        let designerReceived = Math.round(designerToReceive * 100) / 100
-        const today = new Date().toLocaleDateString('en-US', {timeZone: "UTC"});
-        let order = new Order();
-        let notification = new Notification();
+    req.body.products.forEach(p => {
+        order.products.push(p);
 
-        //customer payment
-        stripe.charge.create({
-            amount: amountPayable,
-            currency: 'usd',
-            transaction: 'customer charged',
-            source: stripeToken
-        }, (err, charge) => {
+        Product.findById(p.productId, (err, product) => {
             if (err) return err;
 
-            if (charge.payment_method_details.country == "US") {
-                order.fees = ((2.9 * amountPayable) / 100) + 0.30;
-            } else {
-                order.fees = 1
-            }
-
-            //payment to designer
-            stripe.transfers.create({
-                amount: designerReceived,
-                currency: "usd",
-                destination: designer.stripeAcct,
-                transfer_group: `ORDER_${order._id}`
-              }, (err, transfer) => {
+            User.findById(product.owner, (err, designer) => {
                 if (err) return err;
-
-                order.for = designer._id;
-                order.from = req.decoded.user._id;
-                if (req.body.address.name) order.address.zip = req.body.address.zip;
-                if (req.body.address.main) order.address.main = req.body.address.main;
-                if (req.body.address.city) order.address.city = req.body.address.city;
-                if (req.body.address.state) order.address.state = req.body.address.state;
-                if (req.body.address.country) order.address.country = req.body.address.country;
-                req.body.products.forEach(p => {
-                    order.products.push(p);
-
-                    Product.findById(p.productId, (err, product) => {
+        
+                let stripeToken = req.body.stripeToken;
+                let amountPayable = req.body.amount;
+                let designerToReceive = amountPayable - ((15 * amountPayable) / 100)
+                let designerReceived = Math.round(designerToReceive * 100) / 100
+                const today = new Date().toLocaleDateString('en-US', {timeZone: "UTC"});
+                
+        
+                //customer payment
+                stripe.charge.create({
+                    amount: amountPayable,
+                    currency: 'usd',
+                    transaction: 'customer charged',
+                    source: stripeToken
+                }, (err, charge) => {
+                    if (err) return err;
+        
+                    if (charge.payment_method_details.country == "US") {
+                        order.fees = ((2.9 * amountPayable) / 100) + 0.30;
+                    } else {
+                        order.fees = 1
+                    }
+        
+                    //payment to designer
+                    stripe.transfers.create({
+                        amount: designerReceived,
+                        currency: "usd",
+                        destination: designer.stripeAcct,
+                        transfer_group: `ORDER_${order._id}`
+                      }, (err, transfer) => {
                         if (err) return err;
-    
+        
+                        order.for = designer._id;
+                        order.from = req.decoded.user._id;
+                        if (req.body.address.name) order.address.zip = req.body.address.zip;
+                        if (req.body.address.main) order.address.main = req.body.address.main;
+                        if (req.body.address.city) order.address.city = req.body.address.city;
+                        if (req.body.address.state) order.address.state = req.body.address.state;
+                        if (req.body.address.country) order.address.country = req.body.address.country;
+                        
+                        
+                        order.totalPaid = req.body.amount;
+                        order.companyReceived = Math.floor(amountPayable - order.fees);
+                        order.designerReceived = designerReceived;
+        
+                        order.save();
+        
                         if (product.type == 'clothing') {
                             let sizeIndex = product.cloth.info.findIndex(p => p.size == req.body.size);
                             product.cloth.info[sizeIndex].quantity  -= req.body.quantity;
-    
+            
                             //send email and notification for product out of stock.
                             if (product.cloth.info[sizeIndex].quantity == 0) {
                                 product.oos = true;
@@ -422,7 +432,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                                 notification.typeOf = 'oos';
                                 notification.message = 'One or more of your products is out of stock.';
                                 notification.save();
-    
+            
                                 //email notification
                                 const output = `
                                 <div style="text-align: center; font-size: medium">
@@ -458,7 +468,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                         } else {
                             let sizeIndex = product.shoe.info.findIndex(p => p.size == req.body.size);
                             product.shoe.info[sizeIndex].quantity  -= req.body.quantity;
-    
+            
                             //send email and notification for product out of stock.
                             if (product.shoe.info[sizeIndex].quantity == 0) {
                                 product.oos = true;
@@ -479,7 +489,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                                 notification.typeOf = 'oos';
                                 notification.message = 'One or more of your products is out of stock.';
                                 notification.save();
-    
+            
                                 //email notification
                                 const output = `
                                 <div style="text-align: center; font-size: medium">
@@ -513,7 +523,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                             }
                             product.save();
                         }
-    
+            
                         //send email and notification to designer
                         //push notification
                         let userIds = [];
@@ -525,14 +535,14 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                             include_player_ids: userIds
                         };
                         sendNotification(message);
-    
+            
                          //in app notification
                          notification.for.push(designer._id);
                          notification.fromUsername = 'StyleHints';
                          notification.typeOf = 'purchase';
                          notification.message = 'A user just made a purchase for one or more of your products.';
                          notification.save();
-    
+            
                           //email notification for designer
                           const output = `
                           <div style="text-align: center; font-size: medium">
@@ -541,7 +551,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                               <p>Hello Designer,</p>
                               <p>This is to inform you that, a user just made a purchase of one or more of your products.</p>
                               <p>Please take immediate action to make sure the the user/customer gets his or her purchased product.</p>
-    
+            
                               <p>--The StyleHints Team.</p>
                           </div>
                           `
@@ -556,7 +566,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                           mailgun.messages().send(data, (error, body) => {
                               if (error) return error;
                           });
-    
+            
                           //email notification for customer
                           const confirmation = `
                           <div style="text-align: center; font-size: medium">
@@ -564,7 +574,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                               <h1>Order confirmation.</h1>
                               <p>Hello ${req.decoded.user.name}</p>
                               <p>This is to inform you that, your purchase of one or more products on our platform was successful.</p>
-    
+            
                               <div style="text-align: center; font-size: medium">
                                     <h2>Details</h2>
                                     <p><b>Order#: ${order._id}</b></p>
@@ -572,7 +582,7 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                                     <p><b>Ordered on: ${today}</b></p>
                                     <p>--The StyleHints Team.</p>
                             </div>
-    
+            
                               <p>--The StyleHints Team.</p>
                           </div>
                           `
@@ -587,21 +597,14 @@ router.post('/orders/:id', checkJwt, (req, res) => {
                           mailgun.messages().send(cnfrm, (error, body) => {
                               if (error) return error;
                           });
-    
+            
                         res.json({
                             success: true,
                             message: 'order successfully placed'
                         })
-                    });
+                      });
                 });
-
-                order.totalPaid = req.body.amount;
-                order.companyReceived = Math.floor(amountPayable - order.fees);
-                order.designerReceived = designerReceived;
-
-                order.save();
-
-              });
+            });
         });
     });
 });
