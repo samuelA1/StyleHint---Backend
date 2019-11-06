@@ -377,6 +377,7 @@ router.post('/pay', checkJwt, (req, res) => {
                     source: stripeToken
                 }, (err, charge) => {
                     if (err) return err;
+
                     console.log(err);
                     console.log(charge)
         
@@ -394,6 +395,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         transfer_group: `ORDER_${order._id}`
                       }, (err, transfer) => {
                         if (err) return err;
+                        
                         console.log(err);
                         console.log(transfer);
         
