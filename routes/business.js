@@ -380,6 +380,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         transfer_group: `ORDER_${order._id}`
                     });
                     }).then(function(charge) {
+                        console.log(charge);
                         if (charge.payment_method_details.country == "US") {
                             order.fees = ((2.9 * req.body.amount) / 100) + 0.30;
                         } else {
@@ -392,7 +393,6 @@ router.post('/pay', checkJwt, (req, res) => {
                             destination: designer.stripeAcct,
                             transfer_group: `ORDER_${order._id}`
                         }).then(function(transfer) {
-                            console.log(transfer);
             
                             order.for = designer._id;
                             order.from = req.decoded.user._id;
