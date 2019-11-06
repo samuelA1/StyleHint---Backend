@@ -376,11 +376,12 @@ router.post('/pay', checkJwt, (req, res) => {
                     return stripe.charges.create({
                         amount: amountPayable,
                         currency: 'usd',
-                        customer: customer.id
+                        customer: customer.id,
+                        transfer_group: `ORDER_${order._id}`
                     });
                     }).then(function(charge) {
                         if (charge.payment_method_details.country == "US") {
-                            order.fees = ((2.9 * amountPayable) / 100) + 0.30;
+                            order.fees = ((2.9 * req.body.amount) / 100) + 0.30;
                         } else {
                             order.fees = 1
                         }
@@ -388,7 +389,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         return stripe.transfers.create({
                             amount: designerReceived,
                             currency: "usd",
-                            destination: designer.stripeAcct,
+                            destination: `${designer.stripeAcct}`,
                             transfer_group: `ORDER_${order._id}`
                         }).then(function(transfer) {
                             console.log(transfer);
