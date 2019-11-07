@@ -418,7 +418,7 @@ router.post('/pay', checkJwt, (req, res) => {
             
                             order.for = designer._id;
                             order.from = req.decoded.user._id;
-                            if (req.body.address.name) order.address.zip = req.body.address.zip;
+                            if (req.body.address.zip) order.address.zip = req.body.address.zip;
                             if (req.body.address.main) order.address.main = req.body.address.main;
                             if (req.body.address.city) order.address.city = req.body.address.city;
                             if (req.body.address.state) order.address.state = req.body.address.state;
@@ -463,7 +463,7 @@ router.post('/pay', checkJwt, (req, res) => {
                                     <div style="text-align: center; font-size: medium">
                                         <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
                                         <h1>Product out of stock</h1>
-                                        <p>Hello Designer,</p>
+                                        <p>Dear Designer,</p>
                                         <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
                                         <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
                                         <div style="text-align: center; font-size: medium">
