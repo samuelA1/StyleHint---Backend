@@ -637,7 +637,7 @@ router.post('/pay', checkJwt, (req, res) => {
 //get all my orders
 router.get('/orders', checkJwt, (req, res) => {
     Order.find({from: req.decoded.user._id})
-        .select(['products', 'totalPaid', 'orderedAt'])
+        .select(['products', 'totalPaid', 'orderedAt', '_id'])
         .exec((err, orders) => {
             if (err) return err;
 
@@ -651,7 +651,7 @@ router.get('/orders', checkJwt, (req, res) => {
 //get single order
 router.get('/order/:id', checkJwt, (req, res) => {
     Order.findById(req.params.id)
-        .select(['address', 'products', 'totalPaid', 'orderedAt'])
+        .select(['address', 'products', 'totalPaid', 'orderedAt', '_id'])
         .exec((err, orders) => {
             if (err) return err;
 
