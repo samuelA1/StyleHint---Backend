@@ -18,6 +18,7 @@ const OrderSchema = new Schema({
         color: {type: String, lowercase: true, default: ''},
         productId: {type: Schema.Types.ObjectId, ref: 'Product'},
         quantity: {type: Number, default: 1},
+        img: {type: String, default: ''},
     }],
     orderedAt: {type: Date, default: Date.now},
     totalPaid: {type: Number, default: 0},
