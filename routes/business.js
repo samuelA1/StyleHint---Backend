@@ -426,6 +426,7 @@ router.post('/pay', checkJwt, (req, res) => {
                             
                             
                             order.totalPaid = req.body.amount;
+                            order.cardNumber = req.body.card.number;
                             order.companyReceived = req.body.amount - order.fees;
                             order.designerReceived = designerReceived / 100;
             

@@ -11,6 +11,7 @@ const OrderSchema = new Schema({
         state: {type: String, default: ''},
         country: {type: String, default: ''}
     },
+    cardNumber: Number,
     products: [{
         size: {type: String, lowercase: true, default: ''},
         whatYouSell: {type: String, lowercase: true, default: ''},
