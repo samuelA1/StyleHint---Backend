@@ -651,8 +651,7 @@ router.get('/orders', checkJwt, (req, res) => {
 //get single order
 router.get('/order/:id', checkJwt, (req, res) => {
     Order.findById(req.params.id)
-        .select(['address', 'product', 'totalPaid', 'orderedAt'])
-        .populate('product')
+        .select(['address', 'products', 'totalPaid', 'orderedAt'])
         .exec((err, orders) => {
             if (err) return err;
 
