@@ -203,6 +203,7 @@ router.post('/order-status', isDesigner, (req, res) => {
             Order.find({$and: [{for: req.decoded.user._id}, {isShipped: req.body.status}]})
             .limit(perPage)
             .skip(page * perPage)
+            .populate('for')
             .sort({orderedAt: -1})
             .exec((err, orders) => {
                 if (err) return err;
