@@ -186,7 +186,6 @@ router.post('/edit-product/:id', isDesigner, (req, res) => {
 router.get('/all-orders', isDesigner, (req, res) => {
     Order.find({for: req.decoded.user._id})
         .populate('from')
-        .populate('product')
         .exec((err, orders) => {
             if (err) return err;
     
@@ -197,7 +196,7 @@ router.get('/all-orders', isDesigner, (req, res) => {
         });
 });
 
-//shipped orders
+//shipped and unshippedorders
 router.post('/order-status', isDesigner, (req, res) => {
     Order.find({$and: [{for: req.decoded.user._id}, {isShipped: req.body.status}]})
         .populate('from')
