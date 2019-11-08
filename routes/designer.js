@@ -182,33 +182,41 @@ router.post('/edit-product/:id', isDesigner, (req, res) => {
     });
 });
 
-//get all orders
-router.get('/all-orders', isDesigner, (req, res) => {
-    Order.find({for: req.decoded.user._id})
-        .populate('from')
-        .exec((err, orders) => {
-            if (err) return err;
-    
-            res.json({
-                success: true,
-                orders: orders
-            });
-        });
-});
 
-//shipped and unshippedorders
+//shipped and unshipped orders
 router.post('/order-status', isDesigner, (req, res) => {
-    Order.find({$and: [{for: req.decoded.user._id}, {isShipped: req.body.status}]})
-        .populate('from')
-        .populate('product')
-        .exec((err, orders) => {
-            if (err) return err;
+    const perPage = 20;
+    const page = req.query.page;
+    async.waterfall([
+        function (callback) {
+            Order.countDocuments({$and: [{for: req.decoded.user._id}, {isShipped: req.body.status}]}, (err, count) => {
+                if (err) return err;
+
+                Order.countDocuments({for: req.decoded.user._id}, (err, grandTotal) => {
+                    if (err) return err;
     
-            res.json({
-                success: true,
-                orders: orders
+                    callback(err, count, grandTotal)
+                });
             });
-        });
+        },
+        function (count, grandTotal) {
+            Order.find({$and: [{for: req.decoded.user._id}, {isShipped: req.body.status}]})
+            .limit(perPage)
+            .skip(page * perPage)
+            .sort({orderedAt: -1})
+            .exec((err, orders) => {
+                if (err) return err;
+        
+                res.json({
+                    success: true,
+                    orders: orders,
+                    totalOrders: count,
+                    grandTotal: grandTotal
+                })
+            });
+
+        }
+    ]);
 });
 
 //change from unshipped to shipped
