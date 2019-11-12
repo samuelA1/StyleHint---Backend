@@ -313,11 +313,8 @@ router.post('/chart-orders', isDesigner, (req, res) => {
                if (err) return err;
        
                if (stats.length !== 0) {
-                   console.log(stats)
                    var monthlyTotal = 0;
-                   stats.forEach(orders => {
-                       monthlyTotal += orders.length;
-                   });
+                   monthlyTotal = stats.length;
                    data.push(Object.assign({total: monthlyTotal}, month));
                    if (data.length == 12) {
                     res.json({
