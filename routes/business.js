@@ -574,7 +574,7 @@ router.post('/pay', checkJwt, (req, res) => {
                             <div style="text-align: center; font-size: medium">
                                 <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
                                 <h1>Order placed</h1>
-                                <p>Hello Designer,</p>
+                                <p>Dear Designer,</p>
                                 <p>This is to inform you that, a user just made a purchase of one or more of your products.</p>
                                 <p>Please take immediate action to make sure the the user/customer gets his or her purchased product.</p>
                 
@@ -652,7 +652,8 @@ router.get('/orders', checkJwt, (req, res) => {
 //get single order
 router.get('/order/:id', checkJwt, (req, res) => {
     Order.findById(req.params.id)
-        .select(['address', 'products', 'totalPaid', 'orderedAt', '_id', 'cardNumber'])
+        .select(['address', 'products', 'totalPaid', 'orderedAt', '_id', 'cardNumber', 'from'])
+        .populate('from')
         .exec((err, orders) => {
             if (err) return err;
 
