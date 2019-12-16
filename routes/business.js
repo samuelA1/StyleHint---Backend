@@ -615,7 +615,7 @@ router.post('/pay', checkJwt, (req, res) => {
                             const cnfrm = {
                                 from: 'StyleHints <no-reply@thestylehint.com>',
                                 to: `${req.decoded.user.email}`,
-                                subject: 'Order placed',
+                                subject: 'Order confirmation',
                                 text: 'The StyleHints Team',
                                 html: confirmation
                             };

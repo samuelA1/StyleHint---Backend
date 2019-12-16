@@ -36,6 +36,7 @@ const UserSchema = new Schema({
     designers: [{type: Schema.Types.ObjectId, ref: 'User'}],
     cart: [
       {
+        owner: {type: Schema.Types.ObjectId, ref: 'User'},
         size: String,
         color: String,
         img: String,
@@ -47,6 +48,7 @@ const UserSchema = new Schema({
     ],
     wishlist: [
       {
+        owner: {type: Schema.Types.ObjectId, ref: 'User'},
         size: String,
         color: String,
         img: String,
