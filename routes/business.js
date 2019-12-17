@@ -2,6 +2,7 @@ const router = require('express').Router();
 const checkJwt = require('../middleware/check-jwt');
 const User = require('../models/user');
 const Order = require('../models/order');
+const Dorder = require('../models/dorder');
 const Notification = require('../models/notification');
 const Product = require('../models/product');
 const async = require('async');
@@ -350,6 +351,8 @@ router.post('/clear-cart', checkJwt, (req, res) => {
 
 //charge or payments
 router.post('/pay', checkJwt, (req, res) => {
+
+    const today = new Date().toLocaleDateString('en-US', {timeZone: "UTC"});
     Math.round10 = function(value, exp) {
         return decimalAdjust('round', value, exp);
     };
@@ -373,8 +376,9 @@ router.post('/pay', checkJwt, (req, res) => {
         return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
     }
     
-    let order = new Order();
+
     let notification = new Notification();
+    let order = new Order();
 
     req.body.products.forEach(p => {
         order.products.push(p);
@@ -382,253 +386,281 @@ router.post('/pay', checkJwt, (req, res) => {
         Product.findById(p.productId, (err, product) => {
             if (err) return err;
 
-            User.findById(product.owner, (err, designer) => {
-                if (err) return err;
-        
-                let stripeToken = req.body.stripeToken;
-                let amountPayable = Math.round(req.body.amount * 100);
-                let designerToReceive = amountPayable - ((15 * amountPayable) / 100)
-                let designerReceived = Math.round(designerToReceive * 100) / 100
-                const today = new Date().toLocaleDateString('en-US', {timeZone: "UTC"});
+            //check product quantity
+            if (product.type == 'clothing') {
+                let clothIndex = product.cloth.findIndex(c => c.color == p.color);
+                let sizeIndex = product.cloth[clothIndex].info.findIndex(c => c.size == p.size);
+                product.cloth[clothIndex].info[sizeIndex].quantity  -= p.quantity;
 
-                stripe.customers
-                    .create({
-                    source: stripeToken
-                    })
-                    .then(function(customer) {
-                    return stripe.charges.create({
-                        amount: amountPayable,
-                        currency: 'usd',
-                        customer: customer.id,
-                        transfer_group: `ORDER_${order._id}`
+                //send email and notification for product out of stock.
+                if (product.cloth[clothIndex].info[sizeIndex].quantity == 0) {
+                    product.oos = true;
+                    let userIds = [];
+                    //push notification
+                    userIds.push(designer['oneSignalId']);
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        headings:{"en": `Out of Stock`},
+                        contents: {"en": `One or more of your products is out of stock.`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
+                    
+                    //in app notification
+                    notification.for.push(designer._id);
+                    notification.fromUsername = 'StyleHints';
+                    notification.typeOf = 'oos';
+                    notification.message = 'One or more of your products is out of stock.';
+                    notification.save();
+
+                    //email notification
+                    const output = `
+                    <div style="text-align: center; font-size: medium">
+                        <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                        <h1>Product out of stock</h1>
+                        <p>Dear Designer,</p>
+                        <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
+                        <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
+                        <div style="text-align: center; font-size: medium">
+                            <p>1. Log onto the app, and move to the designer's section.</p>
+                            <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
+                            <p>3. Click on the product with the <b>out of stock label</b></p>
+                            <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
+                            <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
+                            <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
+                            <p>--The StyleHints Team.</p>
+                        </div>
+                    </div>
+                    `
+                    const data = {
+                        from: 'StyleHints <no-reply@thestylehint.com>',
+                        to: `${designer.email}`,
+                        subject: 'Out of Stock',
+                        text: 'The StyleHints Team',
+                        html: output
+                    };
+                    
+                    mailgun.messages().send(data, (error, body) => {
+                        if (error) return error;
                     });
-                    }).then(function(charge) {
-                        if (charge.payment_method_details.card.country == "US") {
-                            order.fees = Math.round10(((2.9 * req.body.amount) / 100) + 0.30, -2);
-                        } else {
-                            order.fees = 1
-                        }
-                        //payment to designer
-                        return stripe.transfers.create({
-                            amount: designerReceived,
-                            currency: "usd",
-                            destination: designer.stripeAcct,
-                            transfer_group: `ORDER_${order._id}`
-                        }).then(function(transfer) {
+                }
+                product.save();
+            } else if(product.type == 'shoe'){
+                let shoeIndex = product.shoe.findIndex(s => s.color == p.color);
+                let sizeIndex = product.shoe[shoeIndex].info.findIndex(s => s.size == parseInt(p.size));
+                product.shoe[shoeIndex].info[sizeIndex].quantity  -= p.quantity;
+
+                //send email and notification for product out of stock.
+                if (product.shoe[shoeIndex].info[sizeIndex].quantity == 0) {
+                    product.oos = true;
+                    let userIds = [];
+                    //push notification
+                    userIds.push(designer['oneSignalId']);
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        headings:{"en": `Out of Stock`},
+                        contents: {"en": `One or more of your products is out of stock.`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
+                    
+                    //in app notification
+                    notification.for.push(designer._id);
+                    notification.fromUsername = 'StyleHints';
+                    notification.typeOf = 'oos';
+                    notification.message = 'One or more of your products is out of stock.';
+                    notification.save();
+
+                    //email notification
+                    const output = `
+                    <div style="text-align: center; font-size: medium">
+                        <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                        <h1>Product out of stock</h1>
+                        <p>Hello Designer,</p>
+                        <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
+                        <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
+                        <div style="text-align: center; font-size: medium">
+                            <p>1. Log onto the app, and move to the designer's section.</p>
+                            <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
+                            <p>3. Click on the product with the <b>out of stock label</b></p>
+                            <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
+                            <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
+                            <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
+                            <p>--The StyleHints Team.</p>
+                        </div>
+                    </div>
+                    `
+                    const data = {
+                        from: 'StyleHints <no-reply@thestylehint.com>',
+                        to: `${designer.email}`,
+                        subject: 'Out of Stock',
+                        text: 'The StyleHints Team',
+                        html: output
+                    };
+                    
+                    mailgun.messages().send(data, (error, body) => {
+                        if (error) return error;
+                    });
+                }
+                product.save();
+            }
+
+            //email notification for customer
+            const confirmation = `
+            <div style="text-align: center; font-size: medium">
+                <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                <h1>Order confirmation.</h1>
+                <p>Hello ${req.decoded.user.name}</p>
+                <p>This is to inform you that, your purchase of one or more products on our platform was successful.</p>
+
+                <div style="text-align: center; font-size: medium">
+                        <h2>Details</h2>
+                        <p><b>Order#: ${order._id}</b></p>
+                        <p><b>Total products: ${p.quantity}</b></p>
+                        <p><b>Order total: $${req.body.amount}</b></p>
+                        <p><b>Ordered on: ${today}</b></p>
+                        <p>--The StyleHints Team.</p>
+                </div>
+
+            </div>
+            `
+            const cnfrm = {
+                from: 'StyleHints <no-reply@thestylehint.com>',
+                to: `${req.decoded.user.email}`,
+                subject: 'Order confirmation',
+                text: 'The StyleHints Team',
+                html: confirmation
+            };
+                
+            mailgun.messages().send(cnfrm, (error, body) => {
+                if (error) return error;
+            });
+
+            //charge customer
+            let stripeToken = req.body.stripeToken;
+            let amountPayable = Math.round(req.body.amount * 100);
             
-                            order.for = designer._id;
-                            order.from = req.decoded.user._id;
-                            if (req.body.address.zip) order.address.zip = req.body.address.zip;
-                            if (req.body.address.main) order.address.main = req.body.address.main;
-                            if (req.body.address.city) order.address.city = req.body.address.city;
-                            if (req.body.address.state) order.address.state = req.body.address.state;
-                            if (req.body.address.country) order.address.country = req.body.address.country;
+
+            stripe.customers
+                .create({
+                source: stripeToken
+                })
+                .then(function(customer) {
+                return stripe.charges.create({
+                    amount: amountPayable,
+                    currency: 'usd',
+                    customer: customer.id,
+                    transfer_group: `ORDER_${order._id}`
+                });
+                }).then(function(charge) {
+                    if (charge.payment_method_details.card.country == "US") {
+                        order.fees = Math.round10(((2.9 * req.body.amount) / 100) + 0.30, -2);
+                    } else {
+                        order.fees = 1
+                    }
+            });
+
+             //create order for customer
+             order.for = '';
+             order.from = req.decoded.user._id;
+             if (req.body.address.zip) order.address.zip = req.body.address.zip;
+             if (req.body.address.main) order.address.main = req.body.address.main;
+             if (req.body.address.city) order.address.city = req.body.address.city;
+             if (req.body.address.state) order.address.state = req.body.address.state;
+             if (req.body.address.country) order.address.country = req.body.address.country;
+             
+             
+             order.totalPaid = req.body.amount;
+             order.cardNumber = req.body.card.number;
+             order.companyReceived = req.body.amount - order.fees;
+             
+ 
+            req.body.sortedDesProds.forEach(prod => {
+                User.findById(prod.owner, (err, designer) => {
+                    if (err) return err;
+
+                    let percent = ((15 * prod.amount) / 100)
+                    let designerToReceive = prod.amount - percent;
+                    let designerReceived = Math.round(designerToReceive * 100) / 100;
+
+                    //payment to designer
+                    return stripe.transfers.create({
+                        amount: designerReceived,
+                        currency: "usd",
+                        destination: designer.stripeAcct,
+                        transfer_group: `ORDER_${order._id}`
+                    }).then(function(transfer) {
+
+                        //create order for each designer
+                        let designerOrder = new Dorder();
+                        designerOrder.for = designer._id;
+                        designerOrder.from = req.decoded.user._id;
+                        designerOrder.ref = order._id;
+                        if (req.body.address.zip) designerOrder.address.zip = req.body.address.zip;
+                        if (req.body.address.main) designerOrder.address.main = req.body.address.main;
+                        if (req.body.address.city) designerOrder.address.city = req.body.address.city;
+                        if (req.body.address.state) designerOrder.address.state = req.body.address.state;
+                        if (req.body.address.country) designerOrder.address.country = req.body.address.country;
+                        
+                        designerOrder.products = prod.products;
+                        designerOrder.companyReceived = percent;
+                        designerOrder.designerReceived = designerReceived / 100;
+                        designerOrder.totalPaid = prod.amount;
+
+                        designerOrder.save();
+
+                        order.designerReceived = designerReceived / 100;
+                        order.save();
+                        
+            
+                        //send email and notification to designer
+                        //push notification
+                        let userIds = [];
+                        userIds.push(designer['oneSignalId']);
+                        var message = { 
+                            app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                            headings:{"en": `Order placed`},
+                            contents: {"en": `A user just made a purchase for one or more of your products.`},
+                            include_player_ids: userIds
+                        };
+                        sendNotification(message);
+            
+                        //in app notification
+                        notification.for.push(designer._id);
+                        notification.fromUsername = 'StyleHints';
+                        notification.typeOf = 'purchase';
+                        notification.message = 'A user just made a purchase for one or more of your products.';
+                        notification.save();
+            
+                        //email notification for designer
+                        const output = `
+                        <div style="text-align: center; font-size: medium">
+                            <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                            <h1>Order placed</h1>
+                            <p>Dear Designer,</p>
+                            <p>This is to inform you that, a user just made a purchase of one or more of your products.</p>
+                            <p>Please take immediate action to make sure the the user/customer gets his or her purchased product.</p>
+            
+                            <p>--The StyleHints Team.</p>
+                        </div>
+                        `
+                        const data = {
+                            from: 'StyleHints <no-reply@thestylehint.com>',
+                            to: `${designer.email}`,
+                            subject: 'Order placed',
+                            text: 'The StyleHints Team',
+                            html: output
+                        };
                             
-                            
-                            order.totalPaid = req.body.amount;
-                            order.cardNumber = req.body.card.number;
-                            order.companyReceived = req.body.amount - order.fees;
-                            order.designerReceived = designerReceived / 100;
-            
-                            order.save();
-            
-                            if (product.type == 'clothing') {
-                                let clothIndex = product.cloth.findIndex(c => c.color == p.color);
-                                let sizeIndex = product.cloth[clothIndex].info.findIndex(c => c.size == p.size);
-                                product.cloth[clothIndex].info[sizeIndex].quantity  -= p.quantity;
-                
-                                //send email and notification for product out of stock.
-                                if (product.cloth[clothIndex].info[sizeIndex].quantity == 0) {
-                                    product.oos = true;
-                                    let userIds = [];
-                                    //push notification
-                                    userIds.push(designer['oneSignalId']);
-                                    var message = { 
-                                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                                        headings:{"en": `Out of Stock`},
-                                        contents: {"en": `One or more of your products is out of stock.`},
-                                        include_player_ids: userIds
-                                    };
-                                    sendNotification(message);
-                                    
-                                    //in app notification
-                                    notification.for.push(designer._id);
-                                    notification.fromUsername = 'StyleHints';
-                                    notification.typeOf = 'oos';
-                                    notification.message = 'One or more of your products is out of stock.';
-                                    notification.save();
-                
-                                    //email notification
-                                    const output = `
-                                    <div style="text-align: center; font-size: medium">
-                                        <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                                        <h1>Product out of stock</h1>
-                                        <p>Dear Designer,</p>
-                                        <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
-                                        <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
-                                        <div style="text-align: center; font-size: medium">
-                                            <p>1. Log onto the app, and move to the designer's section.</p>
-                                            <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
-                                            <p>3. Click on the product with the <b>out of stock label</b></p>
-                                            <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
-                                            <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
-                                            <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
-                                            <p>--The StyleHints Team.</p>
-                                        </div>
-                                    </div>
-                                    `
-                                    const data = {
-                                        from: 'StyleHints <no-reply@thestylehint.com>',
-                                        to: `${designer.email}`,
-                                        subject: 'Out of Stock',
-                                        text: 'The StyleHints Team',
-                                        html: output
-                                    };
-                                    
-                                    mailgun.messages().send(data, (error, body) => {
-                                        if (error) return error;
-                                    });
-                                }
-                                product.save();
-                            } else if(product.type == 'shoe'){
-                                let shoeIndex = product.shoe.findIndex(s => s.color == p.color);
-                                let sizeIndex = product.shoe[shoeIndex].info.findIndex(s => s.size == parseInt(p.size));
-                                product.shoe[shoeIndex].info[sizeIndex].quantity  -= p.quantity;
-                
-                                //send email and notification for product out of stock.
-                                if (product.shoe[shoeIndex].info[sizeIndex].quantity == 0) {
-                                    product.oos = true;
-                                    let userIds = [];
-                                    //push notification
-                                    userIds.push(designer['oneSignalId']);
-                                    var message = { 
-                                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                                        headings:{"en": `Out of Stock`},
-                                        contents: {"en": `One or more of your products is out of stock.`},
-                                        include_player_ids: userIds
-                                    };
-                                    sendNotification(message);
-                                    
-                                    //in app notification
-                                    notification.for.push(designer._id);
-                                    notification.fromUsername = 'StyleHints';
-                                    notification.typeOf = 'oos';
-                                    notification.message = 'One or more of your products is out of stock.';
-                                    notification.save();
-                
-                                    //email notification
-                                    const output = `
-                                    <div style="text-align: center; font-size: medium">
-                                        <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                                        <h1>Product out of stock</h1>
-                                        <p>Hello Designer,</p>
-                                        <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
-                                        <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
-                                        <div style="text-align: center; font-size: medium">
-                                            <p>1. Log onto the app, and move to the designer's section.</p>
-                                            <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
-                                            <p>3. Click on the product with the <b>out of stock label</b></p>
-                                            <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
-                                            <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
-                                            <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
-                                            <p>--The StyleHints Team.</p>
-                                        </div>
-                                    </div>
-                                    `
-                                    const data = {
-                                        from: 'StyleHints <no-reply@thestylehint.com>',
-                                        to: `${designer.email}`,
-                                        subject: 'Out of Stock',
-                                        text: 'The StyleHints Team',
-                                        html: output
-                                    };
-                                    
-                                    mailgun.messages().send(data, (error, body) => {
-                                        if (error) return error;
-                                    });
-                                }
-                                product.save();
-                            }
-                
-                            //send email and notification to designer
-                            //push notification
-                            let userIds = [];
-                            userIds.push(designer['oneSignalId']);
-                            var message = { 
-                                app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                                headings:{"en": `Order placed`},
-                                contents: {"en": `A user just made a purchase for one or more of your products.`},
-                                include_player_ids: userIds
-                            };
-                            sendNotification(message);
-                
-                            //in app notification
-                            notification.for.push(designer._id);
-                            notification.fromUsername = 'StyleHints';
-                            notification.typeOf = 'purchase';
-                            notification.message = 'A user just made a purchase for one or more of your products.';
-                            notification.save();
-                
-                            //email notification for designer
-                            const output = `
-                            <div style="text-align: center; font-size: medium">
-                                <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                                <h1>Order placed</h1>
-                                <p>Dear Designer,</p>
-                                <p>This is to inform you that, a user just made a purchase of one or more of your products.</p>
-                                <p>Please take immediate action to make sure the the user/customer gets his or her purchased product.</p>
-                
-                                <p>--The StyleHints Team.</p>
-                            </div>
-                            `
-                            const data = {
-                                from: 'StyleHints <no-reply@thestylehint.com>',
-                                to: `${designer.email}`,
-                                subject: 'Order placed',
-                                text: 'The StyleHints Team',
-                                html: output
-                            };
-                                
-                            mailgun.messages().send(data, (error, body) => {
-                                if (error) return error;
-                            });
-                
-                            //email notification for customer
-                            const confirmation = `
-                            <div style="text-align: center; font-size: medium">
-                                <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                                <h1>Order confirmation.</h1>
-                                <p>Hello ${req.decoded.user.name}</p>
-                                <p>This is to inform you that, your purchase of one or more products on our platform was successful.</p>
-                
-                                <div style="text-align: center; font-size: medium">
-                                        <h2>Details</h2>
-                                        <p><b>Order#: ${order._id}</b></p>
-                                        <p><b>Total products: ${p.quantity}</b></p>
-                                        <p><b>Order total: $${req.body.amount}</b></p>
-                                        <p><b>Ordered on: ${today}</b></p>
-                                        <p>--The StyleHints Team.</p>
-                                </div>
-                
-                            </div>
-                            `
-                            const cnfrm = {
-                                from: 'StyleHints <no-reply@thestylehint.com>',
-                                to: `${req.decoded.user.email}`,
-                                subject: 'Order confirmation',
-                                text: 'The StyleHints Team',
-                                html: confirmation
-                            };
-                                
-                            mailgun.messages().send(cnfrm, (error, body) => {
-                                if (error) return error;
-                            });
-                
-                            res.json({
-                                success: true,
-                                message: 'order successfully placed'
-                            })
+                        mailgun.messages().send(data, (error, body) => {
+                            if (error) return error;
                         });
+
+                        res.json({
+                            success: true,
+                            message: 'order successfully placed'
+                        })
+            });
                     })
             });
         });
