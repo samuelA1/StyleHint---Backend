@@ -429,7 +429,7 @@ router.delete('/delete-news/:id', isAdmin, (req, res) => {
 });
 
 //update user info
-router.post('/update-user/:id', isAdmin, (req, res) => {
+router.post('/update-user/:id', (req, res) => {
     User.findById(req.params.id, (err, user) => {
         if (err) return err;
 
