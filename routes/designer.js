@@ -17,24 +17,6 @@ cloudinary.config({
     api_secret: 'CJnItspl_V5HLIl_phgAWYsdbL4' 
 });
 
-//edit primary info
-router.post('/edit-primary-info', isDesigner, (req, res) => {
-    User.findById(req.decoded.user._id, (err, user) => {
-        if (err) return err;
-
-        if (req.body.description) user.description = req.body.description;
-        if (req.body.category) {
-            user.category = [];
-            user.category.push(req.body.category);
-        }
-        user.save();
-        res.json({
-            success: true,
-            message: 'Information successfully updated.'
-        })
-    });
-});
-
 //add product
 router.post('/add-product', isDesigner, (req, res) => {
     let form = new formidable.IncomingForm();
@@ -457,7 +439,8 @@ router.get('/monthly-finances', isDesigner, (req, res) => {
                     success: true,
                     totalOrders: totalOrders,
                     totalSold: totalSold,
-                    totalQuantity: totalQuantity
+                    totalQuantity: totalQuantity,
+                    orders: orders
     
                 })
                }
