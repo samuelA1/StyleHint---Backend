@@ -378,7 +378,8 @@ router.get('/daily-finances', isDesigner, (req, res) => {
                     success: true,
                     totalOrders: totalOrders,
                     totalSold: totalSold,
-                    totalQuantity: totalQuantity
+                    totalQuantity: totalQuantity,
+                    orders: orders
     
                 })
                }
