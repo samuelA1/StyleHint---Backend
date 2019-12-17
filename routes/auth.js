@@ -49,6 +49,7 @@ router.post('/auto-login', (req, res) => {
             const token = jwt.sign({user: userExist}, config.secret, {expiresIn: '365d'});
             res.json({
                 success: true,
+                user: userExist,
                 message: 'Login successful',
                 token: token
             })
