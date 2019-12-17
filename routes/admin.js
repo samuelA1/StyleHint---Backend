@@ -435,6 +435,7 @@ router.post('/update-user/:id', (req, res) => {
 
         if (req.body.username) user.username = req.body.username;
         if (req.body.name) user.name = req.body.name;
+        if (req.body.description) user.description = req.body.description;
         if (req.body.email) user.email = req.body.email;
         if (req.body.password) user.password = req.body.password;
         if (req.body.gender) user.gender = req.body.gender;
