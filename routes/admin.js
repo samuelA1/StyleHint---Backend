@@ -377,7 +377,7 @@ router.post('/sort-hints', (req, res) => {
 });
 
 //get single users
-router.get('/single-user/:id', isAdmin, (req, res) => {
+router.get('/single-user/:id', (req, res) => {
     User.findById(req.params.id)
         .select(['-friends', '-tips', '-myTips', '-closet'])
         .exec((err, user) => {
