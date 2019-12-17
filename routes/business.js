@@ -696,4 +696,19 @@ router.get('/order/:id', checkJwt, (req, res) => {
         });
 });
 
+//get single order for designer
+router.get('/dorder/:id', checkJwt, (req, res) => {
+    Dorder.findById(req.params.id)
+        .select(['address', 'products', 'totalPaid', 'orderedAt', '_id', 'cardNumber', 'from'])
+        .populate('from')
+        .exec((err, orders) => {
+            if (err) return err;
+
+            res.json({
+                success: true,
+                orders: orders
+            })
+        });
+});
+
 module.exports = router;
