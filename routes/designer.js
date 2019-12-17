@@ -363,6 +363,7 @@ router.get('/daily-finances', isDesigner, (req, res) => {
         $gte: new Date(new Date().setDate(new Date().getDate()-1))}}]})
         .populate('from')
         .populate('product')
+        .sort({orderedAt: -1})
         .exec((err, orders) => {
             if (err) return err;
 
