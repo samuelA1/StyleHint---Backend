@@ -371,22 +371,28 @@ router.get('/daily-finances', isDesigner, (req, res) => {
             let totalSold = 0;
             let totalQuantity = 0;
 
-            for (let i = 0; i < orders.length; i++) {
-                totalSold += orders[i].designerReceived;
-                totalQuantity += orders[i].quantity;
-               if (i == orders.length) {
+            if (orders.length !== 0) {
+                for (let i = 0; i < orders.length; i++) {
+                    totalSold += orders[i].designerReceived;
+                    totalQuantity += orders[i].quantity;
+                   if (i == orders.length) {
+                    res.json({
+                        success: true,
+                        totalOrders: totalOrders,
+                        totalSold: totalSold,
+                        totalQuantity: totalQuantity,
+                        orders: orders
+        
+                    })
+                   }
+                    
+                }
+            } else {
                 res.json({
                     success: true,
-                    totalOrders: totalOrders,
-                    totalSold: totalSold,
-                    totalQuantity: totalQuantity,
-                    orders: orders
-    
-                })
-               }
-                
-            }
-           
+                    orders: []
+                });
+            }      
         });
 });
 
