@@ -386,124 +386,7 @@ router.post('/pay', checkJwt, (req, res) => {
         Product.findById(p.productId, (err, product) => {
             if (err) return err;
 
-            //check product quantity
-            if (product.type == 'clothing') {
-                let clothIndex = product.cloth.findIndex(c => c.color == p.color);
-                let sizeIndex = product.cloth[clothIndex].info.findIndex(c => c.size == p.size);
-                product.cloth[clothIndex].info[sizeIndex].quantity  -= p.quantity;
-
-                //send email and notification for product out of stock.
-                if (product.cloth[clothIndex].info[sizeIndex].quantity == 0) {
-                    product.oos = true;
-                    let userIds = [];
-                    //push notification
-                    userIds.push(designer['oneSignalId']);
-                    var message = { 
-                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                        headings:{"en": `Out of Stock`},
-                        contents: {"en": `One or more of your products is out of stock.`},
-                        include_player_ids: userIds
-                    };
-                    sendNotification(message);
-                    
-                    //in app notification
-                    notification.for.push(designer._id);
-                    notification.fromUsername = 'StyleHints';
-                    notification.typeOf = 'oos';
-                    notification.message = 'One or more of your products is out of stock.';
-                    notification.save();
-
-                    //email notification
-                    const output = `
-                    <div style="text-align: center; font-size: medium">
-                        <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                        <h1>Product out of stock</h1>
-                        <p>Dear Designer,</p>
-                        <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
-                        <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
-                        <div style="text-align: center; font-size: medium">
-                            <p>1. Log onto the app, and move to the designer's section.</p>
-                            <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
-                            <p>3. Click on the product with the <b>out of stock label</b></p>
-                            <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
-                            <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
-                            <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
-                            <p>--The StyleHints Team.</p>
-                        </div>
-                    </div>
-                    `
-                    const data = {
-                        from: 'StyleHints <no-reply@thestylehint.com>',
-                        to: `${designer.email}`,
-                        subject: 'Out of Stock',
-                        text: 'The StyleHints Team',
-                        html: output
-                    };
-                    
-                    mailgun.messages().send(data, (error, body) => {
-                        if (error) return error;
-                    });
-                }
-                product.save();
-            } else if(product.type == 'shoe'){
-                let shoeIndex = product.shoe.findIndex(s => s.color == p.color);
-                let sizeIndex = product.shoe[shoeIndex].info.findIndex(s => s.size == parseInt(p.size));
-                product.shoe[shoeIndex].info[sizeIndex].quantity  -= p.quantity;
-
-                //send email and notification for product out of stock.
-                if (product.shoe[shoeIndex].info[sizeIndex].quantity == 0) {
-                    product.oos = true;
-                    let userIds = [];
-                    //push notification
-                    userIds.push(designer['oneSignalId']);
-                    var message = { 
-                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                        headings:{"en": `Out of Stock`},
-                        contents: {"en": `One or more of your products is out of stock.`},
-                        include_player_ids: userIds
-                    };
-                    sendNotification(message);
-                    
-                    //in app notification
-                    notification.for.push(designer._id);
-                    notification.fromUsername = 'StyleHints';
-                    notification.typeOf = 'oos';
-                    notification.message = 'One or more of your products is out of stock.';
-                    notification.save();
-
-                    //email notification
-                    const output = `
-                    <div style="text-align: center; font-size: medium">
-                        <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                        <h1>Product out of stock</h1>
-                        <p>Hello Designer,</p>
-                        <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
-                        <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
-                        <div style="text-align: center; font-size: medium">
-                            <p>1. Log onto the app, and move to the designer's section.</p>
-                            <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
-                            <p>3. Click on the product with the <b>out of stock label</b></p>
-                            <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
-                            <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
-                            <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
-                            <p>--The StyleHints Team.</p>
-                        </div>
-                    </div>
-                    `
-                    const data = {
-                        from: 'StyleHints <no-reply@thestylehint.com>',
-                        to: `${designer.email}`,
-                        subject: 'Out of Stock',
-                        text: 'The StyleHints Team',
-                        html: output
-                    };
-                    
-                    mailgun.messages().send(data, (error, body) => {
-                        if (error) return error;
-                    });
-                }
-                product.save();
-            }
+            
 
             //email notification for customer
             const confirmation = `
@@ -655,6 +538,125 @@ router.post('/pay', checkJwt, (req, res) => {
                         mailgun.messages().send(data, (error, body) => {
                             if (error) return error;
                         });
+
+                        //check product quantity
+            if (product.type == 'clothing') {
+                let clothIndex = product.cloth.findIndex(c => c.color == p.color);
+                let sizeIndex = product.cloth[clothIndex].info.findIndex(c => c.size == p.size);
+                product.cloth[clothIndex].info[sizeIndex].quantity  -= p.quantity;
+
+                //send email and notification for product out of stock.
+                if (product.cloth[clothIndex].info[sizeIndex].quantity == 0) {
+                    product.oos = true;
+                    let userIds = [];
+                    //push notification
+                    userIds.push(designer['oneSignalId']);
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        headings:{"en": `Out of Stock`},
+                        contents: {"en": `One or more of your products is out of stock.`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
+                    
+                    //in app notification
+                    notification.for.push(designer._id);
+                    notification.fromUsername = 'StyleHints';
+                    notification.typeOf = 'oos';
+                    notification.message = 'One or more of your products is out of stock.';
+                    notification.save();
+
+                    //email notification
+                    const output = `
+                    <div style="text-align: center; font-size: medium">
+                        <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                        <h1>Product out of stock</h1>
+                        <p>Dear Designer,</p>
+                        <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
+                        <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
+                        <div style="text-align: center; font-size: medium">
+                            <p>1. Log onto the app, and move to the designer's section.</p>
+                            <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
+                            <p>3. Click on the product with the <b>out of stock label</b></p>
+                            <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
+                            <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
+                            <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
+                            <p>--The StyleHints Team.</p>
+                        </div>
+                    </div>
+                    `
+                    const data = {
+                        from: 'StyleHints <no-reply@thestylehint.com>',
+                        to: `${designer.email}`,
+                        subject: 'Out of Stock',
+                        text: 'The StyleHints Team',
+                        html: output
+                    };
+                    
+                    mailgun.messages().send(data, (error, body) => {
+                        if (error) return error;
+                    });
+                }
+                product.save();
+            } else if(product.type == 'shoe'){
+                let shoeIndex = product.shoe.findIndex(s => s.color == p.color);
+                let sizeIndex = product.shoe[shoeIndex].info.findIndex(s => s.size == parseInt(p.size));
+                product.shoe[shoeIndex].info[sizeIndex].quantity  -= p.quantity;
+
+                //send email and notification for product out of stock.
+                if (product.shoe[shoeIndex].info[sizeIndex].quantity == 0) {
+                    product.oos = true;
+                    let userIds = [];
+                    //push notification
+                    userIds.push(designer['oneSignalId']);
+                    var message = { 
+                        app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                        headings:{"en": `Out of Stock`},
+                        contents: {"en": `One or more of your products is out of stock.`},
+                        include_player_ids: userIds
+                    };
+                    sendNotification(message);
+                    
+                    //in app notification
+                    notification.for.push(designer._id);
+                    notification.fromUsername = 'StyleHints';
+                    notification.typeOf = 'oos';
+                    notification.message = 'One or more of your products is out of stock.';
+                    notification.save();
+
+                    //email notification
+                    const output = `
+                    <div style="text-align: center; font-size: medium">
+                        <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
+                        <h1>Product out of stock</h1>
+                        <p>Hello Designer,</p>
+                        <p>This is to inform you that, one or more of your products has a size which is out of stock.</p>
+                        <p>If you have more products in stock, you can refill the number of product in stock on our platform by using the following steps:</p>
+                        <div style="text-align: center; font-size: medium">
+                            <p>1. Log onto the app, and move to the designer's section.</p>
+                            <p>2. In the designer's section, click on the <b>Products</b> section on the side menu.</p>
+                            <p>3. Click on the product with the <b>out of stock label</b></p>
+                            <p>4. Input the number of products you have in stock in the <b>Quantity</b> input field</p>
+                            <p>5. Finally, when done click the <b>update</b> button and you're good to go</p>
+                            <p><b>Please make sure you update the quantity in respect to the size of the products you have in stock or your product will not be available for users to buy.</b></p>
+                            <p>--The StyleHints Team.</p>
+                        </div>
+                    </div>
+                    `
+                    const data = {
+                        from: 'StyleHints <no-reply@thestylehint.com>',
+                        to: `${designer.email}`,
+                        subject: 'Out of Stock',
+                        text: 'The StyleHints Team',
+                        html: output
+                    };
+                    
+                    mailgun.messages().send(data, (error, body) => {
+                        if (error) return error;
+                    });
+                }
+                product.save();
+            }
 
                         res.json({
                             success: true,
