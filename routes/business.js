@@ -464,7 +464,7 @@ router.post('/pay', checkJwt, (req, res) => {
                 User.findById(prod.owner, (err, designer) => {
                     if (err) return err;
 
-                    let percent = ;
+                    let percent = ((15 * prod.amount) / 100);
                     let designerToReceive = prod.amount - percent;
                     let designerReceived = Math.round((designerToReceive * 100) / 100);
 
