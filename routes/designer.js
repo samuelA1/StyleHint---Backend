@@ -205,57 +205,6 @@ router.post('/order-status', isDesigner, (req, res) => {
     ]);
 });
 
-//change from unshipped to shipped
-router.post('/change-status/:id', isDesigner, (req, res) => {
-    Order.findById(req. params.id)
-        .populate('from')
-        .exec((err, order) => {
-            if (err) return err;
-    
-            order.isShipped = true;
-            order.shippedAt = new Date().toLocaleDateString('en-US', {timeZone: 'UTC'});
-            
-    
-    
-            //email notification for customer
-            const confirmation = `
-            <div style="text-align: center; font-size: medium">
-                <img style="width: 20%" src="https://res.cloudinary.com/stylehint/image/upload/v1563869996/towel_l5xkio.png" >
-                <h1>Product shipped.</h1>
-                <p>Hello ${order.from.name}</p>
-                <p>This is to inform you that, one or more of the products you purchased on ${order.orderedAt} has been shipped. See below for more details</p>
-                <p><b>Shipped on: ${order.shippedAt}</b></p>
-                
-    
-                <div style="text-align: center; font-size: medium">
-                        <h2>Details</h2>
-                        <p><b>Order#: ${order._id}</b></p>
-                        <p><b>Order total: $${order.totalPaid}</b></p>
-                        <p>--The StyleHints Team.</p>
-                </div>
-    
-            </div>
-            `
-            const cnfrm = {
-                from: 'StyleHints <no-reply@thestylehint.com>',
-                to: `${order.from.email}`,
-                subject: 'Product shipped',
-                text: 'The StyleHints Team',
-                html: confirmation
-            };
-                
-            mailgun.messages().send(cnfrm, (error, body) => {
-                if (error) return error;
-            });
-    
-            order.save();
-            res.json({
-                success: true,
-                message: 'Product shipped confirmation'
-            })
-        })
-});
-
 //oders for day
 router.get('/daily-orders', isDesigner, (req, res) => {
     Order.find({$and: [{for: req.decoded.user._id}, {orderedAt: {$lt: new Date(), 

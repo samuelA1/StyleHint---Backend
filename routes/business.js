@@ -499,17 +499,18 @@ router.post('/pay', checkJwt, (req, res) => {
                         //send email and notification to designer
                         //push notification
                         let userIds = [];
-                        userIds.push(designer['oneSignalId']);
-                        if (userIds.length !== 0) {
-                            var message = { 
-                                app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                                headings:{"en": `Order placed`},
-                                contents: {"en": `A user just made a purchase for one or more of your products.`},
-                                include_player_ids: userIds
-                            };
-                            sendNotification(message);
-                        }
-                        
+                        if (designer['oneSignalId']) {
+                            userIds.push(designer['oneSignalId']);
+                            if (userIds.length !== 0) {
+                                var message = { 
+                                    app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                                    headings:{"en": `Order placed`},
+                                    contents: {"en": `A user just made a purchase for one or more of your products.`},
+                                    include_player_ids: userIds
+                                };
+                                sendNotification(message);
+                            }
+                        }                        
             
                         //in app notification
                         let notification = new Notification();
@@ -554,17 +555,18 @@ router.post('/pay', checkJwt, (req, res) => {
                     product.oos = true;
                     let userIds = [];
                     //push notification
-                    userIds.push(designer['oneSignalId']);
-                    if (userIds.length !== 0) {
-                        var message = { 
-                            app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                            headings:{"en": `Out of Stock`},
-                            contents: {"en": `One or more of your products is out of stock.`},
-                            include_player_ids: userIds
-                        };
-                        sendNotification(message);
-                    }
-                   
+                    if (designer['oneSignalId']) {
+                        userIds.push(designer['oneSignalId']);
+                        if (userIds.length !== 0) {
+                            var message = { 
+                                app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                                headings:{"en": `Out of Stock`},
+                                contents: {"en": `One or more of your products is out of stock.`},
+                                include_player_ids: userIds
+                            };
+                            sendNotification(message);
+                        }
+                    }                   
                     
                     //in app notification
                     let notification = new Notification();
@@ -616,17 +618,18 @@ router.post('/pay', checkJwt, (req, res) => {
                     product.oos = true;
                     let userIds = [];
                     //push notification
-                    userIds.push(designer['oneSignalId']);
-                    if (userIds.length !== 0) {
-                        var message = { 
-                            app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
-                            headings:{"en": `Out of Stock`},
-                            contents: {"en": `One or more of your products is out of stock.`},
-                            include_player_ids: userIds
-                        };
-                        sendNotification(message);
-                    }
-                    
+                    if (designer['oneSignalId']) {
+                        userIds.push(designer['oneSignalId']);
+                        if (userIds.length !== 0) {
+                            var message = { 
+                                app_id: "4e5b4450-3330-4ac4-a16e-c60e26ec271d",
+                                headings:{"en": `Out of Stock`},
+                                contents: {"en": `One or more of your products is out of stock.`},
+                                include_player_ids: userIds
+                            };
+                            sendNotification(message);
+                        }
+                    }                    
                     
                     //in app notification
                     let notification = new Notification();
