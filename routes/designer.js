@@ -339,7 +339,8 @@ router.get('/daily-finances', isDesigner, (req, res) => {
             } else {
                 res.json({
                     success: true,
-                    orders: []
+                    orders: [],
+                    totalSold: 0,
                 });
             }      
         });
@@ -388,21 +389,33 @@ router.get('/monthly-finances', isDesigner, (req, res) => {
             let totalSold = 0;
             let totalQuantity = 0;
 
-            for (let i = 0; i < orders.length; i++) {
-                totalSold += orders[i].designerReceived;
-                totalQuantity += orders[i].quantity;
-               if (i == orders.length) {
+            if (orders.length !== 0) {
+                for (let i = 0; i < orders.length; i++) {
+                    totalSold += orders[i].designerReceived;
+                    totalQuantity += orders[i].quantity;
+                   if (i == orders.length) {
+                    res.json({
+                        success: true,
+                        totalOrders: totalOrders,
+                        totalSold: totalSold,
+                        totalQuantity: totalQuantity,
+                        orders: orders
+        
+                    })
+                   }
+                    
+                }
+            } else {
                 res.json({
                     success: true,
                     totalOrders: totalOrders,
-                    totalSold: totalSold,
-                    totalQuantity: totalQuantity,
-                    orders: orders
+                    totalSold: 0,
+                    orders: []
     
                 })
-               }
-                
             }
+
+           
         });
 });
 
@@ -419,20 +432,30 @@ router.get('/yearly-finances', isDesigner, (req, res) => {
             let totalSold = 0;
             let totalQuantity = 0;
 
-            for (let i = 0; i < orders.length; i++) {
-                totalSold += orders[i].designerReceived;
-                totalQuantity += orders[i].quantity;
-               if (i == orders.length) {
-                res.json({
-                    success: true,
-                    totalOrders: totalOrders,
-                    totalSold: totalSold,
-                    totalQuantity: totalQuantity
-    
-                })
-               }
-                
+            if (orders.length !== 0) {
+                for (let i = 0; i < orders.length; i++) {
+                    totalSold += orders[i].designerReceived;
+                    totalQuantity += orders[i].quantity;
+                   if (i == orders.length) {
+                    res.json({
+                        success: true,
+                        totalOrders: totalOrders,
+                        totalSold: totalSold,
+                        totalQuantity: totalQuantity
+        
+                    })
+                   }
+                    
+                }
+            } else {
+               res.json({
+                   success: true,
+                   totalOrders: totalOrders,
+                   totalSold: 0,
+               }); 
             }
+
+            
         });
 });
 
