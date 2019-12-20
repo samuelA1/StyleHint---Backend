@@ -238,7 +238,7 @@ router.get('/weekly-orders', isDesigner, (req, res) => {
 });
 
 //orders for month
-router.get('/monthly-orders', isDesigner, (req, res) => {
+router.post('/monthly-orders', isDesigner, (req, res) => {
     Order.find({$and: [{for: req.decoded.user._id}, {orderedAt: {$gte: new Date(req.body.year, req.body.month, 1),
         $lt: new Date(req.body.year, req.body.month + 1, 1)}}]})
         .populate('from')
@@ -254,7 +254,7 @@ router.get('/monthly-orders', isDesigner, (req, res) => {
 });
 
 //orders for year
-router.get('/yearly-orders', isDesigner, (req, res) => {
+router.post('/yearly-orders', isDesigner, (req, res) => {
     Order.find({$and: [{for: req.decoded.user._id}, {orderedAt: {$gte: new Date(req.body.year, 1, 1),
         $lt: new Date(req.body.year + 1, 1, 1)}}]})
         .populate('from')
