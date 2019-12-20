@@ -320,6 +320,8 @@ router.get('/daily-finances', isDesigner, (req, res) => {
             let totalSold = 0;
             let totalQuantity = 0;
 
+            console.log(orders);
+
             if (orders.length !== 0) {
                 for (let i = 0; i < orders.length; i++) {
                     totalSold += orders[i].designerReceived;
