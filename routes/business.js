@@ -377,8 +377,23 @@ router.post('/pay', checkJwt, (req, res) => {
     }
     
 
-    let notification = new Notification();
     let order = new Order();
+
+    //create order for customer
+    order.for = order._id;
+    order.from = req.decoded.user._id;
+    if (req.body.address.zip) order.address.zip = req.body.address.zip;
+    if (req.body.address.main) order.address.main = req.body.address.main;
+    if (req.body.address.city) order.address.city = req.body.address.city;
+    if (req.body.address.state) order.address.state = req.body.address.state;
+    if (req.body.address.country) order.address.country = req.body.address.country;
+    
+    
+    order.totalPaid = req.body.amount;
+    order.cardNumber = req.body.card.number;
+    order.companyReceived = req.body.amount - order.fees;
+    order.designerReceived = order.companyReceived - ((15 * order.totalPaid) / 100);
+    order.save();
 
     req.body.products.forEach(p => {
         order.products.push(p);
@@ -442,22 +457,6 @@ router.post('/pay', checkJwt, (req, res) => {
                         order.fees = 1
                     }
             });
-
-             //create order for customer
-             order.for = order._id;
-             order.from = req.decoded.user._id;
-             if (req.body.address.zip) order.address.zip = req.body.address.zip;
-             if (req.body.address.main) order.address.main = req.body.address.main;
-             if (req.body.address.city) order.address.city = req.body.address.city;
-             if (req.body.address.state) order.address.state = req.body.address.state;
-             if (req.body.address.country) order.address.country = req.body.address.country;
-             
-             
-             order.totalPaid = req.body.amount;
-             order.cardNumber = req.body.card.number;
-             order.companyReceived = req.body.amount - order.fees;
-             order.designerReceived = order.companyReceived - ((15 * order.totalPaid) / 100);
-             order.save();
              
  
             req.body.sortedDesProds.forEach(prod => {
@@ -513,6 +512,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         
             
                         //in app notification
+                        let notification = new Notification();
                         notification.for.push(designer._id);
                         notification.fromUsername = 'StyleHints';
                         notification.typeOf = 'purchase';
@@ -567,6 +567,7 @@ router.post('/pay', checkJwt, (req, res) => {
                    
                     
                     //in app notification
+                    let notification = new Notification();
                     notification.for.push(designer._id);
                     notification.fromUsername = 'StyleHints';
                     notification.typeOf = 'oos';
@@ -628,6 +629,7 @@ router.post('/pay', checkJwt, (req, res) => {
                     
                     
                     //in app notification
+                    let notification = new Notification();
                     notification.for.push(designer._id);
                     notification.fromUsername = 'StyleHints';
                     notification.typeOf = 'oos';

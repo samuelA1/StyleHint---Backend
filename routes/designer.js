@@ -174,7 +174,7 @@ router.post('/order-status', isDesigner, (req, res) => {
     const page = req.query.page;
     async.waterfall([
         function (callback) {
-            Order.countDocuments({$and: [{for: req.decoded.user._id}, {isShipped: req.body.status}]}, (err, count) => {
+            Order.countDocuments({for: req.decoded.user._id}, (err, count) => {
                 if (err) return err;
 
                 Order.countDocuments({for: req.decoded.user._id}, (err, grandTotal) => {
@@ -185,7 +185,7 @@ router.post('/order-status', isDesigner, (req, res) => {
             });
         },
         function (count, grandTotal) {
-            Order.find({$and: [{for: req.decoded.user._id}, {isShipped: req.body.status}]})
+            Order.find({for: req.decoded.user._id})
             .limit(perPage)
             .skip(page * perPage)
             .populate('for')
