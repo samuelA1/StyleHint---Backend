@@ -626,7 +626,7 @@ router.post('/year-statistics', isAdmin, (req, res) => {
 });
 
 //change from unshipped to shipped
-router.post('/change-status/:id', isDesigner, (req, res) => {
+router.post('/change-status/:id', isAdmin, (req, res) => {
     Order.findById(req. params.id)
         .populate('from')
         .exec((err, order) => {
