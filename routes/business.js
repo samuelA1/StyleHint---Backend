@@ -459,9 +459,8 @@ router.post('/pay', checkJwt, (req, res) => {
             });
              
  
-            console.log(req.body.sortedDesProds);
-            req.body.sortedDesProds.forEach(prod => {
-                User.findById(prod.owner, (err, designer) => {
+            for (let i = 0; i < req.body.sortedDesProds.length; i++) {
+                User.findById(req.body.sortedDesProds[i].owner, (err, designer) => {
                     if (err) return err;
 
                     let percent = (((15 * prod.amount) / 100) * 100);
@@ -677,7 +676,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         
             });
                     })
-            });
+            }
         });
     });
 
