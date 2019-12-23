@@ -318,10 +318,7 @@ router.get('/daily-finances', isDesigner, (req, res) => {
 
             console.log(orders)
             if (orders.length !== 0) {
-                for (let i = 0; i < orders.length; i++) {
-                    totalSold += orders[i].designerReceived;
-                    totalQuantity += orders[i].quantity;
-                   if (i == orders.length) {
+                if (i == orders.length) {
                     res.json({
                         success: true,
                         totalOrders: totalOrders,
@@ -331,8 +328,6 @@ router.get('/daily-finances', isDesigner, (req, res) => {
         
                     })
                    }
-                    
-                }
             } else {
                 res.json({
                     success: true,
