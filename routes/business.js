@@ -488,7 +488,7 @@ router.post('/pay', checkJwt, (req, res) => {
                         if (req.body.address.country) designerOrder.address.country = req.body.address.country;
                         
                         designerOrder.products = prod.products;
-                        designerOrder.companyReceived = percent;
+                        designerOrder.companyReceived = Math.round(percent);
                         designerOrder.designerReceived = designerReceived / 100;
                         designerOrder.totalPaid = prod.amount;
 
