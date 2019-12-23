@@ -22,7 +22,6 @@ const DorderSchema = new Schema({
         img: {type: String, default: ''},
     }],
     orderedAt: {type: Date, default: Date.now},
-    totalReceived: {type: Number, default: 0},
     companyReceived: {type: Number, default: 0},
     designerReceived: {type: Number, default: 0},
 });
