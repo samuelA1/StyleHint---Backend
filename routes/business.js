@@ -463,8 +463,8 @@ router.post('/pay', checkJwt, (req, res) => {
                 User.findById(req.body.sortedDesProds[i].owner, (err, designer) => {
                     if (err) return err;
 
-                    let percent = (((15 * prod.amount) / 100) * 100);
-                    let designerToReceive = prod.amount - percent;
+                    let percent = (((15 * req.body.sortedDesProds[i].amount) / 100) * 100);
+                    let designerToReceive = req.body.sortedDesProds[i].amount - percent;
                     let designerReceived = Math.round((designerToReceive * 100));
 
                     //payment to designer
@@ -486,10 +486,10 @@ router.post('/pay', checkJwt, (req, res) => {
                         if (req.body.address.state) designerOrder.address.state = req.body.address.state;
                         if (req.body.address.country) designerOrder.address.country = req.body.address.country;
                         
-                        designerOrder.products = prod.products;
+                        designerOrder.products = req.body.sortedDesProds[i].products;
                         designerOrder.companyReceived = Math.round(percent);
                         designerOrder.designerReceived = designerReceived / 100;
-                        designerOrder.totalPaid = prod.amount;
+                        designerOrder.totalPaid = req.body.sortedDesProds[i].amount;
 
                         designerOrder.save();
 
