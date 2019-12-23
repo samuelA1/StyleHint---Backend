@@ -6,10 +6,6 @@ const isDesigner = require('../middleware/is-designer');
 const cloudinary = require('cloudinary');
 const formidable = require('formidable');
 const async = require('async');
-const User = require('../models/user');
-var API_KEY = 'key-cd89dbc925b95695b194ca3ea9eedf3e';
-var DOMAIN = 'mg.thestylehint.com';
-var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
 
 cloudinary.config({ 
     cloud_name: 'stylehint', 
@@ -320,6 +316,7 @@ router.get('/daily-finances', isDesigner, (req, res) => {
             let totalSold = 0;
             let totalQuantity = 0;
 
+            console.log(orders)
             if (orders.length !== 0) {
                 for (let i = 0; i < orders.length; i++) {
                     totalSold += orders[i].designerReceived;
