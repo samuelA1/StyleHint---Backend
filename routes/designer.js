@@ -371,7 +371,7 @@ router.get('/weekly-finances', isDesigner, (req, res) => {
 });
 
 //finances for month
-router.get('/monthly-finances', isDesigner, (req, res) => {
+router.post('/monthly-finances', isDesigner, (req, res) => {
     Order.find({$and: [{for: req.decoded.user._id}, {orderedAt: {$gte: new Date(req.body.year, req.body.month, 1),
         $lt: new Date(req.body.year, req.body.month + 1, 1)}}]})
         .populate('from')
