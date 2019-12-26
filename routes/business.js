@@ -256,6 +256,46 @@ router.get('/get-cart-wishlist', checkJwt, (req, res) => {
 });
 
 
+router.post('/check-quantity', checkJwt, (req, res) => {
+    req.body.products.forEach(prod => {
+        Product.findById(prod.productId, (err, product) => {
+            if (err) return err;
+
+            if (product.type == 'clothing') {
+                let clothIndex = product.cloth.findIndex(p => p.color == req.body.color);
+                let sizeIndex = product.cloth[clothIndex].info.findIndex(p => p.size == req.body.size);
+                if (prod.quantity > product.cloth[clothIndex].info[sizeIndex].quantity) {
+                    User.findById(req.decoded.user._id, (err, user) => {
+                        if (err) return err;
+                
+                        user.cart.splice(user.cart.findIndex(c => c.productId == prod.productId), 1);
+                
+                        user.save();
+                        res.json({
+                            success: true
+                        })
+                    });
+                }
+            } else {
+                let shoeIndex = product.shoe.findIndex(p => p.color == req.body.color);
+                let sizeIndex = product.shoe[shoeIndex].info.findIndex(p => p.size == req.body.size)
+                if (prod.quantity >  product.shoe[shoeIndex].info[sizeIndex].quantity) {
+                    User.findById(req.decoded.user._id, (err, user) => {
+                        if (err) return err;
+                
+                        user.cart.splice(user.cart.findIndex(c => c.productId == prod.productId), 1);
+                
+                        user.save();
+                        res.json({
+                            success: true
+                        })
+                    });
+                } 
+            }
+        });
+    });
+});
+
 
 //update item in cart
 router.post('/update-cart/:id', checkJwt, (req, res) => {
@@ -552,7 +592,7 @@ router.post('/pay', checkJwt, (req, res) => {
                     product.cloth[clothIndex].info[sizeIndex].quantity  -= p.quantity;
     
                     //send email and notification for product out of stock.
-                    if (product.cloth[clothIndex].info[sizeIndex].quantity == 0) {
+                    if (product.cloth[clothIndex].info[sizeIndex].quantity <= 0) {
                         product.oos = true;
                         let userIds = [];
                         //push notification
@@ -615,7 +655,7 @@ router.post('/pay', checkJwt, (req, res) => {
                     product.shoe[shoeIndex].info[sizeIndex].quantity  -= p.quantity;
     
                     //send email and notification for product out of stock.
-                    if (product.shoe[shoeIndex].info[sizeIndex].quantity == 0) {
+                    if (product.shoe[shoeIndex].info[sizeIndex].quantity <= 0) {
                         product.oos = true;
                         let userIds = [];
                         //push notification
