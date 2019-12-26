@@ -262,8 +262,8 @@ router.post('/check-quantity', checkJwt, (req, res) => {
             if (err) return err;
 
             if (product.type == 'clothing') {
-                let clothIndex = product.cloth.findIndex(p => p.color == req.body.color);
-                let sizeIndex = product.cloth[clothIndex].info.findIndex(p => p.size == req.body.size);
+                let clothIndex = product.cloth.findIndex(p => p.color == prod.color);
+                let sizeIndex = product.cloth[clothIndex].info.findIndex(p => p.size == prod.size);
                 if (prod.quantity > product.cloth[clothIndex].info[sizeIndex].quantity) {
                     User.findById(req.decoded.user._id, (err, user) => {
                         if (err) return err;
@@ -277,7 +277,7 @@ router.post('/check-quantity', checkJwt, (req, res) => {
                     });
                 }
             } else {
-                let shoeIndex = product.shoe.findIndex(p => p.color == req.body.color);
+                let shoeIndex = product.shoe.findIndex(p => p.color == prod.color);
                 let sizeIndex = product.shoe[shoeIndex].info.findIndex(p => p.size == req.body.size)
                 if (prod.quantity >  product.shoe[shoeIndex].info[sizeIndex].quantity) {
                     User.findById(req.decoded.user._id, (err, user) => {
