@@ -278,7 +278,7 @@ router.post('/check-quantity', checkJwt, (req, res) => {
                 }
             } else {
                 let shoeIndex = product.shoe.findIndex(p => p.color == prod.color);
-                let sizeIndex = product.shoe[shoeIndex].info.findIndex(p => p.size == req.body.size)
+                let sizeIndex = product.shoe[shoeIndex].info.findIndex(p => p.size == prod.size)
                 if (prod.quantity >  product.shoe[shoeIndex].info[sizeIndex].quantity) {
                     User.findById(req.decoded.user._id, (err, user) => {
                         if (err) return err;
