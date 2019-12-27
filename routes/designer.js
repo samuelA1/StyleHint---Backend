@@ -302,6 +302,27 @@ router.post('/chart-orders', isDesigner, (req, res) => {
     
 });
 
+//sum of all finances and orders ever made
+router.get('/total-finances', isDesigner, (req, res) => {
+    Order.find({for: req.decoded.user._id}, (err, orders) => {
+        if (err) return err;
+
+        let totalSold = 0;
+        if (orders.length !== 0) {
+            for (let i = 0; i < orders.length; i++) {
+                totalSold += orders[i].designerReceived;
+            }
+            res.json({
+                success: true,
+                totalSold: totalSold,
+                orders: orders
+
+            })
+        }
+
+    });
+});
+
 //finances for day
 router.get('/daily-finances', isDesigner, (req, res) => {
     Order.find({$and: [{for: req.decoded.user._id}, {orderedAt: {$lt: new Date(), 
