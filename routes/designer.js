@@ -303,7 +303,7 @@ router.post('/chart-orders', isDesigner, (req, res) => {
 });
 
 //sum of all finances and orders ever made
-router.get('/total-finances', isDesigner, (req, res) => {
+router.get('/total-finances-orders', isDesigner, (req, res) => {
     Order.find({for: req.decoded.user._id}, (err, orders) => {
         if (err) return err;
 
