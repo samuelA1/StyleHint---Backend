@@ -318,7 +318,13 @@ router.get('/total-finances', isDesigner, (req, res) => {
                 orders: orders
 
             })
-        }
+        } else {
+            res.json({
+                success: true,
+                orders: [],
+                totalSold: 0,
+            });
+        }   
 
     });
 });
